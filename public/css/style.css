@@ -1,0 +1,1063 @@
+/* General Body and Font Styles */
+
+:root {
+    /* KAMCUP Brand Colors (Original) */
+    --kamcup-primary: #cb2786; /* Merah Muda Keunguan */
+    --kamcup-secondary: #00617a; /* Biru Kehijauan Tua */
+    --kamcup-accent: #f4b704; /* Kuning Cerah */
+
+    /* Bale by BTN Brand Colors */
+    --bale-primary: #2966b1; /* BTN Blue */
+    --bale-accent: #ee1d23; /* BTN Red */
+
+    /* Combined Palette for Kamcup X Bale - **UPDATED FOR MORE BALE PRESENCE** */
+    --collab-primary: var(--bale-primary); /* BTN Blue remains primary structural */
+    --collab-secondary: var(--kamcup-secondary); /* Kamcup secondary for depth */
+    --collab-accent: var(--bale-accent); /* **UPDATED: Bale Red for main actions & emphasis!** */
+    --collab-highlight: var(--kamcup-accent); /* Kamcup accent for strong highlights (e.g. text emphasis) */
+    --collab-cta-kamcup: var(--kamcup-primary); /* **NEW: Kamcup Primary for specific Kamcup-focused CTAs** */
+
+    /* Custom color for all buttons and the "PARTNER & SPONSOR KAMI" section downwards */
+    --custom-blue: #0F62FF;
+    --custom-blue-darken: #004ac2; /* A darker shade for hover effects */
+
+    /* Specific color for box shadow */
+    --shadow-color-cf2585: #CF2585;
+
+    --text-dark: #212529;
+    --text-light: #ffffff;
+    --text-muted: #6c757d;
+    --light-bg: #f8f9fa;
+    --dark-bg-overlay: rgba(41, 102, 177, 0.85); /* Increased opacity for BTN Blue overlay */
+
+    /* Old style colors for reference / integration (now mostly superseded by collab colors) */
+    --old-text-color: #0C2C5A; /* Specific color from old style, now generally covered by --text-dark or --collab-primary */
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text-dark);
+}
+
+/* Wrapper utama untuk memastikan footer berada di bawah */
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Memastikan wrapper mengambil setidaknya 100% dari tinggi layar */
+}
+
+/* Konten bisa berkembang tapi tetap memberi ruang untuk footer */
+.content {
+    flex-grow: 1; /* Konten akan mengisi ruang yang tersisa */
+}
+
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.hero-section .navbar-brand {
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.hero-section .nav-link {
+    color: rgba(255, 255, 255, 0.95) !important; /* Even more opaque for better visibility */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.hero-section .nav-link.active,
+.hero-section .nav-link:hover {
+    color: var(--collab-highlight) !important; /* Kamcup accent for active/hover */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Stronger glow on hover */
+}
+
+.hero-section .btn-outline-light {
+    border-color: var(--text-light);
+    color: var(--text-light);
+    transition: all 0.3s ease;
+}
+
+.hero-section .btn-outline-light:hover {
+    background-color: var(--text-light);
+    color: var(--collab-primary); /* **UPDATED: Text color to BTN Blue for contrast** */
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
+}
+
+.hero-content {
+    padding-top: 100px;
+    padding-bottom: 80px;
+}
+
+.hero-content .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.8rem); /* Slightly larger title */
+    font-weight: 800; /* Bolder title */
+    color: var(--text-light);
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.5); /* More prominent shadow */
+}
+
+.hero-content .hero-description {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: clamp(1rem, 2vw, 1.35rem); /* Slightly larger description */
+    line-height: 1.8;
+}
+
+.hero-content .hero-description strong {
+    color: var(--collab-highlight); /* Kamcup accent for emphasis */
+}
+
+/* Updated hero button styling */
+.hero-content .hero-btn {
+    background-color: var(--custom-blue); /* All buttons now use this custom blue */
+    border-color: var(--custom-blue);
+    color: var(--text-light); /* White font for all buttons */
+    font-weight: bold;
+    padding: 1.2rem 3rem;
+    font-size: 1.25rem; /* Slightly larger button */
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3); /* Stronger shadow */
+    border-radius: 8px !important; /* Smaller border-radius */
+}
+
+.hero-content .hero-btn:hover {
+    background-color: var(--custom-blue-darken); /* Darken custom blue on hover */
+    border-color: var(--custom-blue-darken);
+    color: var(--text-light);
+    transform: translateY(-4px); /* More lift effect on hover */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Section Titles */
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 2.8rem); /* Larger font size */
+    color: var(--text-dark);
+    position: relative;
+    padding-bottom: 15px; /* More space for underline */
+    margin-bottom: 35px; /* More space below title */
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 90px; /* Longer underline */
+    height: 6px; /* Thicker underline */
+    background-color: var(--collab-primary); /* **UPDATED: BTN Blue for underline** */
+    border-radius: 3px;
+}
+
+/* Updated see all button styling */
+.see-all-btn {
+    border-color: var(--custom-blue); /* All buttons now use this custom blue */
+    background-color: var(--custom-blue);
+    color: var(--text-light); /* White font for all buttons */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-radius: 8px !important; /* Smaller border-radius */
+}
+
+.see-all-btn:hover {
+    background-color: var(--custom-blue-darken); /* Darken custom blue on hover */
+    color: var(--text-light);
+    box-shadow: 0 4px 10px rgba(15, 98, 255, 0.4); /* Shadow using custom blue */
+}
+
+/* Article Cards - UNCHANGED AS REQUESTED */
+.article-text {
+    color: var(--old-text-color);
+}
+
+.card-hover-zoom {
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 1;
+    box-shadow: 8px 8px 0px 0px var(--shadow-color-cf2585);
+}
+
+.card-hover-zoom:hover {
+    transform: scale(1.05);
+    z-index: 999;
+}
+
+.article-card-title-color {
+    color: #CF2585;
+}
+
+.article-card-description-color {
+    color: #CF2585;
+}
+
+.article-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    border: 1px solid var(--light-bg);
+    border-radius: 0.8rem;
+}
+
+.article-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 1.5rem 5rem rgba(0,0,0,.25) !important;
+    border-color: var(--collab-primary);
+}
+
+.article-card .card-body {
+    padding: 1.75rem;
+}
+
+.article-card .card-title {
+    font-size: 1.45rem;
+    margin-bottom: 0.85rem;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.article-card .short-description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.article-card .short-description strong {
+    color: var(--collab-accent);
+}
+
+.article-card .stretched-link {
+    color: var(--collab-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+.article-card .stretched-link:hover {
+    color: #1a4f8c;
+}
+
+/* Event Status Badge - UNCHANGED AS REQUESTED */
+.event-status-badge {
+    padding: .3em .6em;
+    border-radius: .3em;
+    font-weight: 600;
+    font-size: 0.85em;
+    display: inline-block;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.status-completed {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-ongoing {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-registration {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Event Cards - UNCHANGED AS REQUESTED */
+.event-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    border: 1px solid var(--light-bg);
+    border-radius: 0.8rem;
+    box-shadow: 8px 8px 0px 0px var(--shadow-color-cf2585);
+}
+
+.event-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 1.5rem 5rem rgba(0,0,0,.25) !important;
+    border-color: var(--collab-accent);
+}
+
+.event-card .card-body {
+    padding: 1rem;
+}
+
+.event-card .card-title {
+    font-size: 1.45rem;
+    margin-bottom: 0.85rem;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.event-card .card-text i {
+    color: var(--collab-primary);
+    margin-right: 8px;
+}
+
+.event-card .short-description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.event-card .short-description strong {
+    color: var(--collab-cta-kamcup);
+}
+.event-card .stretched-link {
+    color: var(--collab-cta-kamcup);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+.event-card .stretched-link:hover {
+    color: #a4206e;
+}
+
+
+/* Bootstrap Carousel Control Overrides for Articles - UNCHANGED AS REQUESTED */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(41, 102, 177, 0.7);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    z-index: 10;
+}
+
+.carousel-control-prev {
+    left: -50px;
+}
+
+.carousel-control-next {
+    right: -50px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+    background-size: 100% 100%;
+}
+
+@media (max-width: 768px) {
+    .carousel-control-prev {
+        left: 0;
+    }
+
+    .carousel-control-next {
+        right: 0;
+    }
+    .card {
+        height: fit-content;
+    }
+}
+
+.carousel-inner,
+.carousel-item {
+    overflow: visible !important;
+}
+
+
+/* Custom Pagination Styles */
+.pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    border-radius: 50%;
+    padding: 10px 15px;
+    color: var(--text-dark);
+    background-color: transparent;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--light-bg);
+    border-color: var(--collab-primary);
+}
+
+/* Active page with custom color */
+.pagination .page-item.active .page-link {
+    background-color: var(--collab-primary);
+    border-color: var(--collab-primary);
+    color: var(--text-light);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+    pointer-events: none;
+}
+
+
+/* Sponsor Section Header */
+.sponsor-section-header {
+    background-color: var(--collab-primary);
+    padding: 2.2rem;
+    border-radius: 15px;
+    box-shadow: 0 0.35rem 1rem rgba(0,0,0,.15);
+    border: none;
+}
+
+.sponsor-section-header p {
+    color: var(--text-light);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* Styles for PARTNER & SPONSOR KAMI section and below */
+.partner-sponsor-section-wrapper {
+    background-color: var(--custom-blue);
+}
+
+.partner-sponsor-section {
+    padding: 50px 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.partner-sponsor-section .container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.partner-sponsor-header {
+    margin-bottom: 0 !important;
+    background-color: transparent;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 20px;
+}
+
+.section-title-no-margin-bottom {
+    margin-bottom: 0 !important;
+    color: white;
+    padding-bottom: 0 !important;
+}
+
+.section-title-no-margin-bottom::after {
+    content: none;
+}
+
+/* Gallery Carousel */
+.carousel-container {
+    max-width: 1200px;
+    margin: 0px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.carousel-title {
+    text-align: left;
+    font-size: 36px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--old-text-color);
+}
+
+.carousel-subtitle {
+    text-align: left;
+    color: var(--old-text-color);
+    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.carousel {
+    padding-top: 30px;
+    position: relative;
+    height: 480px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.carousel-images {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    transform-style: preserve-3d;
+}
+
+.image-item {
+    position: absolute;
+    width: 50%;
+    height: 480px;
+    left: 25%;
+    padding: 10px;
+    background-color: #ECBF00;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /* Add border-radius here */
+    border-radius: 8px; /* Added border-radius for gallery cards */
+}
+
+.image-item img {
+    width: 100%;
+    height: calc(100% - 50px);
+    object-fit: cover;
+}
+
+.image-item h1 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ECBF00;
+    color: var(--old-text-color);
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.image-item.active {
+    z-index: 10;
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+.image-item.prev {
+    z-index: 5;
+    opacity: 1;
+    transform: translateX(-20%) scale(0.85) ;
+}
+
+.image-item.next {
+    z-index: 5;
+    opacity: 1;
+    transform: translateX(20%) scale(0.85) ;
+}
+
+.image-item.prev-hidden {
+    z-index: 4;
+    opacity: 1;
+    transform: translateX(-40%) scale(0.7);
+}
+
+.image-item.next-hidden {
+    z-index: 4;
+    opacity: 1;
+    transform: translateX(40%) scale(0.7);
+}
+
+.image-item.hidden {
+    opacity: 0;
+    transform: translateX(-200%) scale(0.7);
+}
+
+.nav-button { /* Changed from .carousel-button to .nav-button as per your HTML */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    background: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.left {
+    left: 7%;
+}
+
+.right {
+    right: 7%;
+}
+
+.image-description {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.lihat-semua-btn:hover {
+    background-color: #0C2C5A !important;
+    color: white !important;
+    border-color: #0C2C5A !important;
+}
+
+
+@media (max-width: 768px) {
+    .carousel {
+        height: 300px;
+    }
+
+    .image-item {
+        height: 300px;
+        width: 80%;
+        left: 10%;
+    }
+
+    .image-item img {
+        height: calc(100% - 50px);
+    }
+    .image-item img {
+        object-fit: contain; /* Keep this as contain for gallery images unless you specifically want fill */
+    }
+}
+
+
+/* Sponsor Boxes */
+.sponsor-box {
+    background-color: var(--text-light);
+    border: 2px solid var(--collab-primary);
+    border-radius: 0.8rem;
+    box-shadow: 0 0.15rem 0.6rem rgba(0,0,0,.1);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 170px; /* Base height for larger screens */
+    padding: 18px;
+}
+
+.sponsor-box img {
+    max-width: 95%;
+    max-height: 85%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.sponsor-box:hover img {
+    filter: grayscale(0%);
+}
+
+.sponsor-xxl img { max-height: 120px; }
+.sponsor-xl img { max-height: 90px; }
+.sponsor-l img { max-height: 70px; }
+.sponsor-ms img { max-height: 60px; }
+
+.sponsor-box:hover {
+    transform: translateY(-7px);
+    border-color: var(--collab-accent);
+    box-shadow: 0 0.6rem 1.8rem rgba(0,0,0,.2);
+}
+.sponsor-box p {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-top: 10px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--collab-primary);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    transition: background-color 0.3s ease;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+/* Brand Logo (Gambar Logo) */
+.navbar-brand .brand-logo {
+    height: 90px;
+    width: auto;
+    object-fit: cover; /* Perubahan: Mengisi wadah dan memotong jika perlu */
+    margin-right: 10px;
+}
+
+
+/* Responsive Adjustments untuk navbar dan logo */
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        min-height: 60px; /* Minimal tinggi navbar di mobile */
+    }
+    .navbar-brand .brand-logo {
+        height: 60px; /* Logo lebih kecil di mobile */
+        width: auto;
+        object-fit: fill; /* Perubahan di sini */
+    }
+    /* ... (pastikan .navbar-collapse memiliki padding yang cukup) ... */
+    .navbar-collapse {
+        /* ... (kode yang sudah ada) ... */
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+/* Small devices (landscape phones, portrait tablets, 576px to 767.98px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        min-height: 65px;
+    }
+    .navbar-brand .brand-logo {
+        height: 70px; /* Lebih besar dari mobile kecil, tapi masih kecil dari desktop */
+        width: auto;
+        object-fit: fill; /* Perubahan di sini */
+    }
+}
+
+/* Medium devices (tablets, large phones, 768px to 991.98px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        min-height: 75px;
+    }
+    .navbar-brand .brand-logo {
+        height: 80px; /* Mendekati ukuran desktop penuh */
+        width: auto;
+        object-fit: fill; /* Perubahan di sini */
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .navbar {
+        padding-top: 0.5rem; /* Kembali ke padding kecil */
+        padding-bottom: 0.5rem;
+        min-height: 100px; /* Atur min-height untuk menampung logo 90px + padding */
+    }
+    .navbar-brand .brand-logo {
+        height: 90px; /* Ukuran penuh 90px untuk desktop */
+        width: auto;
+        object-fit: fill; /* Perubahan di sini */
+    }
+    /* Pastikan nav-link punya padding yang cukup */
+    .nav-link {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
+
+/* Responsive Adjustments (bagian ini sudah ada di kode Anda, hanya memastikan urutan benar) */
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .hero-content {
+        padding-top: 80px;
+        padding-bottom: 60px;
+    }
+    .hero-content .hero-title {
+        font-size: 2.2rem; /* Smaller for very small screens */
+        margin-bottom: 1.5rem;
+    }
+    .hero-content .hero-description {
+        font-size: 0.95rem;
+        padding: 0 15px; /* Add horizontal padding for text */
+    }
+    .hero-content .hero-btn {
+        padding: 0.8rem 1.8rem;
+        font-size: 1rem;
+    }
+
+    .navbar-brand .brand-name {
+        font-size: 1.2rem !important;
+    }
+    .navbar-toggler {
+        margin-right: 15px; /* Space from edge */
+    }
+    .navbar-collapse {
+        background-color: var(--collab-primary); /* Dark background for collapsed menu */
+        border-radius: 0.5rem;
+        margin-top: 10px;
+        padding: 15px;
+    }
+    .navbar-nav .nav-item {
+        margin-bottom: 10px;
+    }
+    .navbar-nav .nav-link {
+        padding: 10px 15px;
+    }
+    .navbar-nav .btn-outline-light {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+        text-align: center; /* Center title on small screens */
+        padding-bottom: 10px;
+    }
+    .section-title::after {
+        left: 50%; /* Center underline */
+        transform: translateX(-50%);
+        width: 70px; /* Shorter underline */
+        height: 4px; /* Thinner underline */
+    }
+
+    /* Adjust for registration cards to be one column on very small screens */
+    .row.row-cols-1.row-cols-md-3.g-4 > .col {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    .card.h-100.border-0.rounded-4 {
+        height: auto !important; /* Allow card height to adjust */
+    }
+
+    /* Adjust partner/sponsor header and button */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column; /* Stack header and button vertically */
+        align-items: center;
+        text-align: center;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .section-title {
+        margin-bottom: 20px; /* Space below title when stacked */
+        text-align: center;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .btn {
+        width: 80%; /* Make button wider */
+        max-width: 300px; /* Prevent button from becoming too wide */
+    }
+
+    .sponsor-section-header {
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+    .sponsor-section-header p {
+        font-size: 1.2rem;
+        line-height: 1.4;
+    }
+
+    .sponsor-box {
+        height: auto; /* Allow height to adjust */
+        min-height: 120px; /* Minimum height for small screens */
+        padding: 10px;
+    }
+    .sponsor-xxl img, .sponsor-xl img, .sponsor-l img, .sponsor-ms img {
+        max-height: 50px; /* Smaller max height for images on very small screens */
+    }
+    .sponsor-box p {
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+}
+
+/* Small devices (landscape phones, portrait tablets, 576px to 767.98px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .hero-content {
+        padding-top: 90px;
+        padding-bottom: 70px;
+    }
+    .hero-content .hero-title {
+        font-size: 2.8rem;
+    }
+    .hero-content .hero-description {
+        font-size: 1.05rem;
+    }
+    .hero-content .hero-btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .section-title::after {
+        width: 80px;
+        height: 5px;
+    }
+
+    /* Registration cards - two columns */
+    .row.row-cols-1.row-cols-md-3.g-4 > .col {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    /* Partner/Sponsor header and button */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column; /* Stack header and button vertically */
+        align-items: center;
+        text-align: center;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .section-title {
+        margin-bottom: 20px; /* Space below title when stacked */
+        text-align: center;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .btn {
+        width: 70%; /* Make button wider */
+        max-width: 350px;
+    }
+
+    .sponsor-section-header p {
+        font-size: 1.5rem;
+    }
+    .sponsor-box {
+        height: auto;
+        min-height: 140px;
+    }
+    .sponsor-xxl img, .sponsor-xl img, .sponsor-l img, .sponsor-ms img {
+        max-height: 60px;
+    }
+}
+
+/* Medium devices (tablets, large phones, 768px to 991.98px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .hero-content {
+        padding-top: 100px;
+        padding-bottom: 80px;
+    }
+    .hero-content .hero-title {
+        font-size: 3.5rem;
+    }
+    .hero-content .hero-description {
+        font-size: 1.2rem;
+    }
+    .hero-content .hero-btn {
+        padding: 1.1rem 2.2rem;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+    .section-title::after {
+        width: 90px;
+        height: 6px;
+    }
+
+    /* Registration cards - three columns on medium screens */
+    .row.row-cols-1.row-cols-md-3.g-4 > .col {
+        flex: 0 0 auto;
+        width: 33.333333%;
+    }
+
+    /* Partner/Sponsor header and button in one row */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .section-title {
+        margin-bottom: 0;
+    }
+
+    .sponsor-section-header p {
+        font-size: 1.8rem;
+    }
+    .sponsor-box {
+        height: 170px; /* Original height for medium screens */
+    }
+    .sponsor-xxl img { max-height: 100px; }
+    .sponsor-xl img { max-height: 80px; }
+    .sponsor-l img { max-height: 65px; }
+    .sponsor-ms img { max-height: 55px; }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .hero-content {
+        padding-top: 100px;
+        padding-bottom: 80px;
+    }
+    .hero-content .hero-title {
+        font-size: 4.8rem;
+    }
+    .hero-content .hero-description {
+        font-size: 1.35rem;
+    }
+    .hero-content .hero-btn {
+        padding: 1.2rem 3rem;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 2.8rem;
+    }
+
+    /* Registration cards - three columns on large screens and up */
+    .row.row-cols-1.row-cols-md-3.g-4 > .col {
+        flex: 0 0 auto;
+        width: 33.333333%;
+    }
+
+    /* Partner/Sponsor header and button in one row (default) */
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 .section-title {
+        margin-bottom: 0;
+    }
+
+    .sponsor-section-header p {
+        font-size: 2rem;
+    }
+    .sponsor-box {
+        height: 170px;
+    }
+    /* Specific heights for sponsor images */
+    .sponsor-xxl img { max-height: 120px; }
+    .sponsor-xl img { max-height: 90px; }
+    .sponsor-l img { max-height: 70px; }
+    .sponsor-ms img { max-height: 60px; }
+}
+
+/* --- Button Border Radius Adjustments --- */
+
+/* For "JELAJAHI PROMO & EVENT" button */
+.hero-content .hero-btn {
+    border-radius: 8px !important; /* Smaller border-radius */
+}
+
+/* For "Lihat semuanya" buttons */
+.lihat-semua-btn,
+.see-all-btn { /* Both classes apply to "Lihat semuanya" buttons */
+    border-radius: 8px !important; /* Smaller border-radius */
+}
+
+/* For "MINAT JADI PARTNER?" button */
+.container-fluid.py-5 .btn {
+    border-radius: 8px !important; /* Smaller border-radius */
+}
+
+/* Also apply to the "DAFTAR SEKARANG", "JADI TUAN RUMAH", "BERI DONASI" buttons */
+/* The existing rule for .card a.btn already applies to these */
+.card a.btn {
+    border-radius: 8px !important; /* Apply smaller border-radius here as well */
+}
+@media (max-width: 767.98px) { /* Untuk ukuran layar di bawah tablet (mobile) */
+    /* Menargetkan div container sebelum "Materi Promosi BY" */
+    .container.py-5.mt-md-5 {
+        margin-top: 8.5rem !important; /* Tambahkan jarak sesuai keinginan, misal 3.5rem atau 4rem */
+    }
+}

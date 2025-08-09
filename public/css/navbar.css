@@ -1,0 +1,208 @@
+/* Custom CSS for Navbar */
+
+/* Definisikan custom property untuk warna */
+:root {
+    /* KAMCUP Brand Colors (Original) */
+    --kamcup-primary: #cb2786; /* Merah Muda Keunguan */
+    --kamcup-secondary: #00617a; /* Biru Kehijauan Tua */
+    --kamcup-accent: #f4b704; /* Kuning Cerah */
+
+    /* Bale by BTN Brand Colors */
+    --bale-primary: #2966b1; /* BTN Blue */
+    --bale-accent: #ee1d23; /* BTN Red */
+
+    /* Combined Palette for Kamcup X Bale */
+    --collab-primary: var(--bale-primary); /* BTN Blue remains primary structural */
+    --collab-secondary: var(--kamcup-secondary); /* Kamcup secondary for depth */
+    --collab-accent: var(--bale-accent); /* Bale Red for main actions & emphasis! */
+    --collab-highlight: var(--kamcup-accent); /* Kamcup accent for strong highlights (e.g. text emphasis) */
+    --collab-cta-kamcup: var(--kamcup-primary); /* Kamcup Primary for specific Kamcup-focused CTAs */
+
+    --text-dark: #212529; /* Warna teks gelap (digunakan untuk link navbar) */
+    --text-light: #ffffff; /* Warna teks terang */
+    --text-muted: #6c757d;
+}
+
+
+/* Navbar Umum */
+.navbar {
+    background-color: transparent !important; /* PENTING: Memastikan background benar-benar transparan */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    transition: background-color 0.3s ease;
+    min-height: 100px; /* Minimal tinggi navbar di desktop */
+    display: flex;
+    align-items: center;
+    /* position-absolute, top-0, start-0, w-100, z-3 sudah ada di HTML */
+}
+
+/* Navbar Brand (Logo) */
+.navbar-brand {
+    width: 190px;
+    overflow: hidden;
+    height: 90px;
+    font-weight: bold;
+}
+
+.navbar-brand .brand-logo {
+    height: 150%;
+    width: 150%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+/* Navbar Toggler (untuk mobile/tablet) */
+.navbar-toggler {
+    border-color: transparent !important; /* Menghilangkan border toggler jika ada */
+}
+.navbar-toggler:focus {
+    box-shadow: none; /* Hilangkan shadow default focus Bootstrap */
+}
+
+
+/* Navbar Links */
+.navbar-nav .nav-item {
+    margin-bottom: 0; /* Hapus margin antar item di mobile agar lebih rapat */
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-dark) !important; /* PENTING: Warna teks link menjadi gelap */
+    transition: color 0.3s ease; /* Transisi hanya pada warna */
+    font-weight: 500;
+    padding: 0.5rem 0.8rem; /* Padding yang lebih kecil agar lebih rapat */
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover {
+    color: var(--collab-primary) !important; /* Warna BTN Blue saat aktif/hover */
+    text-shadow: none; /* Hapus text-shadow untuk tampilan yang lebih bersih seperti di gambar */
+}
+
+/* Login/Logout Button */
+.navbar-nav .btn-outline-light {
+    border-color: var(--collab-primary); /* Border BTN Blue */
+    color: var(--collab-primary); /* Teks BTN Blue */
+    transition: all 0.3s ease;
+    width: auto; /* Lebar otomatis, tidak lagi 100% di mobile */
+    margin-left: 0.5rem; /* Beri sedikit jarak dari link terakhir */
+    margin-top: 0; /* Hapus margin atas */
+    padding: 0.375rem 0.75rem; /* Padding default Bootstrap button */
+}
+
+.navbar-nav .btn-outline-light:hover {
+    background-color: var(--collab-primary); /* Background BTN Blue saat hover */
+    color: var(--text-light); /* Teks putih saat hover */
+    box-shadow: none; /* Hapus shadow */
+}
+
+/* Responsive Adjustments untuk Navbar dan Logo */
+
+/* Collapse menu saat di mobile/tablet (ATURAN INI HANYA BERLAKU DI LAYAR KECIL) */
+@media (max-width: 991.98px) { /* Ini menargetkan layar di bawah breakpoint 'lg' (desktop) */
+    .navbar-collapse {
+        /* Background untuk menu yang terbuka di mobile (agar teks terlihat jelas) */
+        background-color: rgba(255, 255, 255, 0.95); /* Putih sedikit transparan */
+        border-radius: 0.5rem;
+        margin-top: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Tambah sedikit shadow */
+        border: none !important; /* Menghilangkan border pada collapse menu */
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .navbar {
+        min-height: 60px;
+    }
+    .navbar-brand {
+        width: 150px;
+        height: 60px;
+    }
+    .navbar-brand .brand-logo {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+    .navbar-nav .nav-item {
+        margin-bottom: 5px; /* Sedikit jarak di mobile */
+    }
+    .navbar-nav .btn-outline-light {
+        width: 100%; /* Tombol login/logout kembali 100% di mobile */
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}
+
+/* Small devices (landscape phones, portrait tablets, 576px to 767.98px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .navbar {
+        min-height: 65px;
+    }
+    .navbar-brand {
+        width: 160px;
+        height: 70px;
+    }
+    .navbar-brand .brand-logo {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+    .navbar-nav .btn-outline-light {
+        margin-left: 0.5rem; /* Jaga margin di samping tombol */
+    }
+}
+
+/* Medium devices (tablets, large phones, 768px to 991.98px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .navbar {
+        min-height: 75px;
+    }
+    .navbar-brand {
+        width: 170px;
+        height: 80px;
+    }
+    .navbar-brand .brand-logo {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
+    .navbar-nav .btn-outline-light {
+        margin-left: 0.8rem;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .navbar {
+        min-height: 100px;
+    }
+    .navbar-brand {
+        width: 190px;
+        height: 90px;
+    }
+    .navbar-brand .brand-logo {
+        height: 150%;
+        width: 150%;
+        object-fit: cover;
+    }
+    .navbar-nav .nav-link {
+        padding-top: 0.5rem; /* Padding yang lebih kecil di desktop */
+        padding-bottom: 0.5rem;
+    }
+    .navbar-nav .btn-outline-light {
+        margin-left: 1rem; /* Margin standar di desktop */
+    }
+}
+
+/* Menyesuaikan padding untuk konten agar tidak tertutup navbar */
+/* Ini harus ditempatkan di bagian atas style.css atau di mana saja yang relevan */
+body {
+    padding-top: 100px; /* Sesuaikan dengan tinggi navbar Anda di desktop (min-height: 100px) */
+}
+
+@media (max-width: 991.98px) {
+    body {
+        padding-top: 70px; /* Sesuaikan padding untuk mobile/tablet (min-height: 60-75px) */
+    }
+}

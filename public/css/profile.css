@@ -1,0 +1,264 @@
+/* Custom CSS untuk halaman profil */
+
+/* Definisikan custom property untuk warna shadow */
+/* Pastikan ini ada di tempat yang dapat diakses secara global, misalnya di :root */
+:root {
+    --shadow-color-cf2585: #FF00FF; /* Warna magenta */
+}
+
+/* Body dan Container */
+body {
+    background-color: #f8f9fa; /* Warna latar belakang body, sesuai gambar */
+}
+
+
+/* Judul "Profile" */
+h2.text-center.mt-5 {
+    color: #007bff; /* Warna biru sesuai gambar */
+    font-size: 2.2rem; /* Ukuran font sesuai gambar (sudah 2.2rem) */
+    font-weight: 600; /* Bold (sudah 600) */
+    margin-bottom: 20px; /* Jarak bawah */
+}
+
+/* Bagian Foto Profil */
+.text-center.my-3 {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.text-center.my-3 img { /* Target gambar di dalam div ini */
+    border-radius: 10px; /* Membuat sudut membulat (tidak terlalu lancip) */
+    border: 2px solid #fff; /* Border putih tipis di sekitar foto profil */
+    box-shadow: 0 0 100px rgba(171, 11, 11, 0.1); /* Sedikit shadow pada foto profil */
+    width: 100px; /* Pastikan ukuran tetap */
+    height: 100px; /* Pastikan ukuran tetap */
+    object-fit: cover; /* Penting untuk cropping gambar agar pas */
+    display: block; /* Agar margin auto bisa berfungsi */
+    margin-left: auto; /* Pusatkan gambar */
+    margin-right: auto; /* Pusatkan gambar */
+}
+
+/* Judul "Informasi Dasar" terpisah */
+.profile-section-title {
+    color: #dc3545; /* Warna teks merah muda/ungu seperti di gambar */
+    font-size: 2.2rem; /* Ukuran font sama dengan judul "Profile" */
+    font-weight: 700; /* Lebih bold (700 atau bolder) */
+    margin-top: 20px; /* Jarak atas dari foto profil */
+    margin-bottom: 15px; /* Jarak bawah ke card informasi */
+}
+
+/* Card Umum */
+.card {
+    border: none; /* Hilangkan border default Bootstrap */
+    /* Hapus box-shadow default dari .card di sini jika ingin hanya .profile-info-card yang punya shadow */
+    /* Atau biarkan jika semua card ingin punya shadow umum */
+    /* box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1); */
+    border-radius: 12px; /* Sudut sedikit membulat, mungkin lebih dari sebelumnya */
+    overflow: hidden; /* Pastikan tidak ada konten yang keluar dari border-radius */
+}
+
+/* Card Informasi Dasar (detail) - Custom Shadow Magenta yang Tebal dan Tidak Blur */
+.profile-info-card {
+    /* Hapus shadow default Bootstrap DULU */
+    /* box-shadow: unset !important;  Ini tidak perlu jika !important diletakkan di akhir */
+
+    border: 1px solid #dee2e6; /* Border tipis di bagian dalam */
+    border-radius: 12px;
+    background-color: #fff;
+
+    position: relative;
+    z-index: 1; /* Pastikan card berada di lapisan atas */
+    margin-bottom: 20px !important; /* Beri ruang ekstra di bawah untuk shadow */
+
+    /* Aplikasikan shadow yang diinginkan */
+    /* KOREKSI TYPO: !important dipindahkan ke akhir properti box-shadow */
+    box-shadow:
+        8px 8px 0px 0px var(--shadow-color-cf2585), /* Shadow magenta tebal */
+        5px 5px 15px rgba(0, 0, 0, 0.1) !important; /* Shadow lembut di belakang, dengan !important */
+
+    /* ATAU, jika hanya ingin shadow magenta saja yang paling dominan: */
+    /* box-shadow: 8px 8px 0px 0px var(--shadow-color-cf2585) !important; */
+}
+
+.card-body {
+    padding: 1.5rem; /* Padding lebih di dalam card body */
+    padding-top: 2.5rem; /* Menyesuaikan padding-top karena tombol edit di pojok atas */
+}
+
+/* Tombol Edit Profile di dalam card */
+.edit-profile-btn {
+    color: #6c757d; /* Warna ikon edit */
+    transition: color 0.2s ease-in-out;
+}
+
+.edit-profile-btn:hover {
+    color: #007bff; /* Warna saat hover */
+}
+
+/* Label dan Nilai pada Informasi Dasar */
+.row.mb-3 .col-md-3.fw-bold {
+    color: #6c757d; /* Warna abu-abu gelap untuk label */
+    text-align: left; /* Pastikan rata kiri */
+    padding-right: 15px; /* Jarak antara label dan nilai */
+}
+.row.mb-3 .col-md-9 {
+    color: #343a40; /* Warna hitam lebih pekat untuk nilai */
+    text-align: left; /* Pastikan rata kiri */
+}
+.row.mb-3 {
+    align-items: center; /* Rata tengah secara vertikal */
+}
+
+/* Nav Tabs */
+.nav-tabs {
+    border-bottom: none; /* Hilangkan border bawah default tabs */
+    margin-top: 30px; /* Jarak atas dari card informasi dasar */
+    margin-bottom: 20px; /* Sesuaikan jarak bawah tab */
+    background-color: #fff; /* Background putih untuk area tab */
+    border-radius: 12px; /* Border radius sama dengan card */
+    padding: 10px 15px; /* Padding di sekitar tab items */
+      box-shadow:
+        8px 8px 0px 0px var(--shadow-color-cf2585), /* Shadow magenta tebal */
+        5px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs .nav-item {
+    margin-right: 15px; /* Memberi sedikit jarak antar tab item */
+}
+
+.nav-tabs .nav-link {
+    border: none; /* Hilangkan border pada setiap tab */
+    background-color: transparent;
+    border-radius: 0; /* Pastikan sudut tidak membulat */
+    font-weight: 500;
+    color: #495057; /* Warna teks default */
+    padding: 0.75rem 0; /* Sesuaikan padding agar hanya ada padding vertikal */
+    border-bottom: 3px solid transparent; /* Garis bawah transparan */
+    transition: all 0.3s ease; /* Transisi untuk hover/active */
+}
+
+/* Warna magenta saat aktif */
+.nav-tabs .nav-link.active {
+    color: #FF00FF; /* Magenta */
+    border-bottom-color: #FF00FF; /* Garis bawah magenta untuk tab aktif */
+    background-color: transparent; /* Pastikan tidak ada background */
+    font-weight: 600; /* Tab aktif lebih tebal */
+}
+
+/* Warna magenta saat hover */
+.nav-tabs .nav-link:hover:not(.active) {
+    color: #FF00FF; /* Magenta */
+    border-bottom-color: #FF00FF; /* Garis bawah magenta saat hover */
+}
+
+/* Mengatasi masalah focus outline pada tombol edit SVG */
+.btn:focus,
+.btn.focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+/* Tombol Edit di Nav Tabs (jika diaktifkan) */
+.nav-tabs .ms-auto .btn {
+    border: none;
+    background-color: transparent;
+    color: #6c757d; /* Warna ikon edit */
+}
+
+.nav-tabs .ms-auto .btn:hover {
+    color: #007bff;
+}
+
+
+/* Bagian di bawah Tabs (Tab Content) */
+.tab-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    /* Apply the same custom shadow to tab-content as well, if desired */
+    box-shadow:
+        8px 8px 0px 0px var(--shadow-color-cf2585), /* Shadow magenta tebal */
+        5px 5px 15px rgba(0, 0, 0, 0.1); /* Shadow lembut di belakang */
+    /* Jika Anda tidak ingin tab-content punya shadow magenta, kembalikan ke: */
+    /* box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1); */
+    margin-bottom: 30px;
+}
+
+/* Gaya untuk area kosong (Buat Tim, Permohonan Tuan Rumah kosong) */
+.d-flex.justify-content-center.align-items-center.border {
+    border: 1px dashed #ccc !important;
+    border-radius: 8px;
+    background-color: #fefefe;
+    padding: 30px;
+}
+
+.d-flex.justify-content-center.align-items-center.border a {
+    color: #6c757d !important; /* Warna abu-abu untuk ikon dan teks link */
+}
+
+/* Card Anggota Tim */
+.card.h-100.shadow-sm.text-center {
+    border-radius: 8px; /* Lebih kecil dari card utama */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08); /* Shadow lebih halus */
+}
+
+.card-body.d-flex.flex-column.justify-content-center.align-items-center {
+    padding: 1rem; /* Sesuaikan padding agar tidak terlalu penuh */
+}
+
+/* Styling untuk badge status */
+.badge {
+    padding: 0.4em 0.8em;
+    border-radius: 0.3rem;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+/* Styling untuk progress bar pada Event Saya */
+.progress {
+    height: 6px; /* Tinggi progress bar lebih kecil */
+    border-radius: 3px;
+    background-color: #e9ecef; /* Warna background progress bar */
+}
+
+.progress-bar {
+    border-radius: 3px;
+}
+
+/* Untuk permohonan tuan rumah yang kosong */
+.text-muted a {
+    color: #007bff; /* Warna link untuk "Ajukan Permohonan Sekarang" */
+    text-decoration: none;
+    font-weight: 500;
+}
+.text-muted a:hover {
+    text-decoration: underline;
+}
+
+/* Penyesuaian responsif jika diperlukan */
+@media (max-width: 768px) {
+    .nav-tabs .nav-item {
+        margin-right: 10px;
+    }
+    .nav-tabs .nav-link {
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+    }
+    h2.text-center.mt-5 {
+        font-size: 1.8rem;
+    }
+    .profile-section-title { /* Sesuaikan juga di media query */
+        font-size: 1.8rem;
+    }
+    .card-body {
+        padding: 1rem;
+    }
+    .tab-content {
+        padding: 15px;
+    }
+    .edit-profile-btn {
+        font-size: 18px; /* Ukuran ikon lebih kecil di mobile */
+        margin-top: 0.8rem; /* Sesuaikan posisi di mobile */
+        margin-right: 0.8rem;
+    }
+}
