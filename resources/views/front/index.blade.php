@@ -291,7 +291,7 @@
                 <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
                 <p class="card-text mb-4">Dukung perkembangan olahraga voli dan komunitas KAMCUP!</p>
-                <a href="#" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+                <a href="/donations" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
                     style="background-color: #F4B704; border-color: #F4B704; color: #212529;">BERI DONASI</a>
             </div>
         </div>

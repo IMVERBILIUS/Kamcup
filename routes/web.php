@@ -104,6 +104,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Event Registration (User facing) - Uses event slug as per front-facing URL, but sends event ID in AJAX body
     Route::post('/events/{event:slug}/register', [FrontController::class, 'register'])->name('front.events.register');
+
+    // Sponsorship/Donation
+    Route::get('/donations', function () {
+        return view('donations.create'); // Only Frontend without Backend 
+    });
 });
 
 
