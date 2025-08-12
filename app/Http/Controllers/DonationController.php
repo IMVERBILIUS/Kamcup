@@ -56,7 +56,8 @@ class DonationController extends Controller
             // Send notification email (optional)
             // $this->sendNotificationEmail($donation);
 
-            return redirect()->back()->with('success', 
+            return redirect()->back()->with(
+                'success',
                 'Terima kasih! Pengajuan sponsorship/donasi Anda telah berhasil dikirim. Kami akan menghubungi Anda segera.'
             );
 
@@ -87,10 +88,10 @@ class DonationController extends Controller
         // Search
         if ($request->has('search') && $request->search) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name_brand', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('event_name', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('event_name', 'like', "%{$search}%");
             });
         }
 
@@ -162,13 +163,20 @@ class DonationController extends Controller
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
 
-        $callback = function() use ($donations) {
+        $callback = function () use ($donations) {
             $file = fopen('php://output', 'w');
-            
+
             // CSV Header
             fputcsv($file, [
-                'ID', 'Nama/Brand', 'Email', 'WhatsApp', 'Event', 
-                'Jenis', 'Sponsor Type', 'Status', 'Tanggal'
+                'ID',
+                'Nama/Brand',
+                'Email',
+                'WhatsApp',
+                'Event',
+                'Jenis',
+                'Sponsor Type',
+                'Status',
+                'Tanggal'
             ]);
 
             // CSV Data

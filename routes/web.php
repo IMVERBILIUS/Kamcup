@@ -164,9 +164,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // === DONATION/SPONSORSHIP ADMIN ROUTES (OPTIONAL) ===
     // Jika nanti butuh admin panel untuk melihat donations
-    // Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
-    // Route::get('/donations/{donation}', [DonationController::class, 'show'])->name('donations.show');
-    // Route::put('/donations/{donation}/status', [DonationController::class, 'updateStatus'])->name('donations.updateStatus');
+    Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
+    Route::get('/donations/{donation}', [DonationController::class, 'show'])->name('donations.show');
+    Route::put('/donations/{donation}/status', [DonationController::class, 'updateStatus'])->name('donations.updateStatus');
     // Route::get('/donations/export/csv', [DonationController::class, 'export'])->name('donations.export');
 });
 
