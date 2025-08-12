@@ -44,7 +44,7 @@
             padding-top: 30px;
             overflow-y: auto;
             flex-shrink: 0; /* Penting: mencegah sidebar mengecil */
-            position: fixed; /* Tetap fixed */
+            position: fixed;
             left: 0;
             top: 0;
             z-index: 1000;
@@ -111,18 +111,7 @@
             box-shadow: var(--shadow-md);
         }
 
-       .btn-logout {
-            bottom: 20px;
-            left: 15px;
-            right: 15px;
-            /* Perbaiki properti yang tidak perlu jika menggunakan position:absolute */
-            position: absolute; /* Tetap absolute jika Anda ingin seperti itu */
-            margin-top: 0; /* Hapus margin-top, karena bottom sudah diatur */
-            width: calc(100% - 30px); /* Menyesuaikan lebar agar ada padding samping */
-            margin-left: 0; /* Hapus margin-left */
-            margin-right: 0; /* Hapus margin-right */
-
-
+        .btn-logout {
             background-color: #fff;
             border: 1px solid var(--primary-color);
             padding: 12px 20px;
@@ -134,7 +123,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
+            width: calc(100% - 30px);
+            margin: 20px 15px 30px;
         }
 
         .btn-logout:hover {
@@ -329,16 +319,18 @@
             <a href="{{ route('admin.tournaments.index') }}" class="{{ request()->routeIs('admin.tournaments.index') || request()->routeIs('admin.tournaments.create') || request()->routeIs('admin.tournaments.edit') ? 'active' : '' }}">
                 <i class="fas fa-trophy"></i> Manage Tournaments
             </a>
-            <a href="{{ route('admin.host-requests.index') }}" class="{{ request()->routeIs('admin.host-requests.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.host-requests.index') }}" class="{{ request()->routeIs('admin.host-requests.index') || request()->routeIs('admin.host-requests.show') ? 'active' : '' }}">
                 <i class="fas fa-clipboard-list"></i> Tournament Host Requests
             </a>
             <a href="{{ route('admin.sponsors.index') }}" class="{{ request()->routeIs('admin.sponsors.index') || request()->routeIs('admin.sponsors.create') || request()->routeIs('admin.sponsors.edit') ? 'active' : '' }}">
                 <i class="fas fa-plus"></i> Manage Sponsors
             </a>
-
+            <a href="{{ route('admin.donations.index') }}" class="{{ request()->routeIs('admin.donations.index') || request()->routeIs('admin.donations.show') ? 'active' : '' }}">
+                <i class="fas fa-donate"></i>Sponsors/Donations
+            </a>
             </div>
 
-            <form action="{{ route('logout') }}" method="POST">
+    <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
