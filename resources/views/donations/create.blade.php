@@ -14,7 +14,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form id="donationForm" action="{{-- {{ route('donation.submit') }} --}}" method="POST">
+                            <form id="donationForm" action="{{ route('donations.store') }}" method="POST">
                                 @csrf
 
                                 @if (session('success'))
@@ -33,77 +33,76 @@
                                     </div>
                                 @endif
 
-                                <div class="mb-3">
-                                    <label for="namaBrand">Nama/Brand</label>
-                                    <input type="text" class="form-control @error('name_brand') is-invalid @enderror"
-                                        id="namaBrand" name="name_brand" value="{{ old('name_brand') }}" required>
-                                    @error('name_brand')
-                                        <div class="field-error">{{ $message }}</div>
-                                    @enderror
+                                {{-- NAMA BISA DIEDIT, EMAIL READONLY --}}
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="namaBrand" class="form-label">Nama/Brand <span class="text-danger">*</span></label>
+                                        <input type="text" 
+                                               class="form-control editable-field @error('name_brand') is-invalid @enderror"
+                                               id="namaBrand" 
+                                               name="name_brand" 
+                                               value="{{ old('name_brand', Auth::user()->name) }}" 
+                                               placeholder="Masukkan nama perusahaan/brand Anda" 
+                                               required>
+                                        <small class="text-muted">Anda bisa menggunakan nama perusahaan atau brand</small>
+                                        @error('name_brand')
+                                            <div class="field-error">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email Kontak</label>
+                                        <input type="email" 
+                                               class="form-control readonly-field" 
+                                               value="{{ Auth::user()->email }}" 
+                                               readonly>
+                                        <small class="text-muted">Email diambil dari akun Anda</small>
+                                    </div>
                                 </div>
 
-
                                 <div class="mb-3">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        value="{{ old('email') }}" required>
-                                    @error('email')
-                                        <div class="field-error">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="phone">Nomor Telepon (WhatsApp)</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone_whatsapp"
-                                        value="{{ old('phone_whatsapp') }}" required>
+                                    <label for="phone" class="form-label">Nomor Telepon (WhatsApp) <span class="text-danger">*</span></label>
+                                    <input type="tel" 
+                                           class="form-control editable-field @error('phone_whatsapp') is-invalid @enderror" 
+                                           id="phone" 
+                                           name="phone_whatsapp" 
+                                           value="{{ old('phone_whatsapp') }}" 
+                                           placeholder="Contoh: 081234567890" 
+                                           required>
                                     @error('phone_whatsapp')
                                         <div class="field-error">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="eventName">Nama Acara/Pertandingan</label>
-                                    <select id="eventName" name="event_name" class="form-control" required>
+                                    <label for="tournament_id" class="form-label">Nama Acara/Pertandingan <span class="text-danger">*</span></label>
+                                    <select id="tournament_id" 
+                                            name="tournament_id" 
+                                            class="form-control editable-field @error('tournament_id') is-invalid @enderror" 
+                                            required>
                                         <option value="">Pilih Pertandingan</option>
-                                        <option value="Kamcup 2025"
-                                            {{ old('event_name') == 'Kamcup 2025' ? 'selected' : '' }}>
-                                            Kamcup
-                                            2025</option>
-                                        <option value="Kamcup 2026 Series A"
-                                            {{ old('event_name') == 'Kamcup 2026 Series A' ? 'selected' : '' }}>Kamcup
-                                            2026
-                                            Series A
-                                        </option>
-                                        <option value="Kamcup 2026 Series B"
-                                            {{ old('event_name') == 'Kamcup 2026 Series B' ? 'selected' : '' }}>Kamcup
-                                            2026
-                                            Series B
-                                        </option>
-                                        <option value="Kamcup 2026 Series C"
-                                            {{ old('event_name') == 'Kamcup 2026 Series C' ? 'selected' : '' }}>Kamcup
-                                            2026
-                                            Series C
-                                        </option>
-                                        <option value="Kamcup 2026 Series D"
-                                            {{ old('event_name') == 'Kamcup 2026 Series D' ? 'selected' : '' }}>Kamcup
-                                            2026
-                                            Series D
-                                        </option>
+                                        @foreach ($tournaments as $tournament)
+                                            <option value="{{ $tournament->id }}" {{ old('tournament_id') == $tournament->id ? 'selected' : '' }}>
+                                                {{ $tournament->title }}
+                                            </option>
+                                        @endforeach
                                     </select>
-                                    @error('event_name')
+                                    @error('tournament_id')
                                         <div class="field-error">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="donationType">Jenis Pendanaan</label>
-                                    <select id="donationType" name="donation_type" class="form-control" required>
-                                        <option value="">sponsor/donatur</option>
+                                    <label for="donationType" class="form-label">Jenis Pendanaan <span class="text-danger">*</span></label>
+                                    <select id="donationType" 
+                                            name="donation_type" 
+                                            class="form-control editable-field @error('donation_type') is-invalid @enderror" 
+                                            required>
+                                        <option value="">Pilih Jenis Pendanaan</option>
                                         <option value="sponsor" {{ old('donation_type') == 'sponsor' ? 'selected' : '' }}>
-                                            sponsor
+                                            Sponsor
                                         </option>
                                         <option value="donatur" {{ old('donation_type') == 'donatur' ? 'selected' : '' }}>
-                                            donatur
+                                            Donatur
                                         </option>
                                     </select>
                                     @error('donation_type')
@@ -111,52 +110,50 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3" id="sponsorTypeGroup"
-                                    style="display: {{ old('donation_type') == 'sponsor' ? 'block' : 'none' }};">
-                                    <label for="sponsorType">Jenis Sponsor</label>
-                                    <select id="sponsorType" name="sponsor_type" class="form-control">
-                                        <option value="">sponsor</option>
-                                        <option value="XXL" {{ old('sponsor_type') == 'XXL' ? 'selected' : '' }}>XXL
+                                <div class="mb-3" id="sponsorTypeGroup" style="display: {{ old('donation_type') == 'sponsor' ? 'block' : 'none' }};">
+                                    <label for="sponsorType" class="form-label">Jenis Sponsor <span class="text-danger">*</span></label>
+                                    <select id="sponsorType" 
+                                            name="sponsor_type" 
+                                            class="form-control editable-field @error('sponsor_type') is-invalid @enderror">
+                                        <option value="">Pilih Jenis Sponsor</option>
+                                        <option value="XXL" {{ old('sponsor_type') == 'XXL' ? 'selected' : '' }}>XXL</option>
+                                        <option value="XL" {{ old('sponsor_type') == 'XL' ? 'selected' : '' }}>XL</option>
+                                        <option value="L" {{ old('sponsor_type') == 'L' ? 'selected' : '' }}>L</option>
+                                        <option value="M" {{ old('sponsor_type') == 'M' ? 'selected' : '' }}>M</option>
+                                        <option value="Pilihan Lainnya" {{ old('sponsor_type') == 'Pilihan Lainnya' ? 'selected' : '' }}>
+                                            Pilihan Lainnya
                                         </option>
-                                        <option value="XL" {{ old('sponsor_type') == 'XL' ? 'selected' : '' }}>XL
-                                        </option>
-                                        <option value="L" {{ old('sponsor_type') == 'L' ? 'selected' : '' }}>L
-                                        </option>
-                                        <option value="M" {{ old('sponsor_type') == 'M' ? 'selected' : '' }}>M
-                                        </option>
-                                        <option value="Pilihan Lainnya"
-                                            {{ old('sponsor_type') == 'Pilihan Lainnya' ? 'selected' : '' }}>
-                                            Pilihan Lainnya</option>
                                     </select>
                                     @error('sponsor_type')
                                         <div class="field-error">{{ $message }}</div>
                                     @enderror
 
-                                    <div class="sponsor-benefits" id="sponsorBenefits"
-                                        style="display: {{ old('sponsor_type') ? 'block' : 'none' }};">
+                                    <div class="sponsor-benefits mt-3" id="sponsorBenefits" style="display: {{ old('sponsor_type') ? 'block' : 'none' }};">
                                         <h4>Benefit</h4>
                                         <ul id="benefitsList">
-                                            <li>Logo perusahaan di Web</li>
-                                            <li>Mendapatkan seluruh kontraprestasi yang didapatkan oleh sponsor khusus
-                                            </li>
-                                            <li>Etc.</li>
+                                            {{-- Content diisi oleh JavaScript --}}
                                         </ul>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="message">Kesan/Pesan</label>
-                                    <textarea id="message" name="message" placeholder="Optional" class="form-control">{{ old('message') }}</textarea>
+                                    <label for="message" class="form-label">Kesan/Pesan</label>
+                                    <textarea id="message" 
+                                              name="message" 
+                                              placeholder="Opsional - Sampaikan pesan atau harapan Anda" 
+                                              class="form-control editable-field" 
+                                              rows="4">{{ old('message') }}</textarea>
                                     @error('message')
                                         <div class="field-error">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <div class="qr-code">
-                                    <div class="qr-placeholder">
-                                        QR CODE<br>
-                                        <div class="mb-4 text-center">
-                                            <svg width="292" height="292" viewBox="0 0 292 292" fill="none"
+                                {{-- QR Code Section --}}
+                                <div class="qr-code" id="qrCodeSection" style="display: none;">
+                                    <div class="qr-placeholder text-center">
+                                        <p class="fw-bold">Silakan lakukan pembayaran ke QR Code berikut:</p>
+                                        <div class="mb-4">
+                                            <svg width="250" height="250" viewBox="0 0 292 292" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <rect width="292" height="292" fill="url(#pattern0_6928_977)" />
@@ -176,7 +173,9 @@
                                 </div>
 
                                 <div class="d-grid gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                                    <button type="submit" id="submitBtn" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>Submit Pengajuan
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -189,37 +188,27 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Background Image */
-        /* Ini ngga full tapi tidak nyambung dengan Warna Navbar */
-        /* .bg-donasi-wrapper {
-                    background-image: url('assets/img/bg-form.svg');
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    background-position: bottom center;
-                    background-color: #f5f5f5;
-                    min-height: 100vh;
-                    padding-top: 100px;
-                } */
-
-        /* Ini nyambung namun full gambarnya dan tidak sesuai design */
         .bg-donasi-wrapper {
-            background-image: url('assets/img/bg-form.svg');
+            background-image: url('{{ asset('assets/img/bg-form.svg') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             z-index: 0;
+            min-height: 100vh;
+            padding-top: 5rem;
+            padding-bottom: 5rem;
         }
 
-        /* Additional styles for the host request page, mimicking profile edit styles */
+        /* Card styles */
         .profile-edit-card {
             border-radius: 12px;
             box-shadow:
                 8px 8px 0px 0px var(--kamcup-pink),
-                /* Bold yellow shadow */
                 5px 5px 15px rgba(0, 0, 0, 0.1) !important;
-            /* Soft background shadow */
             position: relative;
             z-index: 1;
             border: 1px solid #dee2e6;
@@ -227,7 +216,6 @@
 
         .profile-section-title {
             color: var(--kamcup-pink);
-            /* Default dark text color */
             font-weight: 600;
         }
 
@@ -236,160 +224,214 @@
             color: #495057;
         }
 
-        /* Overriding button colors to match KAMCUP brand identity */
+        /* PERBAIKAN: Form control styles yang bisa diedit */
+        .form-control.editable-field {
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: #ffffff; /* Pastikan background putih */
+            color: #495057; /* Warna text normal */
+        }
+
+        .form-control.editable-field:focus {
+            border-color: var(--kamcup-pink);
+            box-shadow: 0 0 0 0.2rem rgba(203, 39, 134, 0.25);
+            background-color: #ffffff;
+        }
+
+        /* PERBAIKAN: Readonly input styling yang berbeda */
+        .form-control.readonly-field {
+            background-color: #f8f9fa !important;
+            border: 1px solid #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Required field indicator */
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        /* Button styles */
         .btn-primary {
             background-color: var(--kamcup-yellow) !important;
-            /* KAMCUP Yellow */
             border-color: var(--kamcup-yellow) !important;
             color: var(--kamcup-dark-text) !important;
-            /* Dark text for contrast */
             transition: all 0.3s ease;
+            font-weight: 600;
         }
 
         .btn-primary:hover {
             background-color: #e0ac00 !important;
-            /* Slightly darker yellow on hover */
             border-color: #e0ac00 !important;
+            transform: translateY(-2px);
         }
 
-        .btn-outline-secondary {
+        .btn-primary:disabled {
+            background-color: #e0ac00 !important;
+            border-color: #e0ac00 !important;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        .field-error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+
+        .sponsor-benefits {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        /* QR Code placeholder styling */
+        .qr-placeholder-box {
+            border-radius: 8px;
+        }
+
+        /* Small text styling */
+        small.text-muted {
+            font-size: 0.85em;
             color: #6c757d !important;
-            border-color: #6c757d !important;
-            transition: all 0.3s ease;
         }
 
-        .btn-outline-secondary:hover {
-            background-color: #6c757d !important;
-            color: white !important;
-        }
-
-        /* KAMCUP brand color variables (ensure these are defined globally in your main CSS or layout) */
+        /* KAMCUP brand color variables */
         :root {
             --kamcup-pink: #cb2786;
             --kamcup-blue-green: #00617a;
             --kamcup-yellow: #f4b704;
             --kamcup-dark-text: #212529;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .row.mb-4 .col-md-6 {
+                margin-bottom: 1rem;
+            }
+            
+            .bg-donasi-wrapper {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+        }
+
+        /* DEBUGGING: Pastikan tidak ada CSS yang override input */
+        input[readonly] {
+            background-color: #f8f9fa !important;
+            cursor: not-allowed !important;
+        }
+
+        input:not([readonly]) {
+            background-color: #ffffff !important;
+            cursor: text !important;
+        }
     </style>
 @endpush
 
 @push('scripts')
     <script>
-        // Data untuk berbagai pilihan
-        const formData = {
-            benefits: {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug: Pastikan field nama tidak readonly
+            const nameField = document.getElementById('namaBrand');
+            if (nameField) {
+                nameField.removeAttribute('readonly');
+                console.log('Name field is editable:', !nameField.hasAttribute('readonly'));
+            }
+
+            // Data untuk benefit sponsor
+            const benefitsData = {
                 "XXL": [
-                    "Logo perusahaan di Web",
+                    "Logo perusahaan di Web", 
                     "Mendapatkan seluruh kontraprestasi yang didapatkan oleh sponsor khusus",
-                    "Booth khusus di area event",
-                    "Branding di semua media promosi",
+                    "Booth khusus di area event", 
+                    "Branding di semua media promosi", 
                     "Merchandise khusus",
                     "Sertifikat apresiasi"
                 ],
                 "XL": [
-                    "Logo perusahaan di Web",
+                    "Logo perusahaan di Web", 
                     "Mendapatkan seluruh kontraprestasi yang didapatkan oleh sponsor khusus",
-                    "Branding di media promosi utama",
+                    "Branding di media promosi utama", 
                     "Merchandise khusus"
                 ],
                 "L": [
-                    "Logo perusahaan di Web",
-                    "Mendapatkan kontraprestasi sponsor",
+                    "Logo perusahaan di Web", 
+                    "Mendapatkan kontraprestasi sponsor", 
                     "Branding di beberapa media promosi"
                 ],
                 "M": [
-                    "Logo perusahaan di Web",
+                    "Logo perusahaan di Web", 
                     "Mendapatkan kontraprestasi dasar"
                 ]
-            }
-        };
+            };
 
-        // Event listeners
-        document.getElementById('donationType').addEventListener('change', function() {
+            // Elemen-elemen form
+            const donationTypeSelect = document.getElementById('donationType');
             const sponsorTypeGroup = document.getElementById('sponsorTypeGroup');
-            if (this.value === 'sponsor') {
-                sponsorTypeGroup.style.display = 'block';
-            } else {
-                sponsorTypeGroup.style.display = 'none';
-                document.getElementById('sponsorBenefits').classList.remove('show');
-            }
-        });
-
-        document.getElementById('sponsorType').addEventListener('change', function() {
-            const benefitsDiv = document.getElementById('sponsorBenefits');
+            const sponsorTypeSelect = document.getElementById('sponsorType');
+            const sponsorBenefitsDiv = document.getElementById('sponsorBenefits');
             const benefitsList = document.getElementById('benefitsList');
-
-            if (this.value && formData.benefits[this.value]) {
-                benefitsList.innerHTML = '';
-                formData.benefits[this.value].forEach(benefit => {
-                    const li = document.createElement('li');
-                    li.textContent = benefit;
-                    benefitsList.appendChild(li);
-                });
-                benefitsDiv.classList.add('show');
-            } else {
-                benefitsDiv.classList.remove('show');
-            }
-        });
-
-        // Form submission - Remove AJAX, let Laravel handle it naturally
-        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            const qrCodeSection = document.getElementById('qrCodeSection');
+            const donationForm = document.getElementById('donationForm');
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.textContent = 'Mengirim...';
-            submitBtn.disabled = true;
 
-            // Let the form submit naturally to Laravel
-            return true;
-        });
-
-        // Simple form validation
-        const inputs = document.querySelectorAll('input[required], select[required]');
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.style.borderColor = '#f44336';
-                } else {
-                    this.style.borderColor = '#4CAF50';
+            // Fungsi untuk menampilkan/menyembunyikan elemen
+            function toggleSponsorFields() {
+                const isSponsor = donationTypeSelect.value === 'sponsor';
+                sponsorTypeGroup.style.display = isSponsor ? 'block' : 'none';
+                if (!isSponsor) {
+                    sponsorBenefitsDiv.style.display = 'none';
                 }
-            });
-        });
-
-        // Show benefits on page load if sponsor type is already selected (for old() values)
-        document.addEventListener('DOMContentLoaded', function() {
-            const sponsorType = document.getElementById('sponsorType').value;
-            if (sponsorType && formData.benefits[sponsorType]) {
-                const benefitsList = document.getElementById('benefitsList');
-                benefitsList.innerHTML = '';
-                formData.benefits[sponsorType].forEach(benefit => {
-                    const li = document.createElement('li');
-                    li.textContent = benefit;
-                    benefitsList.appendChild(li);
-                });
-                document.getElementById('sponsorBenefits').classList.add('show');
             }
-        });
+            
+            // Logika JavaScript untuk menampilkan QR Code secara kondisional
+            function toggleQrCode() {
+                const isFundingTypeSelected = donationTypeSelect.value !== '';
+                qrCodeSection.style.display = isFundingTypeSelected ? 'block' : 'none';
+            }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const donationType = document.getElementById('donationType');
-            const sponsorTypeGroup = document.getElementById('sponsorTypeGroup');
-            const sponsorBenefits = document.getElementById('sponsorBenefits');
-
-            donationType.addEventListener('change', function() {
-                if (this.value === 'sponsor') {
-                    sponsorTypeGroup.style.display = 'block';
+            function updateSponsorBenefits() {
+                const selectedType = sponsorTypeSelect.value;
+                if (selectedType && benefitsData[selectedType]) {
+                    benefitsList.innerHTML = ''; // Kosongkan list sebelumnya
+                    benefitsData[selectedType].forEach(benefit => {
+                        const li = document.createElement('li');
+                        li.textContent = benefit;
+                        benefitsList.appendChild(li);
+                    });
+                    sponsorBenefitsDiv.style.display = 'block';
                 } else {
-                    sponsorTypeGroup.style.display = 'none';
-                    sponsorBenefits.style.display = 'none';
+                    sponsorBenefitsDiv.style.display = 'none';
+                }
+            }
+
+            // Event listeners
+            donationTypeSelect.addEventListener('change', function() {
+                toggleSponsorFields();
+                toggleQrCode();
+            });
+            
+            sponsorTypeSelect.addEventListener('change', updateSponsorBenefits);
+
+            donationForm.addEventListener('submit', function(e) {
+                if(submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
+                    submitBtn.disabled = true;
                 }
             });
 
-            document.getElementById('sponsorType').addEventListener('change', function() {
-                if (this.value !== '') {
-                    sponsorBenefits.style.display = 'block';
-                } else {
-                    sponsorBenefits.style.display = 'none';
-                }
-            });
+            // Inisialisasi tampilan form saat halaman dimuat
+            toggleSponsorFields();
+            toggleQrCode();
+            updateSponsorBenefits();
         });
     </script>
 @endpush
