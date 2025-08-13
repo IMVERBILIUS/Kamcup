@@ -16,9 +16,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\DonationController; // <-- Tambahan untuk Donation
-// Hapus import FrontEventController karena sudah digabungkan ke FrontController
-// use App\Http\Controllers\Front\EventController as FrontEventController;
-
 
 // Route for storage link (usually run once after deployment/setup)
 Route::get('/storage-link', function () {
@@ -51,24 +48,6 @@ Route::middleware('log.visit')->group(function () {
     Route::get('/events', [FrontController::class, 'events'])->name('front.events.index');
     // Event/Tournament Details (front-facing) - Sekarang ditangani oleh FrontController
     Route::get('/events/{event:slug}', [FrontController::class, 'showEvent'])->name('front.events.show');
-
-    // === DONATION/SPONSORSHIP ROUTES (PUBLIC) ===
-    // Form sponsorship/donasi - bisa diakses tanpa login
-    Route::get('/sponsorship', [DonationController::class, 'create'])->name('donations.create');
-    Route::post('/sponsorship', [DonationController::class, 'store'])->name('donations.store');
-    
-    // Alternative routes jika ingin URL yang berbeda
-    Route::get('/donations', [DonationController::class, 'create'])->name('donation.form');
-    Route::post('/donations', [DonationController::class, 'store'])->name('donation.store');
-
-    // === DONATION/SPONSORSHIP ROUTES (PUBLIC) ===
-    // Form sponsorship/donasi - bisa diakses tanpa login
-    Route::get('/sponsorship', [DonationController::class, 'create'])->name('donations.create');
-    Route::post('/sponsorship', [DonationController::class, 'store'])->name('donations.store');
-    
-    // Alternative routes jika ingin URL yang berbeda
-    Route::get('/ajukan-sponsorship', [DonationController::class, 'create'])->name('sponsorship.form');
-    Route::get('/donasi', [DonationController::class, 'create'])->name('donation.form');
 });
 
 // Authentication Routes
@@ -86,7 +65,6 @@ Route::get('forgot-password', [ResetPasswordController::class, 'showLinkRequestF
 Route::post('forgot-password', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
-
 
 // --- Authenticated User Routes ---
 // These routes require the user to be logged in.
@@ -123,8 +101,18 @@ Route::middleware(['auth'])->group(function () {
 
     // Event Registration (User facing) - Uses event slug as per front-facing URL, but sends event ID in AJAX body
     Route::post('/events/{event:slug}/register', [FrontController::class, 'register'])->name('front.events.register');
-});
 
+    // === DONATION/SPONSORSHIP ROUTES (SEKARANG BUTUH LOGIN) ===
+    // Form sponsorship/donasi - sekarang butuh login
+    Route::get('/sponsorship', [DonationController::class, 'create'])->name('donations.create');
+    Route::post('/sponsorship', [DonationController::class, 'store'])->name('donations.store');
+    
+    // Alternative routes dengan URL yang berbeda
+    Route::get('/donations', [DonationController::class, 'create'])->name('donation.form');
+    Route::post('/donations', [DonationController::class, 'store'])->name('donation.store');
+    Route::get('/ajukan-sponsorship', [DonationController::class, 'create'])->name('sponsorship.form');
+    Route::get('/donasi', [DonationController::class, 'create'])->name('donation.form.alt');
+});
 
 // --- Admin Routes ---
 // These routes require authentication and the 'admin' role.
@@ -162,14 +150,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/host-requests/{tournamentHostRequest}/approve', [TournamentHostRequestController::class, 'approve'])->name('host-requests.approve');
     Route::put('/host-requests/{tournamentHostRequest}/reject', [TournamentHostRequestController::class, 'reject'])->name('host-requests.reject');
 
-    // === DONATION/SPONSORSHIP ADMIN ROUTES (OPTIONAL) ===
-    // Jika nanti butuh admin panel untuk melihat donations
+    // === DONATION/SPONSORSHIP ADMIN ROUTES ===
+    // Admin panel untuk melihat dan mengelola donations
     Route::get('/donations', [DonationController::class, 'index'])->name('donations.index');
     Route::get('/donations/{donation}', [DonationController::class, 'show'])->name('donations.show');
     Route::put('/donations/{donation}/status', [DonationController::class, 'updateStatus'])->name('donations.updateStatus');
-    // Route::get('/donations/export/csv', [DonationController::class, 'export'])->name('donations.export');
+    Route::get('/donations/export/csv', [DonationController::class, 'export'])->name('donations.export');
+    Route::get('/donations/statistics/json', [DonationController::class, 'statistics'])->name('donations.statistics');
 });
-
 
 // --- Role-Based Dashboards ---
 // Specific dashboards for different roles, accessible only after authentication and role check.
