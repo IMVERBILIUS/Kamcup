@@ -285,16 +285,21 @@
             </div>
         </div>
         <div class="col">
-            <div
-                class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-4 d-flex flex-column justify-content-center align-items-center"
-                style="background-color: var(--collab-primary); color: var(--text-light);">
-                <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
-                <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
-                <p class="card-text mb-4">Dukung perkembangan olahraga voli dan komunitas KAMCUP!</p>
-                <a href="/donations" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
-                    style="background-color: #F4B704; border-color: #F4B704; color: #212529;">BERI DONASI</a>
-            </div>
-        </div>
+    <div
+        class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-4 d-flex flex-column justify-content-center align-items-center"
+        style="background-color: var(--collab-primary); color: var(--text-light);">
+        <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
+        <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
+        <p class="card-text mb-4">Dukung perkembangan olahraga voli dan komunitas KAMCUP!</p>
+        @auth
+            <a href="{{ route('donations.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+                style="background-color: #F4B704; border-color: #F4B704; color: #212529;">BERI DONASI</a>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+                style="background-color: #F4B704; border-color: #F4B704; color: #212529;">LOGIN UNTUK DONASI</a>
+        @endauth
+    </div>
+</div>
     </div>
 </div>
 
