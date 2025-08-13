@@ -7,7 +7,8 @@
     <h2 class="text-center mt-5">Profile</h2>
 
     <div class="text-center my-3">
-        <img src="{{ Auth::user()->profile && Auth::user()->profile->profile_photo ? asset('storage/' . Auth::user()->profile->profile_photo) : asset('assets/img/profile-placeholder.png') }}" alt="Profile Photo" class="img-fluid img-square-profile">
+        <img src="{{ Auth::user()->profile && Auth::user()->profile->profile_photo ? asset('storage/' . Auth::user()->profile->profile_photo) : asset('assets/img/profile-placeholder.png') }}"
+             alt="Profile Photo" class="img-fluid img-square-rounded" width="100" height="100" style="object-fit: cover;">
     </div>
 
     <h4 class="text-center mt-4 mb-3 profile-section-title">Informasi Dasar</h4>
@@ -59,6 +60,9 @@
         <li class="nav-item">
             <a class="nav-link @if(request('active_tab') == 'permohonan') active @endif" id="permohonan-tab" data-bs-toggle="tab" href="#permohonan" role="tab" aria-controls="permohonan" aria-selected="false">Permohonan Tuan Rumah</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link @if(request('active_tab') == 'donasi-saya') active @endif" id="donasi-saya-tab" data-bs-toggle="tab" href="#donasi-saya" role="tab" aria-controls="donasi-saya" aria-selected="false">Donasi Saya</a>
+        </li>
     </ul>
 
     {{-- Konten Tab --}}
@@ -87,7 +91,8 @@
                         </a>
 
                         <div class="text-center mb-3">
-                            <img src="{{ $firstTeam->logo ? asset('storage/' . $firstTeam->logo) : asset('assets/img/team-placeholder.png') }}" alt="Team Logo" class="img-fluid img-square-team">
+                            <img src="{{ $firstTeam->logo ? asset('storage/' . $firstTeam->logo) : asset('assets/img/team-placeholder.png') }}"
+                                 alt="Team Logo" class="img-fluid img-square-rounded" width="80" height="80" style="object-fit: cover;">
                         </div>
                         <div class="row mb-2">
                             <div class="col-md-4 fw-bold">Nama Tim:</div>
@@ -123,7 +128,7 @@
                 </div>
 
                 <h4 class="text-center mt-4 mb-3 profile-section-title">Anggota Tim</h4>
-                <div class="row row-cols-2 row-cols-md-5 g-3 d-flex align-items-stretch">
+                <div class="row row-cols-2 row-cols-md-5 g-3">
                     @for ($i = 0; $i < $firstTeam->member_count; $i++)
                         <div class="col">
                             @php
@@ -132,32 +137,30 @@
 
                             @if ($member)
                                 <div class="card h-100 shadow-sm text-center d-flex flex-column justify-content-center align-items-center text-dark member-card-wrapper">
-                                    <div class="d-flex flex-column h-100"> 
-                                        <a href="{{ route('team.members.edit', ['team' => Crypt::encryptString($firstTeam->id), 'member' => Crypt::encryptString($member->id)]) }}"
-                                        class="member-card-link" style="padding: 1rem; width: 100%;">
-                                            <div class="card-body">
-                                                @if ($member->photo)
-                                                    <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}" class="img-fluid img-square-team-member mb-2">
-                                                @else
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle text-muted mb-2" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                                    </svg>
-                                                @endif
-                                                <h6 class="card-title mb-0">{{ $member->name ?? 'Anggota Tim' }}</h6>
-                                                <p class="card-text text-muted small">{{ $member->position ?? 'Peran' }}</p>
-                                            </div>
-                                        </a>
-                                        @if ($firstTeam->members->count() > 1)
-                                            <form action="{{ route('team.members.destroy', ['team' => Crypt::encryptString($firstTeam->id), 'member' => Crypt::encryptString($member->id)]) }}" method="POST" class="d-block w-100 px-3 pb-2 mt-auto">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="confirmDeleteMember(event, this.parentElement)" class="btn btn-danger btn-sm w-100">
-                                                    <i class="fas fa-trash me-1"></i> Hapus
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
+                                    <a href="{{ route('team.members.edit', ['team' => Crypt::encryptString($firstTeam->id), 'member' => Crypt::encryptString($member->id)]) }}"
+                                       class="member-card-link" style="padding: 1rem; width: 100%;">
+                                        <div class="card-body">
+                                            @if ($member->photo)
+                                                <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}" class="img-fluid img-square-rounded mb-2" width="70" height="70" style="object-fit: cover;">
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle text-muted mb-2" viewBox="0 0 16 16">
+                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                                </svg>
+                                            @endif
+                                            <h6 class="card-title mb-0">{{ $member->name ?? 'Anggota Tim' }}</h6>
+                                            <p class="card-text text-muted small">{{ $member->position ?? 'Peran' }}</p>
+                                        </div>
+                                    </a>
+                                    @if ($firstTeam->members->count() > 1)
+                                        <form action="{{ route('team.members.destroy', ['team' => Crypt::encryptString($firstTeam->id), 'member' => Crypt::encryptString($member->id)]) }}" method="POST" class="d-inline-block w-100 px-3 pb-2">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" onclick="confirmDeleteMember(event, this.parentElement)" class="btn btn-danger btn-sm w-100">
+                                                <i class="fas fa-trash me-1"></i> Hapus
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             @else
                                 <a href="{{ route('team.members.create', Crypt::encryptString($firstTeam->id)) }}"
@@ -224,53 +227,6 @@
                         </div>
                     </div>
                 @endforeach
-                {{-- Pagination untuk Event Saya --}}
-                <div class="mt-5 d-flex justify-content-center">
-                    <nav aria-label="Page navigation for Registered Tournaments">
-                        <ul class="pagination">
-                            {{-- Previous Page Link --}}
-                            @if ($registeredTournaments->onFirstPage())
-                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-                            @else
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $registeredTournaments->previousPageUrl() . '&active_tab=event-saya&page_host=' . request('page_host', 1) }}" rel="prev">&laquo;</a>
-                                </li>
-                            @endif
-
-                            {{-- Pagination Elements --}}
-                            @php
-                                $currentPage = $registeredTournaments->currentPage();
-                                $lastPage = $registeredTournaments->lastPage();
-                                $pageRange = 5; // Number of page links to show
-                                $startPage = max(1, $currentPage - floor($pageRange / 2));
-                                $endPage = min($lastPage, $currentPage + floor($pageRange / 2));
-
-                                // Adjust start/end if at the beginning/end of pages
-                                if ($currentPage <= floor($pageRange / 2) && $lastPage >= $pageRange) {
-                                    $endPage = $pageRange;
-                                }
-                                if ($currentPage > ($lastPage - floor($pageRange / 2)) && $lastPage >= $pageRange) {
-                                    $startPage = $lastPage - $pageRange + 1;
-                                }
-                            @endphp
-
-                            @for ($i = $startPage; $i <= $endPage; $i++)
-                                <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $registeredTournaments->url($i) . '&active_tab=event-saya&page_host=' . request('page_host', 1) }}">{{ $i }}</a>
-                                </li>
-                            @endfor
-
-                            {{-- Next Page Link --}}
-                            @if ($registeredTournaments->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $registeredTournaments->nextPageUrl() . '&active_tab=event-saya&page_host=' . request('page_host', 1) }}" rel="next">&raquo;</a>
-                                </li>
-                            @else
-                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-                            @endif
-                        </ul>
-                    </nav>
-                </div>
             @endif
         </div>
 
@@ -309,53 +265,94 @@
                         </div>
                     </div>
                 @endforeach
-                {{-- Pagination untuk Permohonan Tuan Rumah --}}
-                <div class="mt-5 d-flex justify-content-center">
-                    <nav aria-label="Page navigation for Host Applications">
-                        <ul class="pagination">
-                            {{-- Previous Page Link --}}
-                            @if ($hostApplications->onFirstPage())
-                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-                            @else
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $hostApplications->previousPageUrl() . '&active_tab=permohonan&page_registered=' . request('page_registered', 1) }}" rel="prev">&laquo;</a>
-                                </li>
-                            @endif
+            @endif
+        </div>
 
-                            {{-- Pagination Elements --}}
-                            @php
-                                $currentPage = $hostApplications->currentPage();
-                                $lastPage = $hostApplications->lastPage();
-                                $pageRange = 5; // Number of page links to show
-                                $startPage = max(1, $currentPage - floor($pageRange / 2));
-                                $endPage = min($lastPage, $currentPage + floor($pageRange / 2));
-
-                                // Adjust start/end if at the beginning/end of pages
-                                if ($currentPage <= floor($pageRange / 2) && $lastPage >= $pageRange) {
-                                    $endPage = $pageRange;
-                                }
-                                if ($currentPage > ($lastPage - floor($pageRange / 2)) && $lastPage >= $pageRange) {
-                                    $startPage = $lastPage - $pageRange + 1;
-                                }
-                            @endphp
-
-                            @for ($i = $startPage; $i <= $endPage; $i++)
-                                <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $hostApplications->url($i) . '&active_tab=permohonan&page_registered=' . request('page_registered', 1) }}">{{ $i }}</a>
-                                </li>
-                            @endfor
-
-                            {{-- Next Page Link --}}
-                            @if ($hostApplications->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $hostApplications->nextPageUrl() . '&active_tab=permohonan&page_registered=' . request('page_registered', 1) }}" rel="next">&raquo;</a>
-                                </li>
-                            @else
-                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-                            @endif
-                        </ul>
-                    </nav>
+        {{-- Tab 'Donasi Saya' - VERSI SEDERHANA --}}
+        <div class="tab-pane fade @if(request('active_tab') == 'donasi-saya') show active @endif" id="donasi-saya" role="tabpanel" aria-labelledby="donasi-saya-tab">
+            @if ($userDonations->isEmpty())
+                <div class="text-center text-muted p-4 border rounded">
+                    <p class="mb-0">Anda belum mengajukan donasi/sponsor.</p>
+                    <p class="mt-2"><a href="{{ route('donations.create') }}">Ajukan Donasi/Sponsor Sekarang</a></p>
                 </div>
+            @else
+                @foreach ($userDonations as $donation)
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">{{ $donation->name_brand ?? 'Nama Brand' }}</h5>
+                                @php
+                                    $badgeClass = '';
+                                    switch($donation->status) {
+                                        case 'pending': $badgeClass = 'bg-warning text-dark'; break;
+                                        case 'approved': $badgeClass = 'bg-success'; break;
+                                        case 'rejected': $badgeClass = 'bg-danger'; break;
+                                        default: $badgeClass = 'bg-secondary'; break;
+                                    }
+                                @endphp
+                                <span class="badge {{ $badgeClass }}">{{ ucfirst($donation->status ?? 'N/A') }}</span>
+                            </div>
+                            <p class="card-text mb-0">
+                                <strong>Jenis:</strong> {{ ucfirst($donation->donation_type ?? '-') }} 
+                                @if($donation->sponsor_type && $donation->donation_type == 'sponsor')
+                                    ({{ $donation->sponsor_type }})
+                                @endif
+                                <br>
+                                <strong>Event:</strong> {{ $donation->event_name ?? '-' }} <br>
+                                <strong>Tanggal Pengajuan:</strong> {{ \Carbon\Carbon::parse($donation->created_at ?? 'N/A')->format('d M Y') }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- Pagination untuk Donasi Saya --}}
+                @if($userDonations->hasPages())
+                    <div class="mt-4 d-flex justify-content-center">
+                        <nav aria-label="Page navigation for User Donations">
+                            <ul class="pagination">
+                                {{-- Previous Page Link --}}
+                                @if ($userDonations->onFirstPage())
+                                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $userDonations->previousPageUrl() . '&active_tab=donasi-saya&page_registered=' . request('page_registered', 1) . '&page_host=' . request('page_host', 1) }}" rel="prev">&laquo;</a>
+                                    </li>
+                                @endif
+
+                                {{-- Pagination Elements --}}
+                                @php
+                                    $currentPage = $userDonations->currentPage();
+                                    $lastPage = $userDonations->lastPage();
+                                    $pageRange = 5;
+                                    $startPage = max(1, $currentPage - floor($pageRange / 2));
+                                    $endPage = min($lastPage, $currentPage + floor($pageRange / 2));
+
+                                    if ($currentPage <= floor($pageRange / 2) && $lastPage >= $pageRange) {
+                                        $endPage = $pageRange;
+                                    }
+                                    if ($currentPage > ($lastPage - floor($pageRange / 2)) && $lastPage >= $pageRange) {
+                                        $startPage = $lastPage - $pageRange + 1;
+                                    }
+                                @endphp
+
+                                @for ($i = $startPage; $i <= $endPage; $i++)
+                                    <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $userDonations->url($i) . '&active_tab=donasi-saya&page_registered=' . request('page_registered', 1) . '&page_host=' . request('page_host', 1) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+
+                                {{-- Next Page Link --}}
+                                @if ($userDonations->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $userDonations->nextPageUrl() . '&active_tab=donasi-saya&page_registered=' . request('page_registered', 1) . '&page_host=' . request('page_host', 1) }}" rel="next">&raquo;</a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                                @endif
+                            </ul>
+                        </nav>
+                    </div>
+                @endif
             @endif
         </div>
     </div>
@@ -366,29 +363,6 @@
     {{-- Memuat CSS eksternal Anda --}}
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
     <style>
-        /* --- Gaya Khusus untuk Gambar Profil Kotak --- */
-        .img-square-profile {
-            width: 100px;  /* Atur lebar yang diinginkan */
-            height: 100px; /* Atur tinggi yang sama dengan lebar */
-            object-fit: cover; /* Penting! Memastikan gambar terpotong dan tidak terdistorsi */
-            border-radius: 8px; /* Untuk membuat sudut sedikit membulat */
-            border: 2px solid #ccc;
-        }
-        /* --- Gaya untuk Gambar Logo dan member Tim Kotak --- */
-        .img-square-team {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        .img-square-team-member {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
         /* Gaya tambahan yang mungkin relevan dari edit.blade.php */
         .profile-info-card {
             border-radius: 12px;
@@ -415,6 +389,13 @@
             --kamcup-dark-text: #212529;
             --kamcup-light-text: #ffffff;
         }
+
+        /* ----- Gaya Baru untuk Gambar Persegi dengan Sudut Membulat ----- */
+        .img-square-rounded {
+            border-radius: 8px; /* Sesuaikan nilai ini untuk seberapa membulat sudutnya */
+            object-fit: cover; /* Pastikan gambar tetap proporsional */
+        }
+
         /* Gaya umum untuk semua kartu anggota yang bisa diklik */
         .member-card-link {
             /* Pastikan elemen <a> ini berperilaku seperti card */
@@ -431,11 +412,16 @@
             cursor: pointer;
         }
 
+        .member-card-link:hover {
+            background-color: #e9ecef; /* Sedikit lebih gelap saat hover */
+            border-color: #0d6efd; /* Ubah warna border saat hover */
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Efek focus seperti form-control */
+        }
+
         /* Gaya untuk kartu "Tambah Anggota" (slot kosong) */
         .add-member-card {
             border: 1px dashed #ccc; /* Border putus-putus */
             background-color: #f8f9fa; /* Latar belakang sedikit abu-abu */
-            transition: all 0.3s ease-in-out;
         }
 
         .add-member-card:hover {
@@ -456,13 +442,11 @@
             background-color: #fff;
             border-radius: 0.5rem;
             border: 1px solid rgba(0,0,0,.125);
-            padding: 0;
-            transition: all 0.2s ease-in-out;
+            padding: 0; /* Reset padding jika card-body yang menangani */
         }
         .member-card-wrapper:hover {
              /* Konsisten dengan hover member-card-link */
             border-color: #0d6efd;
-            background-color: #e9ecef;
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
 
@@ -612,8 +596,8 @@
             const profileTabs = document.getElementById('profileTabs');
             if (profileTabs) {
                 profileTabs.addEventListener('shown.bs.tab', function (event) {
-                    const newTabId = event.target.id; // e.g., "event-saya-tab"
-                    const tabName = newTabId.replace('-tab', ''); // e.g., "event-saya"
+                    const newTabId = event.target.id; // e.g., "donasi-saya-tab"
+                    const tabName = newTabId.replace('-tab', ''); // e.g., "donasi-saya"
                     const currentUrl = new URL(window.location.href);
                     currentUrl.searchParams.set('active_tab', tabName);
 
@@ -623,6 +607,9 @@
                     }
                     if (tabName !== 'permohonan') {
                         currentUrl.searchParams.delete('page_host');
+                    }
+                    if (tabName !== 'donasi-saya') {
+                        currentUrl.searchParams.delete('page_donations');
                     }
 
                     window.history.pushState({}, '', currentUrl.toString());
