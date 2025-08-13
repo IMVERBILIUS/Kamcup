@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(TournamentHostRequest::class);
     }
+
+    // TAMBAH RELASI KE DONATIONS
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
 }
