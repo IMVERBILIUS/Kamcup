@@ -1,5 +1,4 @@
 <?php
-// app/Models/Donation.php
 
 namespace App\Models;
 
@@ -12,6 +11,7 @@ class Donation extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',      // TAMBAH INI - Relasi ke user yang login
         'name_brand',
         'email', 
         'phone_whatsapp',
@@ -29,6 +29,12 @@ class Donation extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    // TAMBAH RELASI KE USER
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Scopes
     public function scopePending($query)
