@@ -1,5 +1,80 @@
 @extends('layouts.master')
 
+@section('head')
+{{-- Meta tags untuk Google Translate --}}
+<meta name="google-translate-customization" content="translate-content">
+<script>
+// AGGRESSIVE APPROACH: Force reload dengan Google Translate aktif
+(function() {
+    console.log('=== ARTICLE TRANSLATE INIT ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Current hash:', window.location.hash);
+    console.log('Cookie:', document.cookie);
+    
+    // Function untuk mendapatkan bahasa aktif
+    function getActiveLanguage() {
+        // Dari cookie
+        var googTransCookie = document.cookie.split(';')
+            .find(row => row.trim().startsWith('googtrans='));
+        
+        if (googTransCookie && googTransCookie.includes('/en')) {
+            return 'en';
+        }
+        
+        // Dari localStorage sebagai backup
+        var storedLang = localStorage.getItem('preferredLanguage');
+        if (storedLang === 'en') {
+            return 'en';
+        }
+        
+        return 'id';
+    }
+    
+    var targetLang = getActiveLanguage();
+    console.log('Target language:', targetLang);
+    
+    if (targetLang === 'en') {
+        var expectedHash = '#googtrans(id|en)';
+        var hasCorrectHash = window.location.hash === expectedHash;
+        var hasGoogTransParam = window.location.search.includes('googtrans');
+        
+        console.log('Has correct hash:', hasCorrectHash);
+        console.log('Has googtrans param:', hasGoogTransParam);
+        
+        if (!hasCorrectHash && !hasGoogTransParam) {
+            console.log('REDIRECTING: Adding googtrans hash and reloading...');
+            
+            // Set cookie untuk memastikan Google Translate aktif
+            document.cookie = 'googtrans=/id/en; path=/; max-age=86400';
+            
+            // Store di localStorage
+            localStorage.setItem('preferredLanguage', 'en');
+            localStorage.setItem('forceTranslate', 'true');
+            
+            // Redirect dengan hash
+            window.location.href = window.location.pathname + expectedHash;
+            return; // Stop execution
+        }
+        
+        // Jika hash sudah ada tapi masih belum translate, paksa reload
+        if (hasCorrectHash) {
+            var forceTranslate = localStorage.getItem('forceTranslate');
+            if (forceTranslate === 'true') {
+                localStorage.removeItem('forceTranslate'); // Prevent infinite loop
+                console.log('FORCE RELOAD: Hash exists but forcing reload to ensure translate works');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 100);
+                return;
+            }
+        }
+    }
+    
+    console.log('=== INIT COMPLETE ===');
+})();
+</script>
+@endsection
+
 @section('content')
 
 <div class="container px-4 px-lg-5">
@@ -13,7 +88,6 @@
                     <i class="fas fa-arrow-left me-2"></i> Kembali
                 </a>
             </div>
-
 
             <!-- Article Header -->
             <div class="mb-4">
@@ -49,7 +123,6 @@
                     </div>
                 @endif
             </div>
-
 
             <!-- Article Content -->
             <div class="mb-4">
@@ -192,7 +265,6 @@
         text-decoration: underline;
     }
 
-
     @media (max-width: 768px) {
         .article-content h3 {
             font-size: 1.3rem;
@@ -212,7 +284,6 @@
             const commentId = this.dataset.commentId;
             const content = this.dataset.content;
 
-            // Create edit form
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/comments/${commentId}`;
@@ -228,16 +299,208 @@
                 </div>
             `;
 
-            // Replace comment content with form
             const commentContent = this.closest('.comment-item').querySelector('p');
             commentContent.replaceWith(form);
 
-            // Handle cancel
             form.querySelector('.cancel-edit').addEventListener('click', () => {
                 form.replaceWith(commentContent);
             });
         });
     });
+
+    // === ENHANCED GOOGLE TRANSLATE FORCE SYSTEM ===
+    
+    // Wait for Google Translate to load and force it to work
+    function waitForGoogleTranslateAndForce() {
+        console.log('Waiting for Google Translate to load...');
+        
+        var attempts = 0;
+        var maxAttempts = 20;
+        
+        var interval = setInterval(function() {
+            attempts++;
+            console.log('Attempt', attempts, '- Checking Google Translate...');
+            
+            // Check if Google Translate is available
+            if (typeof google !== 'undefined' && 
+                google.translate && 
+                google.translate.TranslateElement) {
+                
+                console.log('Google Translate found! Forcing translation...');
+                clearInterval(interval);
+                
+                // Force set the language
+                setTimeout(function() {
+                    forceActivateTranslate();
+                }, 1000);
+                
+                return;
+            }
+            
+            if (attempts >= maxAttempts) {
+                console.warn('Google Translate not loaded after', maxAttempts, 'attempts');
+                clearInterval(interval);
+                
+                // Last resort: reload page with googtrans parameter
+                if (window.location.hash.includes('googtrans')) {
+                    console.log('Last resort: reloading with googtrans parameter...');
+                    var newUrl = window.location.pathname + '?googtrans=id%7Cen' + window.location.hash;
+                    window.location.href = newUrl;
+                }
+            }
+        }, 500);
+    }
+    
+    // Force activate translate
+    function forceActivateTranslate() {
+        try {
+            console.log('Forcing translate activation...');
+            
+            // Method 1: Try to find and trigger the dropdown
+            var selectElement = document.querySelector('.goog-te-combo');
+            if (selectElement) {
+                console.log('Found translate dropdown, setting to English...');
+                selectElement.value = 'en';
+                
+                // Trigger change event
+                var changeEvent = new Event('change', { bubbles: true });
+                selectElement.dispatchEvent(changeEvent);
+                
+                setTimeout(function() {
+                    if (selectElement.value === 'en') {
+                        console.log('Dropdown set to English successfully');
+                    } else {
+                        console.log('Dropdown not set properly, trying alternative...');
+                        alternativeTranslateMethod();
+                    }
+                }, 1000);
+            } else {
+                console.log('Dropdown not found, trying alternative method...');
+                alternativeTranslateMethod();
+            }
+            
+        } catch (error) {
+            console.error('Error in forceActivateTranslate:', error);
+            alternativeTranslateMethod();
+        }
+    }
+    
+    // Alternative translate method
+    function alternativeTranslateMethod() {
+        console.log('Using alternative translate method...');
+        
+        try {
+            // Method 2: Direct cookie manipulation and reload
+            document.cookie = 'googtrans=/id/en; path=/; max-age=86400; domain=' + window.location.hostname;
+            
+            // Check if we need to reload
+            var currentText = document.body.innerText;
+            var hasIndonesianWords = /\b(dan|atau|yang|untuk|dengan|dari|adalah|akan|telah|pada|dalam)\b/i.test(currentText);
+            
+            if (hasIndonesianWords && window.location.hash.includes('googtrans')) {
+                console.log('Still has Indonesian words, forcing reload...');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            }
+            
+        } catch (error) {
+            console.error('Error in alternativeTranslateMethod:', error);
+        }
+    }
+    
+    // Check if translate is working
+    function checkTranslateStatus() {
+        setTimeout(function() {
+            console.log('Checking translate status...');
+            
+            var currentText = document.body.innerText;
+            var hasIndonesianWords = /\b(dan|atau|yang|untuk|dengan|dari|adalah|akan|telah|pada|dalam)\b/i.test(currentText);
+            
+            console.log('Has Indonesian words:', hasIndonesianWords);
+            
+            if (hasIndonesianWords && localStorage.getItem('preferredLanguage') === 'en') {
+                console.log('Translation not working properly, trying alternative...');
+                
+                // Try reload with different approach
+                var currentUrl = window.location.href;
+                if (!currentUrl.includes('googtrans=')) {
+                    var separator = currentUrl.includes('?') ? '&' : '?';
+                    window.location.href = currentUrl + separator + 'googtrans=id%7Cen';
+                } else {
+                    window.location.reload();
+                }
+            } else {
+                console.log('Translation appears to be working or not needed');
+            }
+        }, 5000);
+    }
+
+    // Main execution
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== ARTICLE TRANSLATE SCRIPT LOADED ===');
+        console.log('Current language preference:', localStorage.getItem('preferredLanguage'));
+        console.log('Current URL:', window.location.href);
+        
+        // Only proceed if we should be in English mode
+        if (localStorage.getItem('preferredLanguage') === 'en' || 
+            document.cookie.includes('googtrans=/id/en') ||
+            window.location.hash.includes('googtrans(id|en)')) {
+            
+            console.log('English mode detected, initializing translate...');
+            
+            // Wait for and force Google Translate
+            waitForGoogleTranslateAndForce();
+            
+            // Check if it's working after some time
+            checkTranslateStatus();
+        } else {
+            console.log('No translation needed');
+        }
+    });
+
+    // Handle page visibility change (when user comes back to tab)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && localStorage.getItem('preferredLanguage') === 'en') {
+            console.log('Page became visible, checking translate status...');
+            setTimeout(checkTranslateStatus, 2000);
+        }
+    });
+
+    // Export functions for debugging
+    window.forceActivateTranslate = forceActivateTranslate;
+    window.waitForGoogleTranslateAndForce = waitForGoogleTranslateAndForce;
+    window.checkTranslateStatus = checkTranslateStatus;
+    
+    // Enhanced debug function
+    window.debugTranslate = function() {
+        console.log('=== COMPREHENSIVE TRANSLATE DEBUG ===');
+        console.log('Current URL:', window.location.href);
+        console.log('Current Hash:', window.location.hash);
+        console.log('Cookie:', document.cookie);
+        console.log('LocalStorage preferredLanguage:', localStorage.getItem('preferredLanguage'));
+        console.log('Google Translate Available:', typeof google !== 'undefined' && google.translate);
+        console.log('Translate Dropdown:', document.querySelector('.goog-te-combo'));
+        console.log('Dropdown Value:', document.querySelector('.goog-te-combo')?.value);
+        
+        var currentText = document.body.innerText.substring(0, 200);
+        console.log('Current text sample:', currentText);
+        
+        var hasIndonesianWords = /\b(dan|atau|yang|untuk|dengan|dari|adalah|akan|telah|pada|dalam)\b/i.test(currentText);
+        console.log('Has Indonesian words:', hasIndonesianWords);
+        console.log('=====================================');
+    };
+    
+    // Manual force function for testing
+    window.manualForceTranslate = function() {
+        localStorage.setItem('preferredLanguage', 'en');
+        document.cookie = 'googtrans=/id/en; path=/; max-age=86400';
+        window.location.href = window.location.pathname + '#googtrans(id|en)';
+    };
 </script>
+
+@push('translation-script')
+    @include('partials.floating-translate')
 @endpush
+
 @endsection

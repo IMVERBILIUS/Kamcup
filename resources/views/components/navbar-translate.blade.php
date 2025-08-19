@@ -1,8 +1,16 @@
-{{-- Google Translate Widget Bawaan --}}
+{{-- Google Translate Widget Desktop --}}
 <li class="nav-item">
     <div class="google-translate-container">
-        <div id="google_translate_element"></div>
+        <div id="google_translate_element_desktop"></div>
     </div>
+</li>
+
+{{-- Google Translate Widget Mobile --}}
+<li class="nav-item mobile-language-link d-lg-none">
+    <a class="nav-link disabled" href="#">
+        <i class="bi bi-globe2"></i><span>{{ __('navbar.language') }}</span>
+    </a>
+    <div id="google_translate_element_mobile"></div>
 </li>
 
 <style>
@@ -12,7 +20,8 @@
 }
 
 /* Styling untuk Google Translate Widget */
-#google_translate_element {
+#google_translate_element_desktop,
+#google_translate_element_mobile {
     display: inline-block;
 }
 
@@ -83,6 +92,16 @@ body {
     display: none !important;
 }
 
+/* Mobile language link styling */
+.mobile-language-link .nav-link {
+    padding: 0.5rem 1rem !important;
+}
+
+.mobile-language-link #google_translate_element_mobile {
+    margin-top: 0.5rem;
+    padding: 0 1rem;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .google-translate-container {
@@ -93,6 +112,18 @@ body {
         min-width: 100px !important;
         padding: 6px 12px !important;
         font-size: 13px !important;
+    }
+    
+    /* Hide desktop version on mobile */
+    .google-translate-container {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    /* Hide mobile version on desktop */
+    .mobile-language-link {
+        display: none !important;
     }
 }
 
@@ -107,6 +138,7 @@ body {
 
 <script type="text/javascript">
 function googleTranslateElementInit() {
+    // Initialize untuk desktop
     new google.translate.TranslateElement({
         pageLanguage: 'id', // Bahasa halaman default (Indonesia)
         includedLanguages: 'id,en', // Hanya Indonesia dan Inggris
@@ -114,7 +146,17 @@ function googleTranslateElementInit() {
         autoDisplay: false,
         gaTrack: true,
         gaId: 'UA-XXXXXXXX-X' // Ganti dengan Google Analytics ID Anda jika ada
-    }, 'google_translate_element');
+    }, 'google_translate_element_desktop');
+    
+    // Initialize untuk mobile
+    new google.translate.TranslateElement({
+        pageLanguage: 'id', // Bahasa halaman default (Indonesia)
+        includedLanguages: 'id,en', // Hanya Indonesia dan Inggris
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+        gaTrack: true,
+        gaId: 'UA-XXXXXXXX-X' // Ganti dengan Google Analytics ID Anda jika ada
+    }, 'google_translate_element_mobile');
 }
 
 // Load Google Translate script
@@ -155,14 +197,102 @@ window.addEventListener('load', function() {
 // Handle navigation untuk SPA atau AJAX loaded content
 function reinitializeTranslate() {
     if (typeof google !== 'undefined' && google.translate) {
-        // Re-scan halaman untuk elemen baru
-        google.translate.TranslateElement().cleanUp();
+        // Force refresh translation untuk konten baru
         setTimeout(function() {
-            googleTranslateElementInit();
-        }, 500);
+            var translateElement = google.translate.TranslateElement();
+            if (translateElement) {
+                translateElement.c();
+            }
+            // Trigger translate ulang untuk konten yang baru di-load
+            google.translate.googleTranslateElementInit2();
+        }, 1000);
     }
 }
 
-// Export function untuk digunakan setelah load konten AJAX
+// Function untuk memaksa translate konten baru
+function forceTranslateNewContent() {
+    if (typeof google !== 'undefined' && google.translate && google.translate.TranslateElement) {
+        // Dapatkan bahasa yang sedang aktif
+        var currentLang = getCurrentLanguage();
+        if (currentLang && currentLang !== 'id') {
+            // Paksa translate konten baru
+            setTimeout(function() {
+                var allElements = document.querySelectorAll('body *:not(.goog-te-gadget):not(.goog-te-gadget *)');
+                allElements.forEach(function(element) {
+                    if (element.childNodes.length > 0) {
+                        // Trigger translate untuk setiap elemen
+                        var event = new Event('DOMNodeInserted', { bubbles: true });
+                        element.dispatchEvent(event);
+                    }
+                });
+            }, 500);
+        }
+    }
+}
+
+// Function untuk mendapatkan bahasa yang sedang aktif
+function getCurrentLanguage() {
+    try {
+        var selectElement = document.querySelector('.goog-te-combo');
+        if (selectElement) {
+            return selectElement.value;
+        }
+        // Alternatif: cek dari URL atau cookie
+        var match = document.cookie.match(/googtrans=\/[^\/]*\/([^;]*)/);
+        if (match && match[1]) {
+            return match[1];
+        }
+    } catch (e) {
+        console.warn('Error getting current language:', e);
+    }
+    return 'id'; // default bahasa Indonesia
+}
+
+// Monitor perubahan URL untuk SPA
+var lastUrl = location.href;
+new MutationObserver(function() {
+    const url = location.href;
+    if (url !== lastUrl) {
+        lastUrl = url;
+        // URL berubah, mungkin navigasi SPA
+        setTimeout(function() {
+            forceTranslateNewContent();
+        }, 1000);
+    }
+}).observe(document, {subtree: true, childList: true});
+
+// Export functions untuk digunakan setelah load konten AJAX
 window.reinitializeGoogleTranslate = reinitializeTranslate;
+window.forceTranslateNewContent = forceTranslateNewContent;
+
+// Event listener untuk perubahan konten dinamis
+document.addEventListener('DOMContentLoaded', function() {
+    // Observer untuk mendeteksi konten baru
+    var observer = new MutationObserver(function(mutations) {
+        var hasNewContent = false;
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                // Cek apakah ada konten baru yang perlu ditranslate
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
+                        hasNewContent = true;
+                    }
+                });
+            }
+        });
+        
+        if (hasNewContent) {
+            // Ada konten baru, coba translate
+            setTimeout(forceTranslateNewContent, 500);
+        }
+    });
+    
+    // Mulai observe setelah Google Translate ready
+    setTimeout(function() {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }, 3000);
+});
 </script>
