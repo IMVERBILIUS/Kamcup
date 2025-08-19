@@ -199,12 +199,12 @@
             <div class="col-auto d-flex justify-content-center">
                 @if (isset($sponsorData['xxl'][0]))
                     @php $sponsor = $sponsorData['xxl'][0]; @endphp
-                    <div class="text-center">
+                    <div class="text-center btn-ylw" style="transition: transform 0.3s;">
                         <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
                 @else
-                    <div class="text-center text-muted">
+                    <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 1</p>
                     </div>
                 @endif
@@ -217,7 +217,7 @@
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
                 @else
-                    <div class="text-center text-muted">
+                    <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 2</p>
                     </div>
                 @endif
@@ -230,7 +230,7 @@
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
                 @else
-                    <div class="text-center text-muted">
+                    <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 3</p>
                     </div>
                 @endif
@@ -249,7 +249,7 @@
                 <i class="bi bi-people-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tim</h4>
                 <p class="card-text mb-4">Gabungkan tim Anda dan raih kemenangan bersama KAMCUP!</p>
-                <a href="{{ route('team.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+                <a href="{{ route('team.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill btn-ylw"
                     style="background-color: #F4B704; border-color: #F4B704; color: #212529;">DAFTAR SEKARANG</a>
             </div>
         </div>
@@ -260,7 +260,7 @@
                 <i class="bi bi-house-door-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tuan Rumah</h4>
                 <p class="card-text mb-4">Siapkan arena terbaik Anda dan selenggarakan turnamen seru!</p>
-                <a href="{{ route('host-request.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+                <a href="{{ route('host-request.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill btn-ylw"
                     style="background-color: #F4B704; border-color: #F4B704; color: #212529;">JADI TUAN RUMAH</a>
             </div>
         </div>
@@ -272,7 +272,7 @@
         <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
         <p class="card-text mb-4">Dukung perkembangan olahraga voli dan komunitas KAMCUP!</p>
         @auth
-            <a href="{{ route('donations.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
+            <a href="{{ route('donations.create') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill btn-ylw"
                 style="background-color: #F4B704; border-color: #F4B704; color: #212529;">BERI DONASI</a>
         @else
             <a href="{{ route('login') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill"
@@ -465,14 +465,15 @@
             .card-title.fw-bold { text-align: center !important; margin-bottom: 0.5rem !important; }
             .btn-sm { width: 100%; }
         }
-        .card-hover-zoom { transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; box-shadow: 8px 8px 0px 0px var(--shadow-color-cf2585), 5px 5px 15px rgba(0, 0, 0, 0.1) !important; }
-        .card-hover-zoom:hover { transform: translateY(-5px); }
+        .card-hover-zoom { transition: transform 0.5s ease, box-shadow 0.3s ease; position: relative; z-index: 1; box-shadow: 0 3px 8px rgba(200, 200, 200, 0.3); }
+        .card-hover-zoom:hover { transform: scale(1.2); z-index: 999; box-shadow: 0 10px 30px rgba(150, 150, 150, 0.3); }
         .card-hover-zoom img { transition: transform 0.3s ease-in-out; }
         .card-hover-zoom:hover img { transform: scale(1.05); }
         .article-text { color: #212529; }
         .match-terdekat-card { display: flex; flex-direction: column; }
         .match-terdekat-card .card-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 1rem; }
         .text-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-ylw:hover { transform: translateY(-5px) }
     </style>
 @endpush
 
