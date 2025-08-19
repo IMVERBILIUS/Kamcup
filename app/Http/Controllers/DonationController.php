@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Donation;
 use App\Models\Tournament;
+// TAMBAHKAN MODEL-MODEL YANG DIBUTUHKAN
+use App\Models\Article;
+use App\Models\Gallery;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -12,8 +16,7 @@ use Illuminate\Support\Facades\Auth;
 class DonationController extends Controller
 {
     /**
-     * Constructor - Tambah middleware auth
-     * Hanya user yang sudah login yang bisa akses semua method
+     * Constructor
      */
     public function __construct()
     {
@@ -22,14 +25,10 @@ class DonationController extends Controller
 
     /**
      * Menampilkan form donasi.
-     * Mengirim data turnamen ke view.
      */
     public function create()
     {
-        // Ambil data dari tabel tournaments
         $tournaments = Tournament::orderBy('title', 'asc')->get();
-        
-        // Kirim data ke view
         return view('donations.create', compact('tournaments'));
     }
 
@@ -38,84 +37,53 @@ class DonationController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi - nama bisa diisi bebas, email tetap dari akun
+        // Validasi
         $validator = Validator::make($request->all(), [
             'name_brand' => 'required|string|max:255',
             'phone_whatsapp' => 'required|string|max:20',
-            'tournament_id' => 'required|integer|exists:tournaments,id', 
+            'tournament_id' => 'required|integer|exists:tournaments,id',
             'donation_type' => 'required|in:sponsor,donatur',
             'sponsor_type' => 'nullable|string|max:50|required_if:donation_type,sponsor',
             'message' => 'nullable|string|max:1000',
-        ], [
-            'name_brand.required' => 'Nama/Brand wajib diisi.',
-            'name_brand.max' => 'Nama/Brand maksimal 255 karakter.',
-            'phone_whatsapp.required' => 'Nomor WhatsApp wajib diisi.',
-            'tournament_id.required' => 'Pilih acara/pertandingan.',
-            'tournament_id.exists' => 'Acara/pertandingan yang dipilih tidak valid.',
-            'donation_type.required' => 'Pilih jenis pendanaan.',
-            'donation_type.in' => 'Jenis pendanaan harus sponsor atau donatur.',
-            'sponsor_type.required_if' => 'Jenis sponsor wajib dipilih jika jenis pendanaan adalah sponsor.',
-            'message.max' => 'Pesan maksimal 1000 karakter.',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         try {
-            // Ambil data user yang login
             $user = Auth::user();
-            
-            // Olah data sebelum disimpan
-            $data = $request->except('tournament_id');
-
-            // Cari nama turnamen berdasarkan ID yang dikirim dari form
             $tournament = Tournament::find($request->tournament_id);
             
-            // Tambahkan data dari user login dan tournament
+            $data = $request->except('tournament_id');
             $data['user_id'] = $user->id;
-            // name_brand sudah ada dari request, tidak perlu diubah
-            $data['email'] = $user->email; // EMAIL TETAP DARI AKUN LOGIN
+            $data['email'] = $user->email;
             $data['event_name'] = $tournament ? $tournament->title : 'Unknown Event';
 
-            // Simpan data yang sudah diolah
-            $donation = Donation::create($data);
-
-            // Kirim notifikasi email (opsional)
-            // $this->sendNotificationEmail($donation);
+            Donation::create($data);
 
             return redirect()->back()->with('success', 
-                'Terima kasih! Pengajuan sponsorship/donasi Anda telah berhasil dikirim. Kami akan menghubungi Anda segera.'
+                'Terima kasih! Pengajuan sponsorship/donasi Anda telah berhasil dikirim.'
             );
-
         } catch (\Exception $e) {
-            // Catat error jika perlu: \Log::error($e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi.')
-                ->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses permintaan Anda.')->withInput();
         }
     }
 
     /**
      * Menampilkan semua donasi (untuk admin).
+     * !! FUNGSI INI YANG DIPERBAIKI SECARA KESELURUHAN !!
      */
     public function index(Request $request)
     {
+        // 1. Logika untuk data donasi (tetap sama)
         $query = Donation::with('user');
-
-        // Filter by status
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
-
-        // Filter by donation type
         if ($request->has('type') && $request->type) {
             $query->where('donation_type', $request->type);
         }
-
-        // Search
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -127,11 +95,37 @@ class DonationController extends Controller
                   });
             });
         }
+        $donations = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        $donations = $query->orderBy('created_at', 'desc')
-            ->paginate(20);
+        // 2. Tambahkan semua data lain yang dibutuhkan oleh view 'index.blade.php'
+        $next_match = Tournament::where('registration_start', '>=', now())
+                                ->orderBy('registration_start', 'asc')
+                                ->first();
+        
+        $latest_articles = Article::latest()->take(5)->get();
+        // Asumsi ada kolom 'views' untuk populer, jika tidak ada ganti dengan 'created_at'
+        $populer_articles = Article::orderBy('views', 'desc')->take(5)->get(); 
+        
+        $events = Tournament::where('status', '!=', 'completed')
+                            ->orderBy('registration_start', 'asc')
+                            ->take(5)
+                            ->get();
 
-        return view('donations.index', compact('donations'));
+        $galleries = Gallery::latest()->take(10)->get();
+        $sponsorData = Sponsor::all()->groupBy('size');
+        $chunk_size = 3; // Ukuran untuk carousel
+
+        // 3. Kirim SEMUA data ke view
+        return view('donations.index', compact(
+            'donations', 
+            'next_match',
+            'latest_articles',
+            'populer_articles',
+            'events',
+            'galleries',
+            'sponsorData',
+            'chunk_size'
+        ));
     }
 
     /**
@@ -152,21 +146,12 @@ class DonationController extends Controller
             'status' => 'required|in:pending,approved,rejected',
             'admin_notes' => 'nullable|string|max:500'
         ]);
-
-        $donation->update([
-            'status' => $request->status,
-            'admin_notes' => $request->admin_notes
-        ]);
-
-        // Kirim email notifikasi ke pendaftar
-        // $this->sendStatusUpdateEmail($donation);
-
+        $donation->update($request->only('status', 'admin_notes'));
         return redirect()->back()->with('success', 'Status donasi berhasil diperbarui.');
     }
-
-    /**
-     * Get donation statistics
-     */
+    
+    // ... SISA FUNGSI LAINNYA (statistics, export, dll) TETAP SAMA ...
+    
     public function statistics()
     {
         $stats = [
@@ -179,60 +164,29 @@ class DonationController extends Controller
                 ->whereYear('created_at', now()->year)
                 ->count()
         ];
-
         return response()->json($stats);
     }
 
-    /**
-     * Export donations to CSV
-     */
     public function export()
     {
         $donations = Donation::with('user')->orderBy('created_at', 'desc')->get();
-
         $filename = 'donations_' . now()->format('Y_m_d') . '.csv';
-
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
-
         $callback = function() use ($donations) {
             $file = fopen('php://output', 'w');
-            
-            fputcsv($file, [
-                'ID', 'User ID', 'Nama/Brand', 'Email', 'WhatsApp', 'Event', 
-                'Jenis', 'Sponsor Type', 'Status', 'Tanggal'
-            ]);
-
+            fputcsv($file, ['ID', 'User ID', 'Nama/Brand', 'Email', 'WhatsApp', 'Event', 'Jenis', 'Sponsor Type', 'Status', 'Tanggal']);
             foreach ($donations as $donation) {
                 fputcsv($file, [
-                    $donation->id,
-                    $donation->user_id,
-                    $donation->name_brand,
-                    $donation->email,
-                    $donation->phone_whatsapp,
-                    $donation->event_name,
-                    ucfirst($donation->donation_type),
-                    $donation->sponsor_type ?? '-',
-                    ucfirst($donation->status),
-                    $donation->created_at->format('d/m/Y H:i')
+                    $donation->id, $donation->user_id, $donation->name_brand, $donation->email, $donation->phone_whatsapp,
+                    $donation->event_name, ucfirst($donation->donation_type), $donation->sponsor_type ?? '-',
+                    ucfirst($donation->status), $donation->created_at->format('d/m/Y H:i')
                 ]);
             }
-
             fclose($file);
         };
-
         return response()->stream($callback, 200, $headers);
-    }
-
-    private function sendNotificationEmail($donation)
-    {
-        // Implementasi logika pengiriman email
-    }
-
-    private function sendStatusUpdateEmail($donation)
-    {
-        // Implementasi logika pengiriman email update status
     }
 }

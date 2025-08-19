@@ -18,6 +18,7 @@ use App\Models\TeamMember;
 use App\Models\TournamentRegistration;
 use App\Models\TournamentHostRequest;
 use App\Models\Profile;
+use App\Models\Donation; // Tambahkan import model Donation
 
 class ProfileController extends Controller
 {
@@ -33,17 +34,20 @@ class ProfileController extends Controller
         // Jumlah item per halaman untuk masing-masing bagian
         $perPageRegistered = 5; // Tetap 5 untuk Event Saya
         $perPageHost = 3;       // Diubah menjadi 3 untuk Permohonan Tuan Rumah
+        $perPageDonations = 3;  // Tambahan untuk Donations
 
         // Dapatkan nomor halaman saat ini dari request query
         $pageRegistered = $request->query('page_registered', 1);
         $pageHost = $request->query('page_host', 1);
+        $pageDonations = $request->query('page_donations', 1); // Tambahan untuk donations
 
         // Eager load semua relasi yang dibutuhkan
         $user->load([
             'profile',
             'team.members',
             'registeredTournaments.tournament',
-            'hostApplications'
+            'hostApplications',
+            'donations' // Tambahkan relasi donations
         ]);
 
         // Inisialisasi variabel untuk view
@@ -64,17 +68,27 @@ class ProfileController extends Controller
             $allRegisteredTournaments->count(),
             $perPageRegistered,
             $pageRegistered,
-            ['path' => route('profile.index', ['page_host' => $pageHost, 'active_tab' => 'event-saya']), 'pageName' => 'page_registered']
+            ['path' => route('profile.index', ['page_host' => $pageHost, 'page_donations' => $pageDonations, 'active_tab' => 'event-saya']), 'pageName' => 'page_registered']
         );
 
         // --- Paginasi Manual untuk hostApplications ---
         $allHostApplications = $user->hostApplications ?? collect();
         $hostApplications = new \Illuminate\Pagination\LengthAwarePaginator(
-            $allHostApplications->forPage($pageHost, $perPageHost), // Menggunakan $perPageHost
+            $allHostApplications->forPage($pageHost, $perPageHost),
             $allHostApplications->count(),
-            $perPageHost, // Menggunakan $perPageHost
+            $perPageHost,
             $pageHost,
-            ['path' => route('profile.index', ['page_registered' => $pageRegistered, 'active_tab' => 'permohonan']), 'pageName' => 'page_host']
+            ['path' => route('profile.index', ['page_registered' => $pageRegistered, 'page_donations' => $pageDonations, 'active_tab' => 'permohonan']), 'pageName' => 'page_host']
+        );
+
+        // --- Paginasi Manual untuk userDonations (TAMBAHAN BARU) ---
+        $allUserDonations = $user->donations ?? collect();
+        $userDonations = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allUserDonations->forPage($pageDonations, $perPageDonations),
+            $allUserDonations->count(),
+            $perPageDonations,
+            $pageDonations,
+            ['path' => route('profile.index', ['page_registered' => $pageRegistered, 'page_host' => $pageHost, 'active_tab' => 'donasi-saya']), 'pageName' => 'page_donations']
         );
 
         return view('front.profile.profile', compact(
@@ -83,7 +97,8 @@ class ProfileController extends Controller
             'firstTeam',
             'teamMembers',
             'registeredTournaments',
-            'hostApplications'
+            'hostApplications',
+            'userDonations' // Tambahkan variabel userDonations
         ));
     }
 
