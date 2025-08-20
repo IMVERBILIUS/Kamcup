@@ -1,16 +1,13 @@
-@extends('../layouts/master')
+<?php $__env->startSection('body-class', 'home-page'); ?>
 
-{{-- Memberi penanda 'home-page' ke tag <body> di master layout --}}
-@section('body-class', 'home-page')
+<?php $__env->startSection('content'); ?>
 
-@section('content')
 
-{{-- Navbar khusus untuk halaman index (transparan) diletakkan di sini --}}
 <nav class="navbar navbar-expand-lg bg-transparent py-3 position-absolute top-0 start-0 w-100 z-3 navbar-transparent">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="{{ route('front.index') }}"
+        <a class="navbar-brand d-flex align-items-center" href="<?php echo e(route('front.index')); ?>"
             style="width: 190px; overflow: hidden; height: 90px;">
-            <img src="{{ asset('assets/img/logo4.png') }}" alt="KAMCUP Logo" class="me-2 brand-logo"
+            <img src="<?php echo e(asset('assets/img/logo4.png')); ?>" alt="KAMCUP Logo" class="me-2 brand-logo"
                 style="height: 100%; width: 100%; object-fit: cover;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
@@ -20,23 +17,37 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.index') }}">HOME</a></li>
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.articles') }}">BERITA</a></li>
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.galleries') }}">GALERI</a></li>
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.events.index') }}">EVENT</a></li>
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.contact') }}">CONTACT US</a></li>
-                <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('profile.index') }}">PROFILE</a></li>
-                @guest
-                    <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('login') }}">LOGIN</a></li>
-                @else
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('front.index')); ?>">HOME</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('front.articles')); ?>">BERITA</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('front.galleries')); ?>">GALERI</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('front.events.index')); ?>">EVENT</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('front.contact')); ?>">CONTACT US</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('profile.index')); ?>">PROFILE</a></li>
+                <?php if(auth()->guard()->guest()): ?>
+                    <li class="nav-item"><a class="nav-link fw-medium" href="<?php echo e(route('login')); ?>">LOGIN</a></li>
+                <?php else: ?>
                     <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="btn btn-outline-light ms-lg-3">LOGOUT</button>
                         </form>
                     </li>
-                @endguest
-                <x-navbar-translate />
+                <?php endif; ?>
+                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.navbar-translate','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('navbar-translate'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
             </ul>
         </div>
     </div>
@@ -44,7 +55,7 @@
 
 <section class="position-relative hero-section">
     <div class="position-relative vh-100 d-flex align-items-center overflow-hidden">
-        <img src="{{ asset('assets/img/jpn.jpg') }}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover z-1" alt="Volleyball Action Hero Image">
+        <img src="<?php echo e(asset('assets/img/jpn.jpg')); ?>" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover z-1" alt="Volleyball Action Hero Image">
         <div class="container position-relative text-white z-2 text-center hero-content">
             <h1 class="display-3 fw-bold mb-4 hero-title"><br>Energi Sportif, Kemudahan Finansial!</h1>
             <p class="lead mb-5 hero-description">
@@ -53,76 +64,79 @@
                     class="highlight-text">komunitas</span> <span class="highlight-text">aktif,</span> suportif, dan
                 penuh<span class="highlight-text"> pertumbuhan </span> para generasi muda visioner.
             </p>
-            <a href="{{ route('front.events.index') }}" class="btn btn-lg fw-bold px-5 py-3 rounded-pill hero-btn">JELAJAHI PROMO & EVENT</a>
+            <a href="<?php echo e(route('front.events.index')); ?>" class="btn btn-lg fw-bold px-5 py-3 rounded-pill hero-btn">JELAJAHI PROMO & EVENT</a>
         </div>
     </div>
 </section>
 
-@if ($next_match)
+<?php if($next_match): ?>
 <div class="container py-4">
-    <a href="{{ route('front.events.show', $next_match->slug) }}" class="text-decoration-none">
+    <a href="<?php echo e(route('front.events.show', $next_match->slug)); ?>" class="text-decoration-none">
         <div class="card bg-light border-0 shadow-sm card-hover-zoom" style="height: auto;">
             <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
                 <h5 class="card-title fw-bold mb-2 mb-md-0 me-md-3 text-center text-md-start article-text">
-                    <span class="main-text">Match</span> <span class="highlight-text">Terdekat:</span> {{ $next_match->title }}
+                    <span class="main-text">Match</span> <span class="highlight-text">Terdekat:</span> <?php echo e($next_match->title); ?>
+
                 </h5>
                 <div class="text-center text-md-end">
                     <p class="mb-1 small text-muted article-text">
                         <i class="bi bi-calendar me-1"></i>
-                        {{ \Carbon\Carbon::parse($next_match->registration_start)->format('d M Y') }}
-                        @if ($next_match->registration_start != $next_match->registration_end)
-                            - {{ \Carbon\Carbon::parse($next_match->registration_end)->format('d M Y') }}
-                        @endif
+                        <?php echo e(\Carbon\Carbon::parse($next_match->registration_start)->format('d M Y')); ?>
+
+                        <?php if($next_match->registration_start != $next_match->registration_end): ?>
+                            - <?php echo e(\Carbon\Carbon::parse($next_match->registration_end)->format('d M Y')); ?>
+
+                        <?php endif; ?>
                     </p>
-                    <a href="{{ route('front.events.show', $next_match->slug) }}" class="btn btn-sm btn-outline-primary mt-2 mt-md-0">Segera Daftar</a>
+                    <a href="<?php echo e(route('front.events.show', $next_match->slug)); ?>" class="btn btn-sm btn-outline-primary mt-2 mt-md-0">Segera Daftar</a>
                 </div>
             </div>
         </div>
     </a>
 </div>
-@endif
+<?php endif; ?>
 
-{{-- Artikel Terbaru --}}
+
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0 section-title"><span class="main-text">Artikel</span> <span
                 class="highlight-text">Terbaru</span></h3>
-        <a href="{{ route('front.articles') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
+        <a href="<?php echo e(route('front.articles')); ?>" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
     </div>
     <div id="latestArticlesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
-            @forelse ($latest_articles->chunk($chunk_size) as $chunkIndex => $chunk)
-                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+            <?php $__empty_1 = true; $__currentLoopData = $latest_articles->chunk($chunk_size); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chunkIndex => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="carousel-item <?php echo e($loop->first ? 'active' : ''); ?>">
                     <div class="row gx-3 gy-3">
-                        @foreach ($chunk as $article)
+                        <?php $__currentLoopData = $chunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $article): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="col-12 col-md-6 col-lg-4">
-                                <a href="{{ route('front.articles.show', $article->slug) }}" class="text-decoration-none">
+                                <a href="<?php echo e(route('front.articles.show', $article->slug)); ?>" class="text-decoration-none">
                                     <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
                                         <div class="ratio ratio-16x9">
-                                            <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                            <img src="<?php echo e(asset('storage/' . $article->thumbnail)); ?>"
                                                 class="img-fluid object-fit-cover w-100 h-100"
-                                                alt="{{ $article->title }}">
+                                                alt="<?php echo e($article->title); ?>">
                                         </div>
                                         <div class="card-body d-flex flex-column px-3 py-3">
-                                            <h5 class="card-title fw-semibold mb-2">{{ Str::limit($article->title, 60) }}</h5>
-                                            <p class="card-text text-muted mb-0 flex-grow-1">{{ Str::limit($article->description, 80) }}</p>
+                                            <h5 class="card-title fw-semibold mb-2"><?php echo e(Str::limit($article->title, 60)); ?></h5>
+                                            <p class="card-text text-muted mb-0 flex-grow-1"><?php echo e(Str::limit($article->description, 80)); ?></p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="carousel-item active">
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">Artikel terbaru akan segera hadir!</p>
                     </div>
                 </div>
-            @endforelse
+            <?php endif; ?>
         </div>
         
-        {{-- Carousel Controls untuk Desktop --}}
+        
         <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#latestArticlesCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -132,60 +146,60 @@
             <span class="visually-hidden">Next</span>
         </button>
         
-        {{-- Carousel Indicators untuk Mobile --}}
-        @if($latest_articles->count() > $chunk_size)
+        
+        <?php if($latest_articles->count() > $chunk_size): ?>
         <div class="carousel-indicators d-md-none position-relative mt-3 mb-0">
-            @foreach ($latest_articles->chunk($chunk_size) as $chunkIndex => $chunk)
-                <button type="button" data-bs-target="#latestArticlesCarousel" data-bs-slide-to="{{ $chunkIndex }}" 
-                        class="{{ $chunkIndex === 0 ? 'active' : '' }}" aria-current="{{ $chunkIndex === 0 ? 'true' : 'false' }}" 
-                        aria-label="Slide {{ $chunkIndex + 1 }}"></button>
-            @endforeach
+            <?php $__currentLoopData = $latest_articles->chunk($chunk_size); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chunkIndex => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <button type="button" data-bs-target="#latestArticlesCarousel" data-bs-slide-to="<?php echo e($chunkIndex); ?>" 
+                        class="<?php echo e($chunkIndex === 0 ? 'active' : ''); ?>" aria-current="<?php echo e($chunkIndex === 0 ? 'true' : 'false'); ?>" 
+                        aria-label="Slide <?php echo e($chunkIndex + 1); ?>"></button>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
-{{-- Artikel Populer --}}
+
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0 section-title"><span class="main-text">Artikel</span> <span
                 class="highlight-text">Populer</span></h3>
-        <a href="{{ route('front.articles') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
+        <a href="<?php echo e(route('front.articles')); ?>" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
     </div>
     <div id="popularArticlesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
-            @forelse ($populer_articles->chunk($chunk_size) as $chunkIndex => $chunk)
-                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+            <?php $__empty_1 = true; $__currentLoopData = $populer_articles->chunk($chunk_size); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chunkIndex => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="carousel-item <?php echo e($loop->first ? 'active' : ''); ?>">
                     <div class="row gx-3 gy-3">
-                        @foreach ($chunk as $article)
+                        <?php $__currentLoopData = $chunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $article): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="col-12 col-md-6 col-lg-4">
-                                <a href="{{ route('front.articles.show', $article->slug) }}" class="text-decoration-none">
+                                <a href="<?php echo e(route('front.articles.show', $article->slug)); ?>" class="text-decoration-none">
                                     <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
                                         <div class="ratio ratio-16x9">
-                                            <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                            <img src="<?php echo e(asset('storage/' . $article->thumbnail)); ?>"
                                                 class="img-fluid object-fit-cover w-100 h-100"
-                                                alt="{{ $article->title }}">
+                                                alt="<?php echo e($article->title); ?>">
                                         </div>
                                         <div class="card-body d-flex flex-column px-3 py-3">
-                                            <h5 class="card-title fw-semibold mb-2">{{ Str::limit($article->title, 60) }}</h5>
-                                            <p class="card-text text-muted mb-0 flex-grow-1">{{ Str::limit($article->description, 80) }}</p>
+                                            <h5 class="card-title fw-semibold mb-2"><?php echo e(Str::limit($article->title, 60)); ?></h5>
+                                            <p class="card-text text-muted mb-0 flex-grow-1"><?php echo e(Str::limit($article->description, 80)); ?></p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="carousel-item active">
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">Artikel populer akan segera hadir!</p>
                     </div>
                 </div>
-            @endforelse
+            <?php endif; ?>
         </div>
         
-        {{-- Carousel Controls untuk Desktop --}}
+        
         <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#popularArticlesCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -195,73 +209,73 @@
             <span class="visually-hidden">Next</span>
         </button>
         
-        {{-- Carousel Indicators untuk Mobile --}}
-        @if($populer_articles->count() > $chunk_size)
+        
+        <?php if($populer_articles->count() > $chunk_size): ?>
         <div class="carousel-indicators d-md-none position-relative mt-3 mb-0">
-            @foreach ($populer_articles->chunk($chunk_size) as $chunkIndex => $chunk)
-                <button type="button" data-bs-target="#popularArticlesCarousel" data-bs-slide-to="{{ $chunkIndex }}" 
-                        class="{{ $chunkIndex === 0 ? 'active' : '' }}" aria-current="{{ $chunkIndex === 0 ? 'true' : 'false' }}" 
-                        aria-label="Slide {{ $chunkIndex + 1 }}"></button>
-            @endforeach
+            <?php $__currentLoopData = $populer_articles->chunk($chunk_size); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chunkIndex => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <button type="button" data-bs-target="#popularArticlesCarousel" data-bs-slide-to="<?php echo e($chunkIndex); ?>" 
+                        class="<?php echo e($chunkIndex === 0 ? 'active' : ''); ?>" aria-current="<?php echo e($chunkIndex === 0 ? 'true' : 'false'); ?>" 
+                        aria-label="Slide <?php echo e($chunkIndex + 1); ?>"></button>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
 <div class="text-center mt-5 mt-md-4">
-    <a href="{{ route('front.articles') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
+    <a href="<?php echo e(route('front.articles')); ?>" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
 </div>
 
-{{-- Sponsor Utama (Satu Card dengan Tiga Logo Sejajar) --}}
+
 <div class="container py-5">
     <h5 class="fw-bold section-title"><span class="main-text">Presented </span> <span class="highlight-text">by</span>
     </h5>
     <div class="card border rounded-3 shadow-sm p-4 bg-white">
         <div class="row g-4 justify-content-around align-items-center">
             <div class="col-auto d-flex justify-content-center">
-                @if (isset($sponsorData['xxl'][0]))
-                    @php $sponsor = $sponsorData['xxl'][0]; @endphp
+                <?php if(isset($sponsorData['xxl'][0])): ?>
+                    <?php $sponsor = $sponsorData['xxl'][0]; ?>
                     <div class="text-center btn-ylw" style="transition: transform 0.3s;">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
+                        <img src="<?php echo e(asset('storage/' . $sponsor->logo)); ?>" alt="<?php echo e($sponsor->name); ?>"
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
-                @else
+                <?php else: ?>
                     <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 1</p>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
             <div class="col-auto d-flex justify-content-center">
-                @if (isset($sponsorData['xxl'][1]))
-                    @php $sponsor = $sponsorData['xxl'][1]; @endphp
+                <?php if(isset($sponsorData['xxl'][1])): ?>
+                    <?php $sponsor = $sponsorData['xxl'][1]; ?>
                     <div class="text-center">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
+                        <img src="<?php echo e(asset('storage/' . $sponsor->logo)); ?>" alt="<?php echo e($sponsor->name); ?>"
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
-                @else
+                <?php else: ?>
                     <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 2</p>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
             <div class="col-auto d-flex justify-content-center">
-                @if (isset($sponsorData['xxl'][2]))
-                    @php $sponsor = $sponsorData['xxl'][2]; @endphp
+                <?php if(isset($sponsorData['xxl'][2])): ?>
+                    <?php $sponsor = $sponsorData['xxl'][2]; ?>
                     <div class="text-center">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
+                        <img src="<?php echo e(asset('storage/' . $sponsor->logo)); ?>" alt="<?php echo e($sponsor->name); ?>"
                             class="img-fluid" style="max-width: 180px; max-height: 80px; object-fit: contain;">
                     </div>
-                @else
+                <?php else: ?>
                     <div class="text-center text-muted btn-ylw" style="transition: transform 0.3s;">
                         <p class="mb-0">Sponsor 3</p>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Card Section for Registrations --}}
+
 <div class="container py-5">
     <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
         <div class="col">
@@ -270,7 +284,7 @@
                 <i class="bi bi-people-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tim</h4>
                 <p class="card-text mb-4">Gabungkan tim Anda dan raih kemenangan bersama KAMCUP!</p>
-                <a href="{{ route('team.create') }}" 
+                <a href="<?php echo e(route('team.create')); ?>" 
                    class="btn fw-bold px-4 py-2 rounded-pill registration-btn"
                    style="background-color: #F4B704; border-color: #F4B704; color: #212529; position: relative; z-index: 100; text-decoration: none;">
                    DAFTAR SEKARANG
@@ -283,7 +297,7 @@
                 <i class="bi bi-house-door-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tuan Rumah</h4>
                 <p class="card-text mb-4">Siapkan arena terbaik Anda dan selenggarakan turnamen seru!</p>
-                <a href="{{ route('host-request.create') }}" 
+                <a href="<?php echo e(route('host-request.create')); ?>" 
                    class="btn fw-bold px-4 py-2 rounded-pill registration-btn"
                    style="background-color: #F4B704; border-color: #F4B704; color: #212529; position: relative; z-index: 100; text-decoration: none;">
                    JADI TUAN RUMAH
@@ -296,65 +310,72 @@
                 <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                 <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
                 <p class="card-text mb-4">Dukung perkembangan olahraga voli dan komunitas KAMCUP!</p>
-                @auth
-                    <a href="{{ route('donations.create') }}" 
+                <?php if(auth()->guard()->check()): ?>
+                    <a href="<?php echo e(route('donations.create')); ?>" 
                        class="btn fw-bold px-4 py-2 rounded-pill registration-btn"
                        style="background-color: #F4B704; border-color: #F4B704; color: #212529; position: relative; z-index: 100; text-decoration: none;">
                        BERI DONASI
                     </a>
-                @else
-                    <a href="{{ route('login') }}" 
+                <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" 
                        class="btn fw-bold px-4 py-2 rounded-pill registration-btn"
                        style="background-color: #F4B704; border-color: #F4B704; color: #212529; position: relative; z-index: 100; text-decoration: none;">
                        DONASI
                     </a>
-                @endauth
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Upcoming Events --}}
+
 <div class="container py-5 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold section-title"><span class="main-text">UPCOMING</span> <span
                 class="highlight-text">EVENT</span></h3>
-        <a href="{{ route('front.events.index') }}" class="btn btn-outline-dark see-all-btn px-4 rounded-pill">Lihat semuanya</a>
+        <a href="<?php echo e(route('front.events.index')); ?>" class="btn btn-outline-dark see-all-btn px-4 rounded-pill">Lihat semuanya</a>
     </div>
     <div id="upcomingEventsCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            @forelse ($events->chunk($chunk_size) as $chunk)
-                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+            <?php $__empty_1 = true; $__currentLoopData = $events->chunk($chunk_size); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="carousel-item <?php echo e($loop->first ? 'active' : ''); ?>">
                     <div class="row g-4">
-                        @foreach ($chunk as $event)
+                        <?php $__currentLoopData = $chunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="col">
                                 <div class="card event-card border-0 rounded-4 overflow-hidden">
                                     <div class="ratio ratio-16x9 mb-2">
-                                        <img src="{{ asset('storage/' . $event->thumbnail) }}"
-                                            class="img-fluid object-fit-cover w-100 h-100" alt="{{ $event->title }}">
+                                        <img src="<?php echo e(asset('storage/' . $event->thumbnail)); ?>"
+                                            class="img-fluid object-fit-cover w-100 h-100" alt="<?php echo e($event->title); ?>">
                                     </div>
                                     <div class="card-body d-flex flex-column">
                                         <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <h5 class="card-title fw-bold mb-0 me-2 flex-grow-1 text-truncate" style="max-width: calc(100% - 70px);">{{ Str::limit($event->title, 20) }}
+                                            <h5 class="card-title fw-bold mb-0 me-2 flex-grow-1 text-truncate" style="max-width: calc(100% - 70px);"><?php echo e(Str::limit($event->title, 20)); ?>
+
                                             </h5>
                                             <span class="small text-muted text-end flex-shrink-0">
-                                                {{ \Carbon\Carbon::parse($event->registration_start)->format('d M') }}
-                                                @if (\Carbon\Carbon::parse($event->registration_start)->format('Y') != \Carbon\Carbon::parse($event->registration_end)->format('Y'))
-                                                    - {{ \Carbon\Carbon::parse($event->registration_end)->format('d M Y') }}
-                                                @else
-                                                    - {{ \Carbon\Carbon::parse($event->registration_end)->format('d M') }}
-                                                    {{ \Carbon\Carbon::parse($event->registration_end)->format('Y') }}
-                                                @endif
+                                                <?php echo e(\Carbon\Carbon::parse($event->registration_start)->format('d M')); ?>
+
+                                                <?php if(\Carbon\Carbon::parse($event->registration_start)->format('Y') != \Carbon\Carbon::parse($event->registration_end)->format('Y')): ?>
+                                                    - <?php echo e(\Carbon\Carbon::parse($event->registration_end)->format('d M Y')); ?>
+
+                                                <?php else: ?>
+                                                    - <?php echo e(\Carbon\Carbon::parse($event->registration_end)->format('d M')); ?>
+
+                                                    <?php echo e(\Carbon\Carbon::parse($event->registration_end)->format('Y')); ?>
+
+                                                <?php endif; ?>
                                             </span>
                                         </div>
                                         <p class="card-text small text-muted mb-2 d-flex align-items-center">
-                                            <i class="bi bi-gender-ambiguous me-2"></i> {{ $event->gender_category }}
+                                            <i class="bi bi-gender-ambiguous me-2"></i> <?php echo e($event->gender_category); ?>
+
                                         </p>
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <p class="card-text small text-muted mb-0 d-flex align-items-center me-2 flex-grow-1 text-truncate">
-                                                <i class="bi bi-geo-alt me-2"></i> {{ Str::limit($event->location, 20) }}
+                                                <i class="bi bi-geo-alt me-2"></i> <?php echo e(Str::limit($event->location, 20)); ?>
+
                                             </p>
-                                            @php
+                                            <?php
                                                 $statusClass = '';
                                                 switch ($event->status) {
                                                     case 'completed': $statusClass = 'status-completed'; break;
@@ -362,33 +383,34 @@
                                                     case 'registration': $statusClass = 'status-registration'; break;
                                                     default: $statusClass = ''; break;
                                                 }
-                                            @endphp
-                                            <span class="event-status-badge {{ $statusClass }} flex-shrink-0">
-                                                {{ ucfirst($event->status) }}
+                                            ?>
+                                            <span class="event-status-badge <?php echo e($statusClass); ?> flex-shrink-0">
+                                                <?php echo e(ucfirst($event->status)); ?>
+
                                             </span>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            @if ($event->sponsors->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $event->sponsors->first()->logo) }}"
+                                            <?php if($event->sponsors->isNotEmpty()): ?>
+                                                <img src="<?php echo e(asset('storage/' . $event->sponsors->first()->logo)); ?>"
                                                     alt="Sponsor Logo"
                                                     style="max-height: 25px; max-width: 60px; object-fit: contain; flex-shrink: 0;">
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
-                                        <a href="{{ route('front.events.show', $event->slug) }}"
+                                        <a href="<?php echo e(route('front.events.show', $event->slug)); ?>"
                                             class="mt-auto stretched-link">Detail Event & Daftar</a>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="carousel-item active">
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">Akan segera hadir! Nantikan event-event seru dari kami.</p>
                     </div>
                 </div>
-            @endforelse
+            <?php endif; ?>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -404,11 +426,12 @@
 <div class="container py-5 mt-md-5">
     <div class="text-center sponsor-section-header mb-4">
         <p class="mb-0 fw-bold fs-4">Materi Promosi BY
-            @if (isset($sponsorData['xxl']) && $sponsorData['xxl']->isNotEmpty())
-                {{ $sponsorData['xxl']->first()->name }}
-            @else
+            <?php if(isset($sponsorData['xxl']) && $sponsorData['xxl']->isNotEmpty()): ?>
+                <?php echo e($sponsorData['xxl']->first()->name); ?>
+
+            <?php else: ?>
                 Para Mitra Hebat Kami
-            @endif
+            <?php endif; ?>
         </p>
     </div>
 </div>
@@ -420,14 +443,14 @@
         <div class="carousel">
             <button class="nav-button left">&#10094;</button>
             <div class="carousel-images">
-                @forelse ($galleries as $gallery)
-                    <a href="{{ route('front.galleries.show', $gallery->slug) }}" class="image-item">
-                        <img src="{{ asset('storage/' . $gallery->thumbnail) }}" alt="{{ $gallery->title }}" />
-                        <h1>{{ Str::limit($gallery->title, 30) }}</h1>
+                <?php $__empty_1 = true; $__currentLoopData = $galleries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gallery): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <a href="<?php echo e(route('front.galleries.show', $gallery->slug)); ?>" class="image-item">
+                        <img src="<?php echo e(asset('storage/' . $gallery->thumbnail)); ?>" alt="<?php echo e($gallery->title); ?>" />
+                        <h1><?php echo e(Str::limit($gallery->title, 30)); ?></h1>
                     </a>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p class="text-center text-muted w-100">Galeri akan segera diisi dengan momen-momen seru!</p>
-                @endforelse
+                <?php endif; ?>
             </div>
             <button class="nav-button right">&#10095;</button>
         </div>
@@ -435,7 +458,7 @@
 </div>
 
 <div class="text-center mt-4 mb-5">
-    <a href="{{ route('front.galleries') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
+    <a href="<?php echo e(route('front.galleries')); ?>" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
 </div>
 
 <div class="container-fluid py-5" style="background-color: #0F62FF;">
@@ -445,7 +468,7 @@
             <a href="#" class="btn px-4 rounded-pill fw-bold"
                 style="background-color: #ECBF00; color: #212529; border-color: #ECBF00;">MINAT JADI PARTNER?</a>
         </div>
-        @php
+        <?php
             $sponsorSizes = [
                 'xxl' => ['cols_md' => 2, 'cols_lg' => 2, 'max_width' => '220px', 'max_height' => '100px', 'p_size' => 4, 'limit' => 2],
                 'xl' => ['cols_md' => 3, 'cols_lg' => 3, 'max_width' => '180px', 'max_height' => '90px', 'p_size' => 4, 'limit' => 3],
@@ -454,29 +477,29 @@
                 's' => ['cols_md' => 6, 'cols_lg' => 6, 'max_width' => '80px', 'max_height' => '40px', 'p_size' => 3, 'limit' => 6],
             ];
             $displayOrder = ['xxl', 'xl', 'l', 'm', 's'];
-        @endphp
-        @foreach ($displayOrder as $size)
-            @if (isset($sponsorData[$size]) && $sponsorData[$size]->isNotEmpty())
+        ?>
+        <?php $__currentLoopData = $displayOrder; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $size): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if(isset($sponsorData[$size]) && $sponsorData[$size]->isNotEmpty()): ?>
                 <div
-                    class="row row-cols-1 row-cols-md-{{ $sponsorSizes[$size]['cols_md'] }} row-cols-lg-{{ $sponsorSizes[$size]['cols_lg'] }} g-4 text-center mb-4 @if ($size === 'xxl') justify-content-center @endif">
-                    @foreach ($sponsorData[$size]->take($sponsorSizes[$size]['limit']) as $sponsor)
+                    class="row row-cols-1 row-cols-md-<?php echo e($sponsorSizes[$size]['cols_md']); ?> row-cols-lg-<?php echo e($sponsorSizes[$size]['cols_lg']); ?> g-4 text-center mb-4 <?php if($size === 'xxl'): ?> justify-content-center <?php endif; ?>">
+                    <?php $__currentLoopData = $sponsorData[$size]->take($sponsorSizes[$size]['limit']); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sponsor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="col">
-                            <div class="p-{{ $sponsorSizes[$size]['p_size'] }} border rounded-3 sponsor-box sponsor-{{ $size }} h-100 d-flex flex-column justify-content-center align-items-center bg-white text-dark">
-                                <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
+                            <div class="p-<?php echo e($sponsorSizes[$size]['p_size']); ?> border rounded-3 sponsor-box sponsor-<?php echo e($size); ?> h-100 d-flex flex-column justify-content-center align-items-center bg-white text-dark">
+                                <img src="<?php echo e(asset('storage/' . $sponsor->logo)); ?>" alt="<?php echo e($sponsor->name); ?>"
                                     class="img-fluid mb-2"
-                                    style="max-width: {{ $sponsorSizes[$size]['max_width'] }}; max-height: {{ $sponsorSizes[$size]['max_height'] }}; object-fit: contain;">
-                                <p class="fw-bold mb-0">{{ $sponsor->name }}</p>
+                                    style="max-width: <?php echo e($sponsorSizes[$size]['max_width']); ?>; max-height: <?php echo e($sponsorSizes[$size]['max_height']); ?>; object-fit: contain;">
+                                <p class="fw-bold mb-0"><?php echo e($sponsor->name); ?></p>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-            @endif
-        @endforeach
+            <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1000,10 +1023,10 @@
             }
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
-    <script src="{{ asset('js/carousel_gallery.js') }}"></script>
+<?php $__env->startPush('scripts'); ?>
+    <script src="<?php echo e(asset('js/carousel_gallery.js')); ?>"></script>
     <script>
         // Perbaikan untuk mobile touch events
         document.addEventListener('DOMContentLoaded', function() {
@@ -1133,4 +1156,5 @@
             });
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('../layouts/master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/Kamcup/resources/views/front/index.blade.php ENDPATH**/ ?>
