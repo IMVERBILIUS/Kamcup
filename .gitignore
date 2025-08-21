@@ -16,3 +16,14 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+# Laravel
+/vendor
+/node_modules
+/public/storage
+/storage
+/.env
+
+# Sistem
+.DS_Store
+Thumbs.db
+
