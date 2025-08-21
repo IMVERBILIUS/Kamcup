@@ -484,653 +484,974 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
-        :root { --shadow-color-cf2585: #CF2585; }
-        
-        .card a.btn { 
-            background-color: #F4B704 !important; 
-            border-color: #F4B704 !important; 
-            color: #212529 !important; 
-            transition: all 0.3s ease; 
-        }
-        
-        .card a.btn:hover { 
-            background-color: #e0ac00 !important; 
-            border-color: #e0ac00 !important; 
-            color: #212529 !important; 
-        }
-        
-        .event-status-badge { 
-            padding: 0.3em 0.6em; 
-            border-radius: 0.25rem; 
-            font-size: 0.75em; 
-            font-weight: 600; 
-            line-height: 1; 
-            white-space: nowrap; 
-            text-align: center; 
-            vertical-align: baseline; 
-            transition: all 0.3s ease-in-out; 
-            color: white; 
-        }
-        
-        .event-status-badge.status-registration { 
-            background-color: #F4B704; 
-            color: #212529; 
-        }
-        
-        .highlight-text { color: #F4B704; }
-        .main-text { color: #0F62FF; }
-        .card-title.fw-bold { font-size: 1.25rem; }
-        
-        /* Zoom effect untuk desktop */
-        .card-hover-zoom { 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            position: relative; 
-            z-index: 1; 
-            box-shadow: 0 3px 8px rgba(200, 200, 200, 0.3); 
-        }
-        
-        .card-hover-zoom:hover { 
-            transform: scale(1.05);
-            z-index: 10;
-            box-shadow: 0 10px 30px rgba(150, 150, 150, 0.3); 
-        }
-        
-        .card-hover-zoom img { 
-            transition: transform 0.3s ease-in-out; 
-        }
-        
-        .card-hover-zoom:hover img { 
-            transform: scale(1.02);
-        }
-        
-        /* Event cards zoom lebih kecil */
-        .event-card.card-hover-zoom:hover {
-            transform: scale(1.03);
-            z-index: 10;
-        }
-        
-        .article-text { color: #212529; }
-        .match-terdekat-card { display: flex; flex-direction: column; }
-        .match-terdekat-card .card-body { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: flex-start; 
-            padding: 1rem; 
-        }
-        .text-truncate { 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-        }
-        
-        .btn-ylw:hover { 
-            transform: translateY(-2px);
-        }
-        
-        .registration-btn {
-            padding: 0.75rem 2rem !important;
-            font-size: 0.95rem !important;
-            transition: all 0.3s ease;
-        }
-        
-        .registration-btn:hover {
-            background-color: #e0ac00 !important;
-            border-color: #e0ac00 !important;
-            transform: translateY(-2px);
-        }
+     :root { 
+    --shadow-color-cf2585: #CF2585; 
+}
 
-        /* ===== PERBAIKAN UNTUK ARTIKEL CAROUSEL ===== */
+.card a.btn { 
+    background-color: #F4B704 !important; 
+    border-color: #F4B704 !important; 
+    color: #212529 !important; 
+    transition: all 0.3s ease; 
+}
 
-        /* Base article carousel styling */
-        .carousel-item .row {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            align-items: stretch !important;
-        }
+.card a.btn:hover { 
+    background-color: #e0ac00 !important; 
+    border-color: #e0ac00 !important; 
+    color: #212529 !important; 
+}
 
-        .carousel-item .col {
-            display: flex !important;
-            flex: 1 1 0 !important;
-            min-width: 0 !important;
-            padding: 0 0.75rem !important;
-        }
+.event-status-badge { 
+    padding: 0.3em 0.6em; 
+    border-radius: 0.25rem; 
+    font-size: 0.75em; 
+    font-weight: 600; 
+    line-height: 1; 
+    white-space: nowrap; 
+    text-align: center; 
+    vertical-align: baseline; 
+    transition: all 0.3s ease-in-out; 
+    color: white; 
+}
 
-        /* Article card standardization */
-        .carousel-item .card {
-            height: 350px !important;
-            width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            border: 1px solid rgba(0,0,0,0.1) !important;
-            border-radius: 12px !important;
-            overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        }
+.event-status-badge.status-registration { 
+    background-color: #F4B704; 
+    color: #212529; 
+}
 
-        /* Image container fixed ratio */
-        .carousel-item .card .ratio {
-            flex: 0 0 200px !important;
-            height: 200px !important;
-            margin-bottom: 0 !important;
-            border-radius: 12px 12px 0 0 !important;
-            overflow: hidden !important;
-        }
+.highlight-text { color: #F4B704; }
+.main-text { color: #0F62FF; }
+.card-title.fw-bold { font-size: 1.25rem; }
 
-        .carousel-item .card .ratio img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            object-position: center !important;
-        }
+/* Zoom effect untuk desktop */
+.card-hover-zoom { 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    position: relative; 
+    z-index: 1; 
+    box-shadow: 0 3px 8px rgba(200, 200, 200, 0.3); 
+}
 
-        /* Card body standardization */
-        .carousel-item .card .card-body {
-            flex: 1 1 auto !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-            padding: 1rem !important;
-            text-align: left !important;
-        }
+.card-hover-zoom:hover { 
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(150, 150, 150, 0.3); 
+}
 
-        /* Title styling */
-        .carousel-item .card h5 {
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            line-height: 1.3 !important;
-            margin-bottom: 0.5rem !important;
-            color: #212529 !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 2 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            height: 2.6rem !important;
-        }
+.card-hover-zoom img { 
+    transition: transform 0.3s ease-in-out; 
+}
 
-        /* Description styling */
-        .carousel-item .card p {
-            font-size: 0.85rem !important;
-            color: #6c757d !important;
-            line-height: 1.4 !important;
-            margin-bottom: 0 !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 3 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            flex: 1 1 auto !important;
-        }
+.card-hover-zoom:hover img { 
+    transform: scale(1.02);
+}
 
-        /* Hover effects */
-        .carousel-item .card-hover-zoom {
-            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-        }
+.article-text { color: #212529; }
+.match-terdekat-card { display: flex; flex-direction: column; }
+.match-terdekat-card .card-body { 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: flex-start; 
+    padding: 1rem; 
+}
+.text-truncate { 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
 
-        .carousel-item .card-hover-zoom:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-        }
+.btn-ylw:hover { 
+    transform: translateY(-2px);
+}
 
-        /* Link styling */
-        .carousel-item a {
-            text-decoration: none !important;
-            color: inherit !important;
-            display: block !important;
-            height: 100% !important;
-        }
+.registration-btn {
+    padding: 0.75rem 2rem !important;
+    font-size: 0.95rem !important;
+    transition: all 0.3s ease;
+}
 
-        /* Carousel controls positioning */
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 5% !important;
-            opacity: 0.7 !important;
-            transition: opacity 0.3s ease !important;
-        }
+.registration-btn:hover {
+    background-color: #e0ac00 !important;
+    border-color: #e0ac00 !important;
+    transform: translateY(-2px);
+}
 
-        .carousel-control-prev:hover,
-        .carousel-control-next:hover {
-            opacity: 1 !important;
-        }
+/* ===== PERBAIKAN UNTUK ARTIKEL CAROUSEL ===== */
 
-        /* Ensure equal height in flex containers */
-        .carousel-inner {
-            overflow: visible !important;
-        }
+/* Base article carousel styling */
+#latestArticlesCarousel .carousel-item .row,
+#popularArticlesCarousel .carousel-item .row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+}
 
-        .carousel-item {
-            transition: transform 0.6s ease-in-out !important;
-        }
+#latestArticlesCarousel .carousel-item .col,
+#popularArticlesCarousel .carousel-item .col {
+    display: flex !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 0 0.75rem !important;
+}
 
-        .carousel-item.active {
-            display: flex !important;
-        }
+/* Article card standardization */
+#latestArticlesCarousel .carousel-item .card,
+#popularArticlesCarousel .carousel-item .card {
+    height: 350px !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
 
-        /* Carousel indicators styling */
-        .carousel-indicators {
-            position: relative !important;
-            margin-top: 1rem !important;
-            margin-bottom: 0 !important;
-        }
-        
-        .carousel-indicators [data-bs-target] {
-            background-color: #6c757d !important;
-            border: none !important;
-            width: 8px !important;
-            height: 8px !important;
-            border-radius: 50% !important;
-            margin: 0 4px !important;
-        }
-        
-        .carousel-indicators .active {
-            background-color: #0F62FF !important;
-        }
+/* Image container fixed ratio */
+#latestArticlesCarousel .carousel-item .card .ratio,
+#popularArticlesCarousel .carousel-item .card .ratio {
+    flex: 0 0 200px !important;
+    height: 200px !important;
+    margin-bottom: 0 !important;
+    border-radius: 12px 12px 0 0 !important;
+    overflow: hidden !important;
+}
 
-        /* ===== RESPONSIVE FIXES ===== */
+#latestArticlesCarousel .carousel-item .card .ratio img,
+#popularArticlesCarousel .carousel-item .card .ratio img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+}
 
-        /* Tablet view */
-        @media (max-width: 991.98px) {
-            .carousel-item .row {
-                flex-wrap: wrap !important;
-            }
-            
-            .carousel-item .col {
-                flex: 1 1 calc(50% - 1rem) !important;
-                max-width: calc(50% - 1rem) !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .carousel-item .card {
-                height: 320px !important;
-            }
-            
-            .carousel-item .card .ratio {
-                flex: 0 0 180px !important;
-                height: 180px !important;
-            }
-            
-            .carousel-item .card h5 {
-                font-size: 0.95rem !important;
-            }
-            
-            .carousel-item .card p {
-                font-size: 0.8rem !important;
-            }
-        }
+/* Card body standardization */
+#latestArticlesCarousel .carousel-item .card .card-body,
+#popularArticlesCarousel .carousel-item .card .card-body {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    padding: 1rem !important;
+    text-align: left !important;
+}
 
-        /* PERBAIKAN KHUSUS MOBILE */
-        @media (max-width: 767.98px) {
-            /* Reset zoom untuk card registrasi dan event agar tidak mengganggu layout */
-            .card.h-100 { 
-                transition: none !important;
-                transform: none !important;
-                z-index: auto !important;
-            }
-            
-            .card.h-100:hover { 
-                transform: none !important;
-                z-index: auto !important;
-            }
-            
-            .event-card { 
-                transition: none !important;
-                transform: none !important;
-                z-index: auto !important;
-            }
-            
-            .event-card:hover {
-                transform: none !important;
-                z-index: auto !important;
-            }
-            
-            /* KEEP ZOOM UNTUK ARTIKEL - dengan efek yang diperkecil */
-            .carousel-item .card-hover-zoom { 
-                transition: transform 0.2s ease !important;
-                transform: scale(1) !important;
-                z-index: 1 !important;
-            }
-            
-            /* Active state untuk touch di artikel */
-            .carousel-item .card-hover-zoom:active { 
-                transform: scale(1.02) !important;
-                z-index: 5 !important;
-                transition: transform 0.1s ease !important;
-            }
-            
-            /* Hover untuk artikel (untuk device yang support hover) */
-            .carousel-item .card-hover-zoom:hover { 
-                transform: scale(1.02) !important;
-                z-index: 5 !important;
-            }
-            
-            .carousel-item .card-hover-zoom:hover img { 
-                transform: scale(1.01) !important;
-            }
-            
-            .carousel-item .card-hover-zoom img { 
-                transition: transform 0.2s ease-in-out !important;
-            }
+/* Title styling */
+#latestArticlesCarousel .carousel-item .card h5,
+#popularArticlesCarousel .carousel-item .card h5 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.5rem !important;
+    color: #212529 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    height: 2.6rem !important;
+}
 
-            /* Article carousel mobile layout */
-            .carousel-item .row {
-                flex-direction: column !important;
-                flex-wrap: nowrap !important;
-            }
-            
-            .carousel-item .col {
-                flex: 1 1 100% !important;
-                max-width: 100% !important;
-                padding: 0 1rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .carousel-item .card {
-                height: 300px !important;
-                max-width: 100% !important;
-                margin: 0 auto !important;
-            }
-            
-            .carousel-item .card .ratio {
-                flex: 0 0 160px !important;
-                height: 160px !important;
-            }
-            
-            .carousel-item .card .card-body {
-                padding: 0.75rem !important;
-            }
-            
-            .carousel-item .card h5 {
-                font-size: 0.9rem !important;
-                height: 2.4rem !important;
-            }
-            
-            .carousel-item .card p {
-                font-size: 0.75rem !important;
-                -webkit-line-clamp: 2 !important;
-            }
-            
-            /* Hide carousel controls on mobile */
-            .carousel-control-prev,
-            .carousel-control-next {
-                display: none !important;
-            }
-            
-            /* Tombol registrasi untuk mobile */
-            .registration-btn {
-                padding: 0.6rem 1.2rem !important;
-                font-size: 0.85rem !important;
-                width: auto !important;
-                display: inline-block !important;
-                white-space: nowrap !important;
-                transition: all 0.2s ease !important;
-            }
-            
-            .registration-btn:active {
-                transform: scale(0.98) !important;
-                background-color: #e0ac00 !important;
-            }
-            
-            /* Perbaikan untuk card registrasi */
-            .card.h-100 {
-                height: auto !important;
-                min-height: 250px;
-            }
-            
-            .card.h-100 .card-title {
-                font-size: 1.1rem !important;
-                margin-bottom: 0.75rem !important;
-            }
-            
-            .card.h-100 .card-text {
-                font-size: 0.9rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            /* Fix untuk container */
-            .container {
-                overflow-x: hidden;
-            }
-            
-            /* Fix untuk row yang berantakan */
-            .row.g-4 {
-                margin: 0 !important;
-            }
-            
-            .row.g-4 > .col {
-                padding: 0.5rem !important;
-            }
-            
-            /* Hero section adjustments */
-            .hero-title {
-                font-size: 2rem !important;
-            }
-            
-            .hero-description {
-                font-size: 1rem !important;
-            }
-            
-            /* Section title adjustments */
-            .section-title {
-                font-size: 1.5rem !important;
-            }
-        }
+/* Description styling */
+#latestArticlesCarousel .carousel-item .card p,
+#popularArticlesCarousel .carousel-item .card p {
+    font-size: 0.85rem !important;
+    color: #6c757d !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex: 1 1 auto !important;
+}
 
-        /* Small mobile */
-        @media (max-width: 575.98px) {
-            .carousel-item .card {
-                height: 280px !important;
-            }
-            
-            .carousel-item .card .ratio {
-                flex: 0 0 140px !important;
-                height: 140px !important;
-            }
-            
-            .carousel-item .card h5 {
-                font-size: 0.85rem !important;
-                height: 2.2rem !important;
-            }
-            
-            .carousel-item .card p {
-                font-size: 0.7rem !important;
-            }
-        }
+/* ===== PERBAIKAN LENGKAP UNTUK EVENT CAROUSEL - UKURAN DIPERTAHANKAN + CLICKABLE ===== */
 
-        /* Perbaikan untuk landscape mobile */
-        @media (max-width: 992px) and (orientation: landscape) {
-            .registration-btn {
-                padding: 0.5rem 1rem !important;
-                font-size: 0.8rem !important;
-            }
-            
-            .carousel-item .card-hover-zoom:active { 
-                transform: scale(1.015) !important;
-            }
-        }
+/* Base event carousel styling dengan ukuran yang dipertahankan */
+#upcomingEventsCarousel .carousel-item .row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+}
 
-        /* Touch enhancement untuk semua mobile device */
-        @media (hover: none) and (pointer: coarse) {
-            /* Artikel cards mendapat efek zoom saat touch */
-            .carousel-item .card-hover-zoom:active { 
-                transform: scale(1.02) !important;
-                z-index: 5 !important;
-                transition: transform 0.1s ease !important;
-            }
-            
-            /* Tombol mendapat efek press */
-            .btn:active, .registration-btn:active {
-                transform: scale(0.98) !important;
-                transition: transform 0.1s ease !important;
-            }
-        }
+#upcomingEventsCarousel .carousel-item .col {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    min-width: 370px !important; /* UKURAN DIPERTAHANKAN */
+    max-width: 400px !important; /* UKURAN DIPERTAHANKAN */
+    width: 400px !important; /* UKURAN DIPERTAHANKAN */
+    padding: 0 0.75rem !important;
+}
 
-        /* Memastikan semua link dan button bisa diklik di semua device */
-        a, button, .btn {
-            position: relative;
-            z-index: 50;
-            pointer-events: auto;
-        }
+/* Event card dengan ukuran yang dipertahankan + PERBAIKAN CLICKABLE */
+#upcomingEventsCarousel .event-card {
+    height: 350px !important; /* UKURAN DIPERTAHANKAN */
+    width: 100% !important;
+    min-width: 350px !important; /* UKURAN DIPERTAHANKAN */
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    /* PERBAIKAN CLICKABLE */
+    position: relative !important;
+    cursor: pointer !important;
+    z-index: 1 !important;
+}
 
-        /* Khusus untuk card yang memiliki stretched-link */
-        .stretched-link::after {
-            z-index: 1 !important;
-        }
+/* PERBAIKAN STRETCHED-LINK - INI YANG PALING PENTING */
+#upcomingEventsCarousel .event-card .stretched-link {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 20 !important;
+    text-decoration: none !important;
+    color: transparent !important;
+    display: block !important;
+    background: transparent !important;
+    border-radius: inherit !important;
+}
 
-        .card .btn {
-            z-index: 51 !important;
-            position: relative !important;
-        }
+/* Reset pseudo-element Bootstrap stretched-link yang bermasalah */
+#upcomingEventsCarousel .event-card .stretched-link::after {
+    display: none !important;
+    content: none !important;
+}
 
-        /* Perbaikan tambahan untuk mobile responsiveness */
-        @media (max-width: 767.98px) {
-            .card-body.flex-column { 
-                align-items: center !important; 
-            }
-            
-            .card-title.fw-bold { 
-                text-align: center !important; 
-                margin-bottom: 0.5rem !important; 
-            }
-            
-            .btn-sm { 
-                width: 100%; 
-            }
-        }
+/* Image container dengan proporsi yang dipertahankan */
+#upcomingEventsCarousel .event-card .ratio {
+    flex: 0 0 200px !important; /* UKURAN DIPERTAHANKAN */
+    height: 200px !important; /* UKURAN DIPERTAHANKAN */
+    margin-bottom: 0 !important;
+    border-radius: 12px 12px 0 0 !important;
+    overflow: hidden !important;
+    /* PERBAIKAN CLICKABLE */
+    position: relative !important;
+    z-index: 15 !important;
+    pointer-events: none !important;
+}
+
+#upcomingEventsCarousel .event-card .ratio img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    transition: transform 0.3s ease !important;
+    /* PERBAIKAN CLICKABLE */
+    position: relative !important;
+    z-index: 15 !important;
+    pointer-events: none !important;
+}
+
+/* Event card body dengan ukuran yang dipertahankan */
+#upcomingEventsCarousel .event-card .card-body {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    padding: 1.1rem !important; /* UKURAN DIPERTAHANKAN */
+    text-align: left !important;
+    /* PERBAIKAN CLICKABLE */
+    position: relative !important;
+    z-index: 15 !important;
+    pointer-events: none !important;
+}
+
+#upcomingEventsCarousel .event-card .card-body * {
+    pointer-events: none !important;
+}
+
+/* Event title styling dengan ukuran yang dipertahankan */
+#upcomingEventsCarousel .event-card h5 {
+    font-size: 1.05rem !important; /* UKURAN DIPERTAHANKAN */
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
+    color: #212529 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    height: 2.7rem !important; /* UKURAN DIPERTAHANKAN */
+}
+
+/* Event meta info styling dengan ukuran yang dipertahankan */
+#upcomingEventsCarousel .event-card .card-text {
+    font-size: 0.87rem !important; /* UKURAN DIPERTAHANKAN */
+    color: #6c757d !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
+}
+
+/* Event details dengan layout yang dipertahankan */
+#upcomingEventsCarousel .event-card .d-flex {
+    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
+}
+
+/* PERBAIKAN KHUSUS UNTUK BROWSER */
+#upcomingEventsCarousel .event-card .stretched-link {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Event card hover effects - UKURAN EFEK DIPERTAHANKAN */
+#upcomingEventsCarousel .event-card.card-hover-zoom:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+#upcomingEventsCarousel .event-card:hover .ratio img {
+    transform: scale(1.02) !important;
+}
+
+/* Hover effects untuk artikel */
+#latestArticlesCarousel .carousel-item .card-hover-zoom,
+#popularArticlesCarousel .carousel-item .card-hover-zoom {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+#latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
+#popularArticlesCarousel .carousel-item .card-hover-zoom:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Link styling untuk artikel dan event */
+#latestArticlesCarousel a,
+#popularArticlesCarousel a,
+#upcomingEventsCarousel a {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block !important;
+    height: 100% !important;
+}
+
+/* Carousel controls positioning */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5% !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1 !important;
+}
+
+/* Ensure equal height in flex containers */
+.carousel-inner {
+    overflow: visible !important;
+}
+
+.carousel-item {
+    transition: transform 0.6s ease-in-out !important;
+}
+
+.carousel-item.active {
+    display: flex !important;
+}
+
+/* Carousel indicators styling */
+.carousel-indicators {
+    position: relative !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0 !important;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: #6c757d !important;
+    border: none !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    margin: 0 4px !important;
+}
+
+.carousel-indicators .active {
+    background-color: #0F62FF !important;
+}
+
+/* Perbaikan overflow untuk event carousel */
+#upcomingEventsCarousel .carousel-inner {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+}
+
+#upcomingEventsCarousel .carousel-item .row {
+    width: max-content !important;
+}
+
+/* ===== RESPONSIVE FIXES - UKURAN DIPERTAHANKAN ===== */
+
+/* Large Desktop - Event cards UKURAN DIPERTAHANKAN */
+@media (min-width: 1400px) {
+    #upcomingEventsCarousel .carousel-item .col {
+        min-width: 420px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 450px !important; /* UKURAN DIPERTAHANKAN */
+        width: 450px !important; /* UKURAN DIPERTAHANKAN */
+    }
+    
+    #upcomingEventsCarousel .event-card {
+        min-width: 400px !important; /* UKURAN DIPERTAHANKAN */
+    }
+}
+
+/* Desktop - UKURAN DIPERTAHANKAN */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    #upcomingEventsCarousel .carousel-item .col {
+        min-width: 370px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 400px !important; /* UKURAN DIPERTAHANKAN */
+        width: 400px !important; /* UKURAN DIPERTAHANKAN */
+    }
+    
+    #upcomingEventsCarousel .event-card {
+        min-width: 350px !important; /* UKURAN DIPERTAHANKAN */
+    }
+}
+
+/* Tablet view */
+@media (max-width: 991.98px) {
+    /* Artikel carousel tablet */
+    #latestArticlesCarousel .carousel-item .row,
+    #popularArticlesCarousel .carousel-item .row {
+        flex-wrap: wrap !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .col,
+    #popularArticlesCarousel .carousel-item .col {
+        flex: 1 1 calc(50% - 1rem) !important;
+        max-width: calc(50% - 1rem) !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card,
+    #popularArticlesCarousel .carousel-item .card {
+        height: 320px !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card .ratio,
+    #popularArticlesCarousel .carousel-item .card .ratio {
+        flex: 0 0 180px !important;
+        height: 180px !important;
+    }
+    
+    /* Event carousel tablet - UKURAN DIPERTAHANKAN */
+    #upcomingEventsCarousel .carousel-item .row {
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+    }
+    
+    #upcomingEventsCarousel .carousel-item .col {
+        flex: 0 0 auto !important;
+        min-width: 320px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 350px !important; /* UKURAN DIPERTAHANKAN */
+        width: 350px !important; /* UKURAN DIPERTAHANKAN */
+        margin-right: 1rem !important;
+    }
+    
+    #upcomingEventsCarousel .event-card {
+        height: 340px !important;
+        min-width: 300px !important; /* UKURAN DIPERTAHANKAN */
+    }
+    
+    #upcomingEventsCarousel .event-card .ratio {
+        flex: 0 0 180px !important;
+        height: 180px !important;
+    }
+}
+
+/* PERBAIKAN KHUSUS MOBILE */
+@media (max-width: 767.98px) {
+    /* Reset zoom untuk card registrasi agar tidak mengganggu layout */
+    .card.h-100 { 
+        transition: none !important;
+        transform: none !important;
+        z-index: auto !important;
+    }
+    
+    .card.h-100:hover { 
+        transform: none !important;
+        z-index: auto !important;
+    }
+    
+    /* KEEP ZOOM UNTUK ARTIKEL DAN EVENT - dengan efek yang diperkecil */
+    #latestArticlesCarousel .carousel-item .card-hover-zoom,
+    #popularArticlesCarousel .carousel-item .card-hover-zoom,
+    #upcomingEventsCarousel .event-card.card-hover-zoom { 
+        transition: transform 0.2s ease !important;
+        transform: scale(1) !important;
+        z-index: 1 !important;
+    }
+    
+    /* Active state untuk touch */
+    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
+        transform: scale(1.02) !important;
+        z-index: 5 !important;
+        transition: transform 0.1s ease !important;
+    }
+    
+    /* Hover untuk device yang support hover */
+    #latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
+    #popularArticlesCarousel .carousel-item .card-hover-zoom:hover,
+    #upcomingEventsCarousel .event-card.card-hover-zoom:hover { 
+        transform: scale(1.02) !important;
+        z-index: 5 !important;
+    }
+    
+    /* Article carousel mobile layout */
+    #latestArticlesCarousel .carousel-item .row,
+    #popularArticlesCarousel .carousel-item .row {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .col,
+    #popularArticlesCarousel .carousel-item .col {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        padding: 0 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card,
+    #popularArticlesCarousel .carousel-item .card {
+        height: 300px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card .ratio,
+    #popularArticlesCarousel .carousel-item .card .ratio {
+        flex: 0 0 160px !important;
+        height: 160px !important;
+    }
+    
+    /* Event carousel mobile - UKURAN DIPERTAHANKAN dengan horizontal scroll */
+    #upcomingEventsCarousel .carousel-item .row {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        width: max-content !important;
+    }
+    
+    #upcomingEventsCarousel .carousel-item .col {
+        flex: 0 0 auto !important;
+        min-width: 300px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 320px !important; /* UKURAN DIPERTAHANKAN */
+        width: 320px !important; /* UKURAN DIPERTAHANKAN */
+        padding: 0 0.5rem !important;
+        margin-right: 0.5rem !important;
+    }
+    
+    #upcomingEventsCarousel .event-card {
+        height: 320px !important;
+        min-width: 280px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 100% !important;
+    }
+    
+    #upcomingEventsCarousel .event-card .ratio {
+        flex: 0 0 160px !important;
+        height: 160px !important;
+    }
+    
+    #upcomingEventsCarousel .event-card .card-body {
+        padding: 1rem !important;
+    }
+    
+    #upcomingEventsCarousel .event-card h5 {
+        font-size: 0.95rem !important;
+        height: 2.4rem !important;
+    }
+    
+    #upcomingEventsCarousel .event-card .card-text {
+        font-size: 0.8rem !important;
+    }
+    
+    /* Hide carousel controls on mobile */
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: none !important;
+    }
+    
+    /* Tombol registrasi untuk mobile */
+    .registration-btn {
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.85rem !important;
+        width: auto !important;
+        display: inline-block !important;
+        white-space: nowrap !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .registration-btn:active {
+        transform: scale(0.98) !important;
+        background-color: #e0ac00 !important;
+    }
+    
+    /* Perbaikan untuk card registrasi */
+    .card.h-100 {
+        height: auto !important;
+        min-height: 250px;
+    }
+    
+    .card.h-100 .card-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .card.h-100 .card-text {
+        font-size: 0.9rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Fix untuk container */
+    .container {
+        overflow-x: hidden;
+    }
+    
+    /* Fix untuk row yang berantakan */
+    .row.g-4 {
+        margin: 0 !important;
+    }
+    
+    .row.g-4 > .col {
+        padding: 0.5rem !important;
+    }
+    
+    /* Hero section adjustments */
+    .hero-title {
+        font-size: 2rem !important;
+    }
+    
+    .hero-description {
+        font-size: 1rem !important;
+    }
+    
+    /* Section title adjustments */
+    .section-title {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Small mobile - UKURAN DIPERTAHANKAN */
+@media (max-width: 575.98px) {
+    #latestArticlesCarousel .carousel-item .card,
+    #popularArticlesCarousel .carousel-item .card {
+        height: 280px !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card .ratio,
+    #popularArticlesCarousel .carousel-item .card .ratio {
+        flex: 0 0 140px !important;
+        height: 140px !important;
+    }
+    
+    /* Event cards small mobile - UKURAN DIPERTAHANKAN */
+    #upcomingEventsCarousel .carousel-item .col {
+        min-width: 280px !important; /* UKURAN DIPERTAHANKAN */
+        max-width: 300px !important; /* UKURAN DIPERTAHANKAN */
+        width: 300px !important; /* UKURAN DIPERTAHANKAN */
+    }
+    
+    #upcomingEventsCarousel .event-card {
+        height: 300px !important;
+        min-width: 260px !important; /* UKURAN DIPERTAHANKAN */
+    }
+    
+    #upcomingEventsCarousel .event-card .ratio {
+        flex: 0 0 140px !important;
+        height: 140px !important;
+    }
+    
+    #upcomingEventsCarousel .event-card h5 {
+        font-size: 0.9rem !important;
+        height: 2.2rem !important;
+    }
+    
+    #upcomingEventsCarousel .event-card .card-text {
+        font-size: 0.75rem !important;
+    }
+}
+
+/* Perbaikan untuk landscape mobile */
+@media (max-width: 992px) and (orientation: landscape) {
+    .registration-btn {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
+        transform: scale(1.015) !important;
+    }
+}
+
+/* Touch enhancement untuk semua mobile device */
+@media (hover: none) and (pointer: coarse) {
+    /* Cards mendapat efek zoom saat touch */
+    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
+    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
+        transform: scale(1.02) !important;
+        z-index: 5 !important;
+        transition: transform 0.1s ease !important;
+    }
+    
+    /* Tombol mendapat efek press */
+    .btn:active, .registration-btn:active {
+        transform: scale(0.98) !important;
+        transition: transform 0.1s ease !important;
+    }
+}
+
+/* Memastikan semua link dan button bisa diklik di semua device */
+a, button, .btn {
+    position: relative;
+    z-index: 50;
+    pointer-events: auto;
+}
+
+/* Perbaikan tambahan untuk mobile responsiveness */
+@media (max-width: 767.98px) {
+    .card-body.flex-column { 
+        align-items: center !important; 
+    }
+    
+    .card-title.fw-bold { 
+        text-align: center !important; 
+        margin-bottom: 0.5rem !important; 
+    }
+    
+    .btn-sm { 
+        width: 100%; 
+    }
+}
     </style>
 @endpush
 
 @push('scripts')
     <script src="{{ asset('js/carousel_gallery.js') }}"></script>
     <script>
-        // Perbaikan untuk mobile touch events
-        document.addEventListener('DOMContentLoaded', function() {
-            // Function untuk mengecek apakah device adalah mobile
-            function isMobileDevice() {
-                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
+       document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 KAMCUP Event Card Script Loaded');
+    
+    // ===== PERBAIKAN EVENT CARD CLICKABLE =====
+    function makeEventCardsClickable() {
+        const eventCards = document.querySelectorAll('#upcomingEventsCarousel .event-card');
+        console.log(`Found ${eventCards.length} event cards`);
+        
+        eventCards.forEach((card, index) => {
+            const link = card.querySelector('.stretched-link') || 
+                        card.querySelector('a[href*="events"]');
             
-            // Disable zoom pada card registrasi dan event di mobile untuk mencegah layout shift
-            if (isMobileDevice()) {
-                const registrationCards = document.querySelectorAll('.card.h-100');
-                const eventCards = document.querySelectorAll('.event-card');
+            if (link && link.href) {
+                console.log(`Setting up event card ${index + 1}:`, link.href);
                 
-                // Disable zoom untuk card registrasi
-                registrationCards.forEach(card => {
-                    card.style.transform = 'none';
-                    card.style.transition = 'none';
-                });
+                // Remove existing event listeners untuk prevent double binding
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
                 
-                // Disable zoom untuk event cards
-                eventCards.forEach(card => {
-                    card.style.transform = 'none';
-                    card.style.transition = 'none';
-                });
+                // Re-query link di new card
+                const newLink = newCard.querySelector('.stretched-link') || 
+                               newCard.querySelector('a[href*="events"]');
                 
-                // Enable zoom untuk artikel cards dengan touch handling
-                const articleCards = document.querySelectorAll('.carousel-item .card-hover-zoom');
-                articleCards.forEach(card => {
-                    // Touch start event
-                    card.addEventListener('touchstart', function(e) {
-                        this.style.transform = 'scale(1.02)';
-                        this.style.zIndex = '5';
-                        this.style.transition = 'transform 0.1s ease';
-                    }, { passive: true });
+                if (newLink) {
+                    // Make entire card clickable
+                    newCard.addEventListener('click', function(e) {
+                        console.log('Event card clicked!', newLink.href);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.location.href = newLink.href;
+                    });
                     
-                    // Touch end event
-                    card.addEventListener('touchend', function(e) {
+                    // Touch handler for mobile
+                    newCard.addEventListener('touchend', function(e) {
+                        console.log('Event card touched!', newLink.href);
+                        e.preventDefault();
+                        e.stopPropagation();
                         setTimeout(() => {
-                            this.style.transform = 'scale(1)';
-                            this.style.zIndex = '1';
+                            window.location.href = newLink.href;
                         }, 100);
-                    }, { passive: true });
+                    });
                     
-                    // Touch cancel event
-                    card.addEventListener('touchcancel', function(e) {
-                        this.style.transform = 'scale(1)';
-                        this.style.zIndex = '1';
-                    }, { passive: true });
-                });
+                    // Visual feedback
+                    newCard.style.cursor = 'pointer';
+                }
+            } else {
+                console.warn(`No valid link found in event card ${index + 1}`);
             }
-            
-            // Memastikan tombol registrasi selalu bisa diklik
-            const registrationBtns = document.querySelectorAll('.registration-btn');
-            registrationBtns.forEach(btn => {
-                // Touch events untuk button
-                btn.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                    this.style.transform = 'scale(0.98)';
-                    this.style.transition = 'transform 0.1s ease';
-                }, { passive: false });
-                
-                btn.addEventListener('touchend', function(e) {
-                    e.stopPropagation();
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 100);
-                }, { passive: false });
-                
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            });
-            
-            // Handle untuk semua button lainnya
-            const allButtons = document.querySelectorAll('.btn:not(.registration-btn)');
-            allButtons.forEach(btn => {
-                btn.addEventListener('touchstart', function(e) {
-                    if (isMobileDevice()) {
-                        this.style.transform = 'scale(0.98)';
-                        this.style.transition = 'transform 0.1s ease';
-                    }
-                }, { passive: true });
-                
-                btn.addEventListener('touchend', function(e) {
-                    if (isMobileDevice()) {
-                        setTimeout(() => {
-                            this.style.transform = 'scale(1)';
-                        }, 100);
-                    }
-                }, { passive: true });
-            });
         });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                const registrationCards = document.querySelectorAll('.card.h-100');
-                const eventCards = document.querySelectorAll('.event-card');
-                
-                registrationCards.forEach(card => {
-                    card.style.transform = 'none';
-                    card.style.transition = 'none';
-                });
-                
-                eventCards.forEach(card => {
-                    card.style.transform = 'none';
-                    card.style.transition = 'none';
-                });
-            }
+    }
+    
+    // ===== FUNCTION UNTUK MOBILE DEVICE DETECTION =====
+    function isMobileDevice() {
+        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
+    // ===== MOBILE TOUCH EVENTS HANDLING =====
+    if (isMobileDevice()) {
+        console.log('Mobile device detected - setting up touch handlers');
+        
+        // Disable zoom untuk card registrasi di mobile
+        const registrationCards = document.querySelectorAll('.card.h-100');
+        registrationCards.forEach(card => {
+            card.style.transform = 'none';
+            card.style.transition = 'none';
         });
         
-        // Carousel gallery script
-        const carouselImagesContainer = document.querySelector('.carousel-images');
-        const leftButton = document.querySelector('.nav-button.left');
-        const rightButton = document.querySelector('.nav-button.right');
-
-        if (carouselImagesContainer && leftButton && rightButton) {
-            const scrollAmount = () => {
-                let itemWidth = carouselImagesContainer.querySelector('.image-item')?.offsetWidth;
-                return itemWidth ? itemWidth + 30 : carouselImagesContainer.offsetWidth / 2;
+        // Enable zoom untuk artikel cards dengan touch handling
+        const articleCards = document.querySelectorAll('.carousel-item .card-hover-zoom');
+        articleCards.forEach(card => {
+            card.addEventListener('touchstart', function(e) {
+                this.style.transform = 'scale(1.02)';
+                this.style.zIndex = '5';
+                this.style.transition = 'transform 0.1s ease';
+            }, { passive: true });
+            
+            card.addEventListener('touchend', function(e) {
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                    this.style.zIndex = '1';
+                }, 100);
+            }, { passive: true });
+            
+            card.addEventListener('touchcancel', function(e) {
+                this.style.transform = 'scale(1)';
+                this.style.zIndex = '1';
+            }, { passive: true });
+        });
+    }
+    
+    // ===== REGISTRATION BUTTON HANDLERS =====
+    const registrationBtns = document.querySelectorAll('.registration-btn');
+    registrationBtns.forEach(btn => {
+        btn.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+            this.style.transform = 'scale(0.98)';
+            this.style.transition = 'transform 0.1s ease';
+        }, { passive: false });
+        
+        btn.addEventListener('touchend', function(e) {
+            e.stopPropagation();
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        }, { passive: false });
+        
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+    
+    // ===== ALL OTHER BUTTONS HANDLER =====
+    const allButtons = document.querySelectorAll('.btn:not(.registration-btn)');
+    allButtons.forEach(btn => {
+        btn.addEventListener('touchstart', function(e) {
+            if (isMobileDevice()) {
+                this.style.transform = 'scale(0.98)';
+                this.style.transition = 'transform 0.1s ease';
             }
-            leftButton.addEventListener('click', () => {
-                carouselImagesContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
-            });
-            rightButton.addEventListener('click', () => {
-                carouselImagesContainer.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
-            });
+        }, { passive: true });
+        
+        btn.addEventListener('touchend', function(e) {
+            if (isMobileDevice()) {
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            }
+        }, { passive: true });
+    });
+    
+    // ===== CAROUSEL GALLERY SCRIPT (DIPERTAHANKAN) =====
+    const carouselImagesContainer = document.querySelector('.carousel-images');
+    const leftButton = document.querySelector('.nav-button.left');
+    const rightButton = document.querySelector('.nav-button.right');
+
+    if (carouselImagesContainer && leftButton && rightButton) {
+        const scrollAmount = () => {
+            let itemWidth = carouselImagesContainer.querySelector('.image-item')?.offsetWidth;
+            return itemWidth ? itemWidth + 30 : carouselImagesContainer.offsetWidth / 2;
         }
+        
+        leftButton.addEventListener('click', () => {
+            carouselImagesContainer.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+        });
+        
+        rightButton.addEventListener('click', () => {
+            carouselImagesContainer.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+        });
+    }
+    
+    // ===== SETUP EVENT CARDS CLICKABLE =====
+    makeEventCardsClickable();
+    
+    // ===== RE-RUN SAAT CAROUSEL BERUBAH =====
+    const eventCarousel = document.getElementById('upcomingEventsCarousel');
+    if (eventCarousel) {
+        eventCarousel.addEventListener('slid.bs.carousel', function() {
+            console.log('Event carousel changed - re-setting up click handlers');
+            setTimeout(makeEventCardsClickable, 200);
+        });
+    }
+    
+    // ===== FALLBACK - RE-RUN SETELAH DELAY =====
+    setTimeout(() => {
+        console.log('Running fallback event card setup');
+        makeEventCardsClickable();
+    }, 1000);
+    
+    // ===== DEBUG MODE (UNCOMMENT UNTUK TESTING) =====
+    // document.body.classList.add('debug-clickable');
+    
+    console.log('✅ All event card handlers setup complete');
+});
+
+// ===== WINDOW RESIZE HANDLER =====
+window.addEventListener('resize', function() {
+    if (window.innerWidth <= 768) {
+        const registrationCards = document.querySelectorAll('.card.h-100');
+        const eventCards = document.querySelectorAll('.event-card');
+        
+        registrationCards.forEach(card => {
+            card.style.transform = 'none';
+            card.style.transition = 'none';
+        });
+        
+        eventCards.forEach(card => {
+            // Tidak disable event cards di mobile, biarkan tetap clickable
+            card.style.cursor = 'pointer';
+        });
+    }
+});
+
+// ===== LOAD EVENT UNTUK CAROUSEL GALLERY =====
+window.addEventListener('load', function() {
+    // Re-setup event cards setelah semua asset loaded
+    setTimeout(() => {
+        const eventCards = document.querySelectorAll('#upcomingEventsCarousel .event-card');
+        if (eventCards.length > 0) {
+            console.log('Window loaded - re-checking event cards');
+            // Function sudah dipanggil di DOMContentLoaded, ini hanya backup
+        }
+    }, 500);
+});
     </script>
 @endpush
