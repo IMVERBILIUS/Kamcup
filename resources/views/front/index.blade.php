@@ -59,7 +59,7 @@
 </section>
 
 @if ($next_match)
-<div class="container py-4">
+<div class="container py-4 scroll-animate" data-animation="fadeInUp">
     <a href="{{ route('front.events.show', $next_match->slug) }}" class="text-decoration-none">
         <div class="card bg-light border-0 shadow-sm card-hover-zoom" style="height: auto;">
             <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
@@ -83,7 +83,7 @@
 @endif
 
 {{-- Artikel Terbaru --}}
-<div class="container py-5">
+<div class="container py-5 scroll-animate" data-animation="fadeInUp">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0 section-title"><span class="main-text">Artikel</span> <span
                 class="highlight-text">Terbaru</span></h3>
@@ -95,7 +95,7 @@
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <div class="row gx-3 gy-3">
                         @foreach ($chunk as $article)
-                            <div class="col-12 col-md-6 col-lg-4">
+                            <div class="col-12 col-md-6 col-lg-4 scroll-animate" data-animation="fadeInUp" data-delay="{{ $loop->index * 100 }}">
                                 <a href="{{ route('front.articles.show', $article->slug) }}" class="text-decoration-none">
                                     <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
                                         <div class="ratio ratio-16x9">
@@ -146,7 +146,7 @@
 </div>
 
 {{-- Artikel Populer --}}
-<div class="container py-5">
+<div class="container py-5 scroll-animate" data-animation="fadeInUp">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0 section-title"><span class="main-text">Artikel</span> <span
                 class="highlight-text">Populer</span></h3>
@@ -158,7 +158,7 @@
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <div class="row gx-3 gy-3">
                         @foreach ($chunk as $article)
-                            <div class="col-12 col-md-6 col-lg-4">
+                            <div class="col-12 col-md-6 col-lg-4 scroll-animate" data-animation="fadeInUp" data-delay="{{ $loop->index * 100 }}">
                                 <a href="{{ route('front.articles.show', $article->slug) }}" class="text-decoration-none">
                                     <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
                                         <div class="ratio ratio-16x9">
@@ -208,17 +208,17 @@
     </div>
 </div>
 
-<div class="text-center mt-5 mt-md-4">
+<div class="text-center mt-5 mt-md-4 scroll-animate" data-animation="fadeInUp">
     <a href="{{ route('front.articles') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
 </div>
 
 {{-- Sponsor Utama (Satu Card dengan Tiga Logo Sejajar) --}}
-<div class="container py-5">
+<div class="container py-5 scroll-animate" data-animation="fadeInUp">
     <h5 class="fw-bold section-title"><span class="main-text">Presented </span> <span class="highlight-text">by</span>
     </h5>
     <div class="card border rounded-3 shadow-sm p-4 bg-white">
         <div class="row g-4 justify-content-around align-items-center">
-            <div class="col-auto d-flex justify-content-center">
+            <div class="col-auto d-flex justify-content-center scroll-animate" data-animation="fadeInLeft" data-delay="100">
                 @if (isset($sponsorData['xxl'][0]))
                     @php $sponsor = $sponsorData['xxl'][0]; @endphp
                     <div class="text-center btn-ylw" style="transition: transform 0.3s;">
@@ -231,7 +231,7 @@
                     </div>
                 @endif
             </div>
-            <div class="col-auto d-flex justify-content-center">
+            <div class="col-auto d-flex justify-content-center scroll-animate" data-animation="fadeInUp" data-delay="200">
                 @if (isset($sponsorData['xxl'][1]))
                     @php $sponsor = $sponsorData['xxl'][1]; @endphp
                     <div class="text-center">
@@ -244,7 +244,7 @@
                     </div>
                 @endif
             </div>
-            <div class="col-auto d-flex justify-content-center">
+            <div class="col-auto d-flex justify-content-center scroll-animate" data-animation="fadeInRight" data-delay="300">
                 @if (isset($sponsorData['xxl'][2]))
                     @php $sponsor = $sponsorData['xxl'][2]; @endphp
                     <div class="text-center">
@@ -262,9 +262,9 @@
 </div>
 
 {{-- Card Section for Registrations --}}
-<div class="container py-5">
+<div class="container py-5 scroll-animate" data-animation="fadeInUp">
     <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
-        <div class="col">
+        <div class="col scroll-animate" data-animation="fadeInLeft" data-delay="100">
             <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                 style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                 <i class="bi bi-people-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
@@ -277,7 +277,7 @@
                 </a>
             </div>
         </div>
-        <div class="col">
+        <div class="col scroll-animate" data-animation="fadeInUp" data-delay="200">
             <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                 style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                 <i class="bi bi-house-door-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
@@ -290,7 +290,7 @@
                 </a>
             </div>
         </div>
-        <div class="col">
+        <div class="col scroll-animate" data-animation="fadeInRight" data-delay="300">
             <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                 style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                 <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
@@ -315,7 +315,7 @@
 </div>
 
 {{-- Upcoming Events --}}
-<div class="container py-5 mb-5">
+<div class="container py-5 mb-5 scroll-animate" data-animation="fadeInUp">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold section-title"><span class="main-text">UPCOMING</span> <span
                 class="highlight-text">EVENT</span></h3>
@@ -327,7 +327,7 @@
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     <div class="row g-4">
                         @foreach ($chunk as $event)
-                            <div class="col">
+                            <div class="col scroll-animate" data-animation="zoomIn" data-delay="{{ $loop->index * 100 }}">
                                 <div class="card event-card border-0 rounded-4 overflow-hidden">
                                     <div class="ratio ratio-16x9 mb-2">
                                         <img src="{{ asset('storage/' . $event->thumbnail) }}"
@@ -401,7 +401,7 @@
     </div>
 </div>
 
-<div class="container py-5 mt-md-5">
+<div class="container py-5 mt-md-5 scroll-animate" data-animation="fadeInUp">
     <div class="text-center sponsor-section-header mb-4">
         <p class="mb-0 fw-bold fs-4">Materi Promosi BY
             @if (isset($sponsorData['xxl']) && $sponsorData['xxl']->isNotEmpty())
@@ -413,7 +413,7 @@
     </div>
 </div>
 
-<div class="container py-5">
+<div class="container py-5 scroll-animate" data-animation="fadeInUp">
     <div class="carousel-container">
         <h2 class="carousel-title">Galeri</h2>
         <p class="carousel-subtitle"></p>
@@ -421,7 +421,7 @@
             <button class="nav-button left">&#10094;</button>
             <div class="carousel-images">
                 @forelse ($galleries as $gallery)
-                    <a href="{{ route('front.galleries.show', $gallery->slug) }}" class="image-item">
+                    <a href="{{ route('front.galleries.show', $gallery->slug) }}" class="image-item scroll-animate" data-animation="fadeInUp" data-delay="{{ $loop->index * 100 }}">
                         <img src="{{ asset('storage/' . $gallery->thumbnail) }}" alt="{{ $gallery->title }}" />
                         <h1>{{ Str::limit($gallery->title, 30) }}</h1>
                     </a>
@@ -434,11 +434,11 @@
     </div>
 </div>
 
-<div class="text-center mt-4 mb-5">
+<div class="text-center mt-4 mb-5 scroll-animate" data-animation="fadeInUp">
     <a href="{{ route('front.galleries') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
 </div>
 
-<div class="container-fluid py-5" style="background-color: #0F62FF;">
+<div class="container-fluid py-5 scroll-animate" data-animation="fadeInUp" style="background-color: #0F62FF;">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold section-title text-white">PARTNER & SPONSOR KAMI</h3>
@@ -458,9 +458,9 @@
         @foreach ($displayOrder as $size)
             @if (isset($sponsorData[$size]) && $sponsorData[$size]->isNotEmpty())
                 <div
-                    class="row row-cols-1 row-cols-md-{{ $sponsorSizes[$size]['cols_md'] }} row-cols-lg-{{ $sponsorSizes[$size]['cols_lg'] }} g-4 text-center mb-4 @if ($size === 'xxl') justify-content-center @endif">
+                    class="row row-cols-1 row-cols-md-{{ $sponsorSizes[$size]['cols_md'] }} row-cols-lg-{{ $sponsorSizes[$size]['cols_lg'] }} g-4 text-center mb-4 @if ($size === 'xxl') justify-content-center @endif scroll-animate" data-animation="fadeInUp" data-delay="{{ $loop->index * 100 }}">
                     @foreach ($sponsorData[$size]->take($sponsorSizes[$size]['limit']) as $sponsor)
-                        <div class="col">
+                        <div class="col scroll-animate" data-animation="zoomIn" data-delay="{{ ($loop->parent->index * 100) + ($loop->index * 50) }}">
                             <div class="p-{{ $sponsorSizes[$size]['p_size'] }} border rounded-3 sponsor-box sponsor-{{ $size }} h-100 d-flex flex-column justify-content-center align-items-center bg-white text-dark">
                                 <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}"
                                     class="img-fluid mb-2"
@@ -486,6 +486,81 @@
     <style>
      :root { 
     --shadow-color-cf2585: #CF2585; 
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform, opacity;
+}
+
+.scroll-animate.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Different animation types */
+.scroll-animate[data-animation="fadeInUp"] {
+    transform: translateY(50px);
+}
+
+.scroll-animate[data-animation="fadeInDown"] {
+    transform: translateY(-50px);
+}
+
+.scroll-animate[data-animation="fadeInLeft"] {
+    transform: translateX(-50px);
+}
+
+.scroll-animate[data-animation="fadeInRight"] {
+    transform: translateX(50px);
+}
+
+.scroll-animate[data-animation="zoomIn"] {
+    transform: scale(0.8) translateY(30px);
+}
+
+.scroll-animate[data-animation="slideInLeft"] {
+    transform: translateX(-100px);
+}
+
+.scroll-animate[data-animation="slideInRight"] {
+    transform: translateX(100px);
+}
+
+/* When animated */
+.scroll-animate[data-animation="fadeInUp"].animate,
+.scroll-animate[data-animation="fadeInDown"].animate,
+.scroll-animate[data-animation="fadeInLeft"].animate,
+.scroll-animate[data-animation="fadeInRight"].animate,
+.scroll-animate[data-animation="slideInLeft"].animate,
+.scroll-animate[data-animation="slideInRight"].animate {
+    transform: translateY(0) translateX(0);
+}
+
+.scroll-animate[data-animation="zoomIn"].animate {
+    transform: scale(1) translateY(0);
+}
+
+/* Staggered animation delays */
+.scroll-animate[data-delay="100"] { transition-delay: 0.1s; }
+.scroll-animate[data-delay="200"] { transition-delay: 0.2s; }
+.scroll-animate[data-delay="300"] { transition-delay: 0.3s; }
+.scroll-animate[data-delay="400"] { transition-delay: 0.4s; }
+.scroll-animate[data-delay="500"] { transition-delay: 0.5s; }
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-animate {
+        transition: opacity 0.3s ease;
+        transform: none;
+    }
+    
+    .scroll-animate.animate {
+        transform: none;
+    }
 }
 
 .card a.btn { 
@@ -978,6 +1053,13 @@
 
 /* PERBAIKAN KHUSUS MOBILE */
 @media (max-width: 767.98px) {
+    /* Disable scroll animations on mobile for better performance */
+    .scroll-animate {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    
     /* Reset zoom untuk card registrasi agar tidak mengganggu layout */
     .card.h-100 { 
         transition: none !important;
@@ -1253,6 +1335,38 @@ a, button, .btn {
        document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 KAMCUP Event Card Script Loaded');
     
+    // ===== SCROLL ANIMATIONS SCRIPT =====
+    function initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const delay = element.getAttribute('data-delay') || 0;
+                    
+                    setTimeout(() => {
+                        element.classList.add('animate');
+                    }, parseInt(delay));
+                } else {
+                    // Remove animation when scrolling back up
+                    entry.target.classList.remove('animate');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all scroll-animate elements
+        const animateElements = document.querySelectorAll('.scroll-animate');
+        animateElements.forEach(el => {
+            observer.observe(el);
+        });
+        
+        console.log(`✅ Scroll animations initialized for ${animateElements.length} elements`);
+    }
+    
     // ===== PERBAIKAN EVENT CARD CLICKABLE =====
     function makeEventCardsClickable() {
         const eventCards = document.querySelectorAll('#upcomingEventsCarousel .event-card');
@@ -1338,6 +1452,9 @@ a, button, .btn {
                 this.style.zIndex = '1';
             }, { passive: true });
         });
+    } else {
+        // Initialize scroll animations only on desktop/tablet
+        initScrollAnimations();
     }
     
     // ===== REGISTRATION BUTTON HANDLERS =====
@@ -1416,12 +1533,14 @@ a, button, .btn {
     setTimeout(() => {
         console.log('Running fallback event card setup');
         makeEventCardsClickable();
+        
+        // Re-initialize scroll animations if not mobile
+        if (!isMobileDevice()) {
+            initScrollAnimations();
+        }
     }, 1000);
     
-    // ===== DEBUG MODE (UNCOMMENT UNTUK TESTING) =====
-    // document.body.classList.add('debug-clickable');
-    
-    console.log('✅ All event card handlers setup complete');
+    console.log('✅ All event card handlers and scroll animations setup complete');
 });
 
 // ===== WINDOW RESIZE HANDLER =====
@@ -1451,7 +1570,59 @@ window.addEventListener('load', function() {
             console.log('Window loaded - re-checking event cards');
             // Function sudah dipanggil di DOMContentLoaded, ini hanya backup
         }
+        
+        // Re-initialize scroll animations for desktop
+        if (window.innerWidth > 768) {
+            const animateElements = document.querySelectorAll('.scroll-animate');
+            if (animateElements.length > 0) {
+                console.log('Re-initializing scroll animations after page load');
+                
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const element = entry.target;
+                            const delay = element.getAttribute('data-delay') || 0;
+                            
+                            setTimeout(() => {
+                                element.classList.add('animate');
+                            }, parseInt(delay));
+                        } else {
+                            entry.target.classList.remove('animate');
+                        }
+                    });
+                }, observerOptions);
+                
+                animateElements.forEach(el => {
+                    observer.observe(el);
+                });
+            }
+        }
     }, 500);
 });
+
+// ===== PERFORMANCE OPTIMIZATION =====
+// Use passive event listeners where possible
+document.addEventListener('scroll', function() {
+    // Scroll performance optimizations can be added here if needed
+}, { passive: true });
+
+// ===== DEBUGGING HELPER (UNCOMMENT FOR TESTING) =====
+// window.debugScrollAnimations = function() {
+//     const elements = document.querySelectorAll('.scroll-animate');
+//     console.log(`Total scroll animate elements: ${elements.length}`);
+//     elements.forEach((el, i) => {
+//         console.log(`Element ${i + 1}:`, {
+//             element: el,
+//             animation: el.getAttribute('data-animation'),
+//             delay: el.getAttribute('data-delay'),
+//             hasAnimateClass: el.classList.contains('animate')
+//         });
+//     });
+// };
     </script>
 @endpush
