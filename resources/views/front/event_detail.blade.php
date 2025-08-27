@@ -10,18 +10,18 @@
         <div class="col-lg-10">
 
             {{-- Top Header Section (Back Button & Date) --}}
-            <div class="d-flex justify-content-between align-items-center top-header-section mb-4 mt-4">
-                <a href="{{ route('front.events.index') }}" class="btn btn-back"> {{-- Mengarahkan ke halaman daftar event --}}
+            <div class="d-flex justify-content-between align-items-center top-header-section mb-4 mt-4 scroll-animate" data-animation="fadeInUp">
+                <a href="{{ route('front.events.index') }}" class="btn btn-back">
                     <i class="fas fa-arrow-left me-2"></i> KEMBALI
                 </a>
                 <span class="date-info">{{ \Carbon\Carbon::now()->format('d F Y') }}</span>
             </div>
 
             {{-- Tournament Title --}}
-            <h1 class="tournament-title">{{ $event->title }}</h1>
+            <h1 class="tournament-title scroll-animate" data-animation="fadeInLeft" data-delay="100">{{ $event->title }}</h1>
 
             {{-- Tournament Header Image --}}
-            <div class="tournament-header-image-container mb-4">
+            <div class="tournament-header-image-container mb-4 scroll-animate" data-animation="zoomIn" data-delay="200">
                 @if ($event->thumbnail)
                     <img src="{{ asset('storage/' . $event->thumbnail) }}" alt="Event Thumbnail" class="img-fluid rounded-lg tournament-thumbnail-img">
                 @else
@@ -30,7 +30,7 @@
             </div>
 
             {{-- Summary Boxes --}}
-            <div class="summary-boxes-container row g-0 mb-4">
+            <div class="summary-boxes-container row g-0 mb-4 scroll-animate" data-animation="fadeInUp" data-delay="300">
                 <div class="col-6">
                     <div class="summary-box tournament-status">
                         <span class="label">Status Event</span>
@@ -46,7 +46,7 @@
             </div>
 
             {{-- Navigation Tabs and Content --}}
-            <div class="tabs-section mb-5">
+            <div class="tabs-section mb-5 scroll-animate" data-animation="fadeInUp" data-delay="400">
                 <ul class="nav nav-pills custom-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="peraturan-tab" data-bs-toggle="tab" data-bs-target="#peraturan" type="button" role="tab" aria-controls="peraturan" aria-selected="true">Peraturan</button>
@@ -249,21 +249,21 @@
             </div>
 
             {{-- Tombol Daftar Event --}}
-            <div class="registration-section text-center my-5">
+            <div class="registration-section text-center my-5 scroll-animate" data-animation="zoomIn" data-delay="500">
                 @auth
-                    @if ($userRegistrationStatus === 'rejected') {{-- NEW: If status is rejected, allow re-registration --}}
-                        <button id="registerEventBtn" class="btn btn-warning btn-lg custom-register-btn"> {{-- Button color for re-registration --}}
+                    @if ($userRegistrationStatus === 'rejected')
+                        <button id="registerEventBtn" class="btn btn-warning btn-lg custom-register-btn">
                             <span id="registerBtnText">Daftar Ulang Event Ini</span>
                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="registerBtnSpinner"></span>
                         </button>
                         <p class="text-muted mt-2">Pendaftaran Anda sebelumnya ditolak. Anda bisa mendaftar ulang.</p>
-                    @elseif ($userRegistrationStatus !== null) {{-- If registered with any other status (pending, approved, completed) --}}
+                    @elseif ($userRegistrationStatus !== null)
                         <button class="btn btn-secondary btn-lg" disabled>Anda Sudah Terdaftar ({{ ucfirst($userRegistrationStatus) }})</button>
                         <p class="text-muted mt-2">Pendaftaran Anda sedang diproses atau sudah dikonfirmasi.</p>
-                    @elseif (!$isRegistrationOpen) {{-- Check if registration is NOT open based on event status --}}
+                    @elseif (!$isRegistrationOpen)
                         <button class="btn btn-danger btn-lg" disabled>Pendaftaran Ditutup</button>
                         <p class="text-muted mt-2">Pendaftaran untuk event ini sudah {{ $event->status === 'ongoing' ? 'berlangsung.' : ($event->status === 'completed' ? 'selesai.' : 'ditutup.') }}</p>
-                    @else {{-- Not registered, and registration is open --}}
+                    @else
                         <button id="registerEventBtn" class="btn btn-primary btn-lg custom-register-btn">
                             <span id="registerBtnText">Daftar Event Ini</span>
                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="registerBtnSpinner"></span>
@@ -373,6 +373,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/event_detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
     <style>
         /* Custom styles for the register button and modals */
         .custom-register-btn {
@@ -593,4 +594,5 @@
         }
     });
 </script>
+<script src="{{ asset('js/animate.js') }}"></script>
 @endpush
