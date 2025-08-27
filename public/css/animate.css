@@ -1,0 +1,237 @@
+:root {
+    --shadow-color-cf2585: #cf2585;
+}
+
+/* ===== SCROLL ANIMATIONS - AKTIF DI SEMUA DEVICE ===== */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform, opacity;
+}
+
+.scroll-animate.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Different animation types */
+.scroll-animate[data-animation="fadeInUp"] {
+    transform: translateY(50px);
+}
+
+.scroll-animate[data-animation="fadeInDown"] {
+    transform: translateY(-50px);
+}
+
+.scroll-animate[data-animation="fadeInLeft"] {
+    transform: translateX(-50px);
+}
+
+.scroll-animate[data-animation="fadeInRight"] {
+    transform: translateX(50px);
+}
+
+.scroll-animate[data-animation="zoomIn"] {
+    transform: scale(0.8) translateY(30px);
+}
+
+.scroll-animate[data-animation="slideInLeft"] {
+    transform: translateX(-100px);
+}
+
+.scroll-animate[data-animation="slideInRight"] {
+    transform: translateX(100px);
+}
+
+/* When animated */
+.scroll-animate[data-animation="fadeInUp"].animate,
+.scroll-animate[data-animation="fadeInDown"].animate,
+.scroll-animate[data-animation="fadeInLeft"].animate,
+.scroll-animate[data-animation="fadeInRight"].animate,
+.scroll-animate[data-animation="slideInLeft"].animate,
+.scroll-animate[data-animation="slideInRight"].animate {
+    transform: translateY(0) translateX(0);
+}
+
+.scroll-animate[data-animation="zoomIn"].animate {
+    transform: scale(1) translateY(0);
+}
+
+/* Staggered animation delays */
+.scroll-animate[data-delay="100"] {
+    transition-delay: 0.1s;
+}
+.scroll-animate[data-delay="200"] {
+    transition-delay: 0.2s;
+}
+.scroll-animate[data-delay="300"] {
+    transition-delay: 0.3s;
+}
+.scroll-animate[data-delay="400"] {
+    transition-delay: 0.4s;
+}
+.scroll-animate[data-delay="500"] {
+    transition-delay: 0.5s;
+}
+
+/* Mobile animations - lebih halus */
+@media (max-width: 768px) {
+    .scroll-animate {
+        transition: all 0.5s ease-out;
+        transform: translateY(30px);
+    }
+
+    .scroll-animate[data-animation="zoomIn"] {
+        transform: scale(0.95) translateY(20px);
+    }
+
+    .scroll-animate[data-animation="fadeInLeft"] {
+        transform: translateX(-30px);
+    }
+
+    .scroll-animate[data-animation="fadeInRight"] {
+        transform: translateX(30px);
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-animate {
+        transition: opacity 0.3s ease;
+        transform: none;
+    }
+
+    .scroll-animate.animate {
+        transform: none;
+    }
+}
+
+.card a.btn {
+    background-color: #f4b704 !important;
+    border-color: #f4b704 !important;
+    color: #212529 !important;
+    transition: all 0.3s ease;
+}
+
+.card a.btn:hover {
+    background-color: #e0ac00 !important;
+    border-color: #e0ac00 !important;
+    color: #212529 !important;
+}
+
+.highlight-text {
+    color: #f4b704;
+}
+.main-text {
+    color: #0f62ff;
+}
+.card-title.fw-bold {
+    font-size: 1.25rem;
+}
+
+/* Zoom effect untuk desktop */
+.card-hover-zoom {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 3px 8px rgba(200, 200, 200, 0.3);
+}
+
+.card-hover-zoom:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(150, 150, 150, 0.3);
+}
+
+.card-hover-zoom img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.card-hover-zoom:hover img {
+    transform: scale(1.02);
+}
+
+.article-text {
+    color: #212529;
+}
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-ylw:hover {
+    transform: translateY(-2px);
+}
+
+.registration-btn {
+    padding: 0.75rem 2rem !important;
+    font-size: 0.95rem !important;
+    transition: all 0.3s ease;
+}
+
+.registration-btn:hover {
+    background-color: #e0ac00 !important;
+    border-color: #e0ac00 !important;
+    transform: translateY(-2px);
+}
+
+/* Hover effects SAMA untuk semua cards */
+.carousel-item .card-hover-zoom {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.carousel-item .card-hover-zoom:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Touch handling untuk mobile */
+@media (hover: none) and (pointer: coarse) {
+    .carousel-item .card-hover-zoom:active {
+        transform: scale(1.02) !important;
+        z-index: 5 !important;
+        transition: transform 0.1s ease !important;
+    }
+}
+
+/* Status badge colors */
+.bg-warning.text-dark {
+    background-color: #f4b704 !important;
+    color: #212529 !important;
+}
+
+/* Perbaikan spacing mobile */
+@media (max-width: 767.98px) {
+    .py-5.mb-3 {
+        padding-top: 2rem !important;
+        padding-bottom: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .pt-5.pb-3.mt-4 {
+        padding-top: 2rem !important;
+        padding-bottom: 1rem !important;
+        margin-top: 1.5rem !important;
+    }
+
+    .sponsor-section-header {
+        margin-bottom: 1.5rem !important;
+        padding: 0 1rem;
+    }
+
+    .promo-title {
+        font-size: 1.1rem !important;
+        line-height: 1.4 !important;
+    }
+
+    .container.py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .scroll-animate + .scroll-animate {
+        margin-top: 0.5rem;
+    }
+}
