@@ -315,69 +315,59 @@
 </div>
 
 {{-- Upcoming Events --}}
-<div class="container py-5 mb-5 scroll-animate" data-animation="fadeInUp">
+<div class="container py-5 mb-3 scroll-animate" data-animation="fadeInUp">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold section-title"><span class="main-text">UPCOMING</span> <span
                 class="highlight-text">EVENT</span></h3>
         <a href="{{ route('front.events.index') }}" class="btn btn-outline-dark see-all-btn px-4 rounded-pill">Lihat semuanya</a>
     </div>
-    <div id="upcomingEventsCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="upcomingEventsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
             @forelse ($events->chunk($chunk_size) as $chunk)
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                    <div class="row g-4">
+                    <div class="row gx-3 gy-3">
                         @foreach ($chunk as $event)
-                            <div class="col scroll-animate" data-animation="zoomIn" data-delay="{{ $loop->index * 100 }}">
-                                <div class="card event-card border-0 rounded-4 overflow-hidden">
-                                    <div class="ratio ratio-16x9 mb-2">
-                                        <img src="{{ asset('storage/' . $event->thumbnail) }}"
-                                            class="img-fluid object-fit-cover w-100 h-100" alt="{{ $event->title }}">
+                            <div class="col-12 col-md-6 col-lg-4 scroll-animate" data-animation="fadeInUp" data-delay="{{ $loop->index * 100 }}">
+                                <a href="{{ route('front.events.show', $event->slug) }}" class="text-decoration-none">
+                                    <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
+                                        <div class="ratio ratio-16x9">
+                                            <img src="{{ asset('storage/' . $event->thumbnail) }}"
+                                                class="img-fluid object-fit-cover w-100 h-100" alt="{{ $event->title }}">
+                                        </div>
+                                        <div class="card-body d-flex flex-column px-3 py-3">
+                                            <h5 class="card-title fw-semibold mb-2">{{ Str::limit($event->title, 60) }}</h5>
+                                            <div class="event-meta mb-auto">
+                                                <p class="small text-muted mb-1 d-flex align-items-center">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($event->registration_start)->format('d M') }} - 
+                                                    {{ \Carbon\Carbon::parse($event->registration_end)->format('d M Y') }}
+                                                </p>
+                                                <p class="small text-muted mb-1 d-flex align-items-center">
+                                                    <i class="bi bi-geo-alt me-1"></i>
+                                                    {{ Str::limit($event->location, 25) }}
+                                                </p>
+                                                <div class="d-flex align-items-center justify-content-between mt-2">
+                                                    <span class="small text-muted">
+                                                        <i class="bi bi-gender-ambiguous me-1"></i>
+                                                        {{ $event->gender_category }}
+                                                    </span>
+                                                    @php
+                                                        $statusClass = '';
+                                                        switch ($event->status) {
+                                                            case 'completed': $statusClass = 'bg-success text-white'; break;
+                                                            case 'ongoing': $statusClass = 'bg-primary text-white'; break;
+                                                            case 'registration': $statusClass = 'bg-warning text-dark'; break;
+                                                            default: $statusClass = 'bg-secondary text-white'; break;
+                                                        }
+                                                    @endphp
+                                                    <span class="badge {{ $statusClass }} px-2 py-1" style="font-size: 0.7rem;">
+                                                        {{ ucfirst($event->status) }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body d-flex flex-column">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <h5 class="card-title fw-bold mb-0 me-2 flex-grow-1 text-truncate" style="max-width: calc(100% - 70px);">{{ Str::limit($event->title, 20) }}
-                                            </h5>
-                                            <span class="small text-muted text-end flex-shrink-0">
-                                                {{ \Carbon\Carbon::parse($event->registration_start)->format('d M') }}
-                                                @if (\Carbon\Carbon::parse($event->registration_start)->format('Y') != \Carbon\Carbon::parse($event->registration_end)->format('Y'))
-                                                    - {{ \Carbon\Carbon::parse($event->registration_end)->format('d M Y') }}
-                                                @else
-                                                    - {{ \Carbon\Carbon::parse($event->registration_end)->format('d M') }}
-                                                    {{ \Carbon\Carbon::parse($event->registration_end)->format('Y') }}
-                                                @endif
-                                            </span>
-                                        </div>
-                                        <p class="card-text small text-muted mb-2 d-flex align-items-center">
-                                            <i class="bi bi-gender-ambiguous me-2"></i> {{ $event->gender_category }}
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <p class="card-text small text-muted mb-0 d-flex align-items-center me-2 flex-grow-1 text-truncate">
-                                                <i class="bi bi-geo-alt me-2"></i> {{ Str::limit($event->location, 20) }}
-                                            </p>
-                                            @php
-                                                $statusClass = '';
-                                                switch ($event->status) {
-                                                    case 'completed': $statusClass = 'status-completed'; break;
-                                                    case 'ongoing': $statusClass = 'status-ongoing'; break;
-                                                    case 'registration': $statusClass = 'status-registration'; break;
-                                                    default: $statusClass = ''; break;
-                                                }
-                                            @endphp
-                                            <span class="event-status-badge {{ $statusClass }} flex-shrink-0">
-                                                {{ ucfirst($event->status) }}
-                                            </span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            @if ($event->sponsors->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $event->sponsors->first()->logo) }}"
-                                                    alt="Sponsor Logo"
-                                                    style="max-height: 25px; max-width: 60px; object-fit: contain; flex-shrink: 0;">
-                                            @endif
-                                        </div>
-                                        <a href="{{ route('front.events.show', $event->slug) }}"
-                                            class="mt-auto stretched-link">Detail Event & Daftar</a>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>
@@ -390,24 +380,38 @@
                 </div>
             @endforelse
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="prev">
+        
+        {{-- Carousel Controls untuk Desktop --}}
+        <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="next">
+        <button class="carousel-control-next d-none d-md-flex" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
+        
+        {{-- Carousel Indicators untuk Mobile --}}
+        @if($events->count() > $chunk_size)
+        <div class="carousel-indicators d-md-none position-relative mt-3 mb-0">
+            @foreach ($events->chunk($chunk_size) as $chunkIndex => $chunk)
+                <button type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide-to="{{ $chunkIndex }}" 
+                        class="{{ $chunkIndex === 0 ? 'active' : '' }}" aria-current="{{ $chunkIndex === 0 ? 'true' : 'false' }}" 
+                        aria-label="Slide {{ $chunkIndex + 1 }}"></button>
+            @endforeach
+        </div>
+        @endif
     </div>
 </div>
 
-<div class="container py-5 mt-md-5 scroll-animate" data-animation="fadeInUp">
+{{-- PERBAIKAN SPACING UNTUK MATERI PROMOSI --}}
+<div class="container pt-5 pb-3 mt-4 scroll-animate" data-animation="fadeInUp">
     <div class="text-center sponsor-section-header mb-4">
-        <p class="mb-0 fw-bold fs-4">Materi Promosi BY
+        <p class="mb-0 fw-bold fs-4 promo-title">Materi Promosi BY
             @if (isset($sponsorData['xxl']) && $sponsorData['xxl']->isNotEmpty())
                 {{ $sponsorData['xxl']->first()->name }}
             @else
-                Para Mitra Hebat Kami
+                TBC
             @endif
         </p>
     </div>
@@ -484,11 +488,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
-     :root { 
+:root { 
     --shadow-color-cf2585: #CF2585; 
 }
 
-/* ===== SCROLL ANIMATIONS ===== */
+/* ===== SCROLL ANIMATIONS - AKTIF DI SEMUA DEVICE ===== */
 .scroll-animate {
     opacity: 0;
     transform: translateY(50px);
@@ -551,6 +555,26 @@
 .scroll-animate[data-delay="400"] { transition-delay: 0.4s; }
 .scroll-animate[data-delay="500"] { transition-delay: 0.5s; }
 
+/* Mobile animations - lebih halus */
+@media (max-width: 768px) {
+    .scroll-animate {
+        transition: all 0.5s ease-out;
+        transform: translateY(30px);
+    }
+    
+    .scroll-animate[data-animation="zoomIn"] {
+        transform: scale(0.95) translateY(20px);
+    }
+    
+    .scroll-animate[data-animation="fadeInLeft"] {
+        transform: translateX(-30px);
+    }
+    
+    .scroll-animate[data-animation="fadeInRight"] {
+        transform: translateX(30px);
+    }
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .scroll-animate {
@@ -574,24 +598,6 @@
     background-color: #e0ac00 !important; 
     border-color: #e0ac00 !important; 
     color: #212529 !important; 
-}
-
-.event-status-badge { 
-    padding: 0.3em 0.6em; 
-    border-radius: 0.25rem; 
-    font-size: 0.75em; 
-    font-weight: 600; 
-    line-height: 1; 
-    white-space: nowrap; 
-    text-align: center; 
-    vertical-align: baseline; 
-    transition: all 0.3s ease-in-out; 
-    color: white; 
-}
-
-.event-status-badge.status-registration { 
-    background-color: #F4B704; 
-    color: #212529; 
 }
 
 .highlight-text { color: #F4B704; }
@@ -621,15 +627,6 @@
 }
 
 .article-text { color: #212529; }
-.match-terdekat-card { display: flex; flex-direction: column; }
-.match-terdekat-card .card-body { 
-    flex-grow: 1; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: flex-start; 
-    padding: 1rem; 
-}
 .text-truncate { 
     white-space: nowrap; 
     overflow: hidden; 
@@ -652,27 +649,24 @@
     transform: translateY(-2px);
 }
 
-/* ===== PERBAIKAN UNTUK ARTIKEL CAROUSEL ===== */
+/* ===== GANTI CSS EVENT CARDS DENGAN INI ===== */
 
-/* Base article carousel styling */
-#latestArticlesCarousel .carousel-item .row,
-#popularArticlesCarousel .carousel-item .row {
+/* Base styling untuk semua carousel - UKURAN YANG SAMA */
+.carousel-item .row {
     display: flex !important;
     flex-wrap: nowrap !important;
     align-items: stretch !important;
 }
 
-#latestArticlesCarousel .carousel-item .col,
-#popularArticlesCarousel .carousel-item .col {
+.carousel-item .col {
     display: flex !important;
     flex: 1 1 0 !important;
     min-width: 0 !important;
     padding: 0 0.75rem !important;
 }
 
-/* Article card standardization */
-#latestArticlesCarousel .carousel-item .card,
-#popularArticlesCarousel .carousel-item .card {
+/* Card styling PERSIS SAMA untuk artikel dan event */
+.carousel-item .card {
     height: 350px !important;
     width: 100% !important;
     display: flex !important;
@@ -683,9 +677,8 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
 }
 
-/* Image container fixed ratio */
-#latestArticlesCarousel .carousel-item .card .ratio,
-#popularArticlesCarousel .carousel-item .card .ratio {
+/* Image container SAMA PERSIS */
+.carousel-item .card .ratio {
     flex: 0 0 200px !important;
     height: 200px !important;
     margin-bottom: 0 !important;
@@ -693,17 +686,15 @@
     overflow: hidden !important;
 }
 
-#latestArticlesCarousel .carousel-item .card .ratio img,
-#popularArticlesCarousel .carousel-item .card .ratio img {
+.carousel-item .card .ratio img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     object-position: center !important;
 }
 
-/* Card body standardization */
-#latestArticlesCarousel .carousel-item .card .card-body,
-#popularArticlesCarousel .carousel-item .card .card-body {
+/* Card body SAMA PERSIS */
+.carousel-item .card .card-body {
     flex: 1 1 auto !important;
     display: flex !important;
     flex-direction: column !important;
@@ -713,9 +704,8 @@
     text-align: left !important;
 }
 
-/* Title styling */
-#latestArticlesCarousel .carousel-item .card h5,
-#popularArticlesCarousel .carousel-item .card h5 {
+/* Title styling SAMA PERSIS untuk semua card */
+.carousel-item .card h5 {
     font-size: 1rem !important;
     font-weight: 600 !important;
     line-height: 1.3 !important;
@@ -729,9 +719,9 @@
     height: 2.6rem !important;
 }
 
-/* Description styling */
-#latestArticlesCarousel .carousel-item .card p,
-#popularArticlesCarousel .carousel-item .card p {
+/* Description untuk ARTIKEL CARDS */
+#latestArticlesCarousel .carousel-item .card p.card-text,
+#popularArticlesCarousel .carousel-item .card p.card-text {
     font-size: 0.85rem !important;
     color: #6c757d !important;
     line-height: 1.4 !important;
@@ -744,587 +734,207 @@
     flex: 1 1 auto !important;
 }
 
-/* ===== PERBAIKAN LENGKAP UNTUK EVENT CAROUSEL - UKURAN DIPERTAHANKAN + CLICKABLE ===== */
-
-/* Base event carousel styling dengan ukuran yang dipertahankan */
-#upcomingEventsCarousel .carousel-item .row {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-}
-
-#upcomingEventsCarousel .carousel-item .col {
-    display: flex !important;
-    flex: 0 0 auto !important;
-    min-width: 370px !important; /* UKURAN DIPERTAHANKAN */
-    max-width: 400px !important; /* UKURAN DIPERTAHANKAN */
-    width: 400px !important; /* UKURAN DIPERTAHANKAN */
-    padding: 0 0.75rem !important;
-}
-
-/* Event card dengan ukuran yang dipertahankan + PERBAIKAN CLICKABLE */
-#upcomingEventsCarousel .event-card {
-    height: 350px !important; /* UKURAN DIPERTAHANKAN */
-    width: 100% !important;
-    min-width: 350px !important; /* UKURAN DIPERTAHANKAN */
-    display: flex !important;
-    flex-direction: column !important;
-    border: 1px solid rgba(0,0,0,0.1) !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-    /* PERBAIKAN CLICKABLE */
-    position: relative !important;
-    cursor: pointer !important;
-    z-index: 1 !important;
-}
-
-/* PERBAIKAN STRETCHED-LINK - INI YANG PALING PENTING */
-#upcomingEventsCarousel .event-card .stretched-link {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 20 !important;
-    text-decoration: none !important;
-    color: transparent !important;
-    display: block !important;
-    background: transparent !important;
-    border-radius: inherit !important;
-}
-
-/* Reset pseudo-element Bootstrap stretched-link yang bermasalah */
-#upcomingEventsCarousel .event-card .stretched-link::after {
-    display: none !important;
-    content: none !important;
-}
-
-/* Image container dengan proporsi yang dipertahankan */
-#upcomingEventsCarousel .event-card .ratio {
-    flex: 0 0 200px !important; /* UKURAN DIPERTAHANKAN */
-    height: 200px !important; /* UKURAN DIPERTAHANKAN */
-    margin-bottom: 0 !important;
-    border-radius: 12px 12px 0 0 !important;
-    overflow: hidden !important;
-    /* PERBAIKAN CLICKABLE */
-    position: relative !important;
-    z-index: 15 !important;
-    pointer-events: none !important;
-}
-
-#upcomingEventsCarousel .event-card .ratio img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    transition: transform 0.3s ease !important;
-    /* PERBAIKAN CLICKABLE */
-    position: relative !important;
-    z-index: 15 !important;
-    pointer-events: none !important;
-}
-
-/* Event card body dengan ukuran yang dipertahankan */
-#upcomingEventsCarousel .event-card .card-body {
+/* Event meta untuk EVENT CARDS - STYLING YANG LEBIH COMPACT */
+#upcomingEventsCarousel .event-meta {
+    font-size: 0.85rem !important;
     flex: 1 1 auto !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
-    padding: 1.1rem !important; /* UKURAN DIPERTAHANKAN */
-    text-align: left !important;
-    /* PERBAIKAN CLICKABLE */
-    position: relative !important;
-    z-index: 15 !important;
-    pointer-events: none !important;
+    justify-content: space-between !important;
 }
 
-#upcomingEventsCarousel .event-card .card-body * {
-    pointer-events: none !important;
-}
-
-/* Event title styling dengan ukuran yang dipertahankan */
-#upcomingEventsCarousel .event-card h5 {
-    font-size: 1.05rem !important; /* UKURAN DIPERTAHANKAN */
-    font-weight: 600 !important;
+#upcomingEventsCarousel .event-meta p {
+    margin-bottom: 0.25rem !important;
     line-height: 1.3 !important;
-    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
-    color: #212529 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    height: 2.7rem !important; /* UKURAN DIPERTAHANKAN */
-}
-
-/* Event meta info styling dengan ukuran yang dipertahankan */
-#upcomingEventsCarousel .event-card .card-text {
-    font-size: 0.87rem !important; /* UKURAN DIPERTAHANKAN */
     color: #6c757d !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
 }
 
-/* Event details dengan layout yang dipertahankan */
-#upcomingEventsCarousel .event-card .d-flex {
-    margin-bottom: 0.7rem !important; /* UKURAN DIPERTAHANKAN */
+#upcomingEventsCarousel .event-meta i {
+    width: 12px !important;
+    text-align: center !important;
+    font-size: 0.8rem !important;
 }
 
-/* PERBAIKAN KHUSUS UNTUK BROWSER */
-#upcomingEventsCarousel .event-card .stretched-link {
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
+#upcomingEventsCarousel .event-meta .d-flex {
+    margin-top: 0.5rem !important;
 }
 
-/* Event card hover effects - UKURAN EFEK DIPERTAHANKAN */
-#upcomingEventsCarousel .event-card.card-hover-zoom:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+#upcomingEventsCarousel .event-meta .badge {
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    padding: 0.25rem 0.5rem !important;
 }
 
-#upcomingEventsCarousel .event-card:hover .ratio img {
-    transform: scale(1.02) !important;
-}
-
-/* Hover effects untuk artikel */
-#latestArticlesCarousel .carousel-item .card-hover-zoom,
-#popularArticlesCarousel .carousel-item .card-hover-zoom {
+/* Hover effects SAMA untuk semua cards */
+.carousel-item .card-hover-zoom {
     transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-#latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
-#popularArticlesCarousel .carousel-item .card-hover-zoom:hover {
+.carousel-item .card-hover-zoom:hover {
     transform: translateY(-5px) !important;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
 }
 
-/* Link styling untuk artikel dan event */
-#latestArticlesCarousel a,
-#popularArticlesCarousel a,
-#upcomingEventsCarousel a {
-    text-decoration: none !important;
-    color: inherit !important;
-    display: block !important;
-    height: 100% !important;
-}
+/* ===== RESPONSIVE - UKURAN SAMA UNTUK SEMUA ===== */
 
-/* Carousel controls positioning */
-.carousel-control-prev,
-.carousel-control-next {
-    width: 5% !important;
-    opacity: 0.7 !important;
-    transition: opacity 0.3s ease !important;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    opacity: 1 !important;
-}
-
-/* Ensure equal height in flex containers */
-.carousel-inner {
-    overflow: visible !important;
-}
-
-.carousel-item {
-    transition: transform 0.6s ease-in-out !important;
-}
-
-.carousel-item.active {
-    display: flex !important;
-}
-
-/* Carousel indicators styling */
-.carousel-indicators {
-    position: relative !important;
-    margin-top: 1rem !important;
-    margin-bottom: 0 !important;
-}
-
-.carousel-indicators [data-bs-target] {
-    background-color: #6c757d !important;
-    border: none !important;
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 50% !important;
-    margin: 0 4px !important;
-}
-
-.carousel-indicators .active {
-    background-color: #0F62FF !important;
-}
-
-/* Perbaikan overflow untuk event carousel */
-#upcomingEventsCarousel .carousel-inner {
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-}
-
-#upcomingEventsCarousel .carousel-item .row {
-    width: max-content !important;
-}
-
-/* ===== RESPONSIVE FIXES - UKURAN DIPERTAHANKAN ===== */
-
-/* Large Desktop - Event cards UKURAN DIPERTAHANKAN */
-@media (min-width: 1400px) {
-    #upcomingEventsCarousel .carousel-item .col {
-        min-width: 420px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 450px !important; /* UKURAN DIPERTAHANKAN */
-        width: 450px !important; /* UKURAN DIPERTAHANKAN */
+/* Desktop - 3 kolom SAMA */
+@media (min-width: 992px) {
+    .carousel-item .row {
+        gap: 1rem !important;
     }
     
-    #upcomingEventsCarousel .event-card {
-        min-width: 400px !important; /* UKURAN DIPERTAHANKAN */
-    }
-}
-
-/* Desktop - UKURAN DIPERTAHANKAN */
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-    #upcomingEventsCarousel .carousel-item .col {
-        min-width: 370px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 400px !important; /* UKURAN DIPERTAHANKAN */
-        width: 400px !important; /* UKURAN DIPERTAHANKAN */
+    .carousel-item .col {
+        flex: 1 1 calc(33.333% - 1rem) !important;
+        max-width: calc(33.333% - 1rem) !important;
     }
     
-    #upcomingEventsCarousel .event-card {
-        min-width: 350px !important; /* UKURAN DIPERTAHANKAN */
+    .carousel-item .card {
+        height: 350px !important;
+        width: 100% !important;
     }
 }
 
-/* Tablet view */
+/* Tablet - 2 kolom SAMA */
 @media (max-width: 991.98px) {
-    /* Artikel carousel tablet */
-    #latestArticlesCarousel .carousel-item .row,
-    #popularArticlesCarousel .carousel-item .row {
+    .carousel-item .row {
         flex-wrap: wrap !important;
     }
     
-    #latestArticlesCarousel .carousel-item .col,
-    #popularArticlesCarousel .carousel-item .col {
+    .carousel-item .col {
         flex: 1 1 calc(50% - 1rem) !important;
         max-width: calc(50% - 1rem) !important;
         margin-bottom: 1rem !important;
     }
     
-    #latestArticlesCarousel .carousel-item .card,
-    #popularArticlesCarousel .carousel-item .card {
+    .carousel-item .card {
         height: 320px !important;
+        width: 100% !important;
     }
     
-    #latestArticlesCarousel .carousel-item .card .ratio,
-    #popularArticlesCarousel .carousel-item .card .ratio {
+    .carousel-item .card .ratio {
         flex: 0 0 180px !important;
         height: 180px !important;
     }
     
-    /* Event carousel tablet - UKURAN DIPERTAHANKAN */
-    #upcomingEventsCarousel .carousel-item .row {
-        flex-wrap: nowrap !important;
-        width: max-content !important;
+    #upcomingEventsCarousel .event-meta {
+        font-size: 0.8rem !important;
     }
     
-    #upcomingEventsCarousel .carousel-item .col {
-        flex: 0 0 auto !important;
-        min-width: 320px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 350px !important; /* UKURAN DIPERTAHANKAN */
-        width: 350px !important; /* UKURAN DIPERTAHANKAN */
-        margin-right: 1rem !important;
-    }
-    
-    #upcomingEventsCarousel .event-card {
-        height: 340px !important;
-        min-width: 300px !important; /* UKURAN DIPERTAHANKAN */
-    }
-    
-    #upcomingEventsCarousel .event-card .ratio {
-        flex: 0 0 180px !important;
-        height: 180px !important;
+    #upcomingEventsCarousel .event-meta .badge {
+        font-size: 0.65rem !important;
     }
 }
 
-/* PERBAIKAN KHUSUS MOBILE */
+/* Mobile - 1 kolom SAMA */
 @media (max-width: 767.98px) {
-    /* Disable scroll animations on mobile for better performance */
-    .scroll-animate {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
-    }
-    
-    /* Reset zoom untuk card registrasi agar tidak mengganggu layout */
-    .card.h-100 { 
-        transition: none !important;
-        transform: none !important;
-        z-index: auto !important;
-    }
-    
-    .card.h-100:hover { 
-        transform: none !important;
-        z-index: auto !important;
-    }
-    
-    /* KEEP ZOOM UNTUK ARTIKEL DAN EVENT - dengan efek yang diperkecil */
-    #latestArticlesCarousel .carousel-item .card-hover-zoom,
-    #popularArticlesCarousel .carousel-item .card-hover-zoom,
-    #upcomingEventsCarousel .event-card.card-hover-zoom { 
-        transition: transform 0.2s ease !important;
-        transform: scale(1) !important;
-        z-index: 1 !important;
-    }
-    
-    /* Active state untuk touch */
-    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
-        transform: scale(1.02) !important;
-        z-index: 5 !important;
-        transition: transform 0.1s ease !important;
-    }
-    
-    /* Hover untuk device yang support hover */
-    #latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
-    #popularArticlesCarousel .carousel-item .card-hover-zoom:hover,
-    #upcomingEventsCarousel .event-card.card-hover-zoom:hover { 
-        transform: scale(1.02) !important;
-        z-index: 5 !important;
-    }
-    
-    /* Article carousel mobile layout */
-    #latestArticlesCarousel .carousel-item .row,
-    #popularArticlesCarousel .carousel-item .row {
+    .carousel-item .row {
         flex-direction: column !important;
         flex-wrap: nowrap !important;
     }
     
-    #latestArticlesCarousel .carousel-item .col,
-    #popularArticlesCarousel .carousel-item .col {
+    .carousel-item .col {
         flex: 1 1 100% !important;
         max-width: 100% !important;
+        width: 100% !important;
         padding: 0 1rem !important;
         margin-bottom: 1rem !important;
     }
     
-    #latestArticlesCarousel .carousel-item .card,
-    #popularArticlesCarousel .carousel-item .card {
-        height: 300px !important;
-        max-width: 100% !important;
+    .carousel-item .card {
+        height: 350px !important;
+        width: 100% !important;
         margin: 0 auto !important;
     }
     
-    #latestArticlesCarousel .carousel-item .card .ratio,
-    #popularArticlesCarousel .carousel-item .card .ratio {
-        flex: 0 0 160px !important;
-        height: 160px !important;
+    .carousel-item .card .ratio {
+        flex: 0 0 180px !important;
+        height: 180px !important;
     }
     
-    /* Event carousel mobile - UKURAN DIPERTAHANKAN dengan horizontal scroll */
-    #upcomingEventsCarousel .carousel-item .row {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        width: max-content !important;
-    }
-    
-    #upcomingEventsCarousel .carousel-item .col {
-        flex: 0 0 auto !important;
-        min-width: 300px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 320px !important; /* UKURAN DIPERTAHANKAN */
-        width: 320px !important; /* UKURAN DIPERTAHANKAN */
-        padding: 0 0.5rem !important;
-        margin-right: 0.5rem !important;
-    }
-    
-    #upcomingEventsCarousel .event-card {
-        height: 320px !important;
-        min-width: 280px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 100% !important;
-    }
-    
-    #upcomingEventsCarousel .event-card .ratio {
-        flex: 0 0 160px !important;
-        height: 160px !important;
-    }
-    
-    #upcomingEventsCarousel .event-card .card-body {
-        padding: 1rem !important;
-    }
-    
-    #upcomingEventsCarousel .event-card h5 {
+    .carousel-item .card h5 {
         font-size: 0.95rem !important;
         height: 2.4rem !important;
     }
     
-    #upcomingEventsCarousel .event-card .card-text {
+    /* Text sizing sama untuk mobile */
+    #latestArticlesCarousel .carousel-item .card p.card-text,
+    #popularArticlesCarousel .carousel-item .card p.card-text {
         font-size: 0.8rem !important;
     }
     
-    /* Hide carousel controls on mobile */
-    .carousel-control-prev,
-    .carousel-control-next {
-        display: none !important;
+    #upcomingEventsCarousel .event-meta {
+        font-size: 0.75rem !important;
     }
     
-    /* Tombol registrasi untuk mobile */
-    .registration-btn {
-        padding: 0.6rem 1.2rem !important;
-        font-size: 0.85rem !important;
-        width: auto !important;
-        display: inline-block !important;
-        white-space: nowrap !important;
-        transition: all 0.2s ease !important;
+    #upcomingEventsCarousel .event-meta .badge {
+        font-size: 0.6rem !important;
     }
-    
-    .registration-btn:active {
-        transform: scale(0.98) !important;
-        background-color: #e0ac00 !important;
-    }
-    
-    /* Perbaikan untuk card registrasi */
-    .card.h-100 {
-        height: auto !important;
-        min-height: 250px;
-    }
-    
-    .card.h-100 .card-title {
-        font-size: 1.1rem !important;
-        margin-bottom: 0.75rem !important;
-    }
-    
-    .card.h-100 .card-text {
-        font-size: 0.9rem !important;
+}
+
+/* ===== DEBUGGING - UNCOMMENT UNTUK CEK UKURAN ===== */
+/*
+#latestArticlesCarousel .card,
+#popularArticlesCarousel .card {
+    border: 2px solid blue !important;
+}
+
+#upcomingEventsCarousel .card {
+    border: 2px solid red !important;
+}
+*/
+
+/* ===== PERBAIKAN SPACING MOBILE ===== */
+@media (max-width: 767.98px) {
+    /* Perbaikan spacing untuk section Upcoming Events */
+    .py-5.mb-3 {
+        padding-top: 2rem !important;
+        padding-bottom: 1.5rem !important;
         margin-bottom: 1rem !important;
     }
     
-    /* Fix untuk container */
-    .container {
-        overflow-x: hidden;
+    /* Perbaikan spacing untuk section Materi Promosi */
+    .pt-5.pb-3.mt-4 {
+        padding-top: 2rem !important;
+        padding-bottom: 1rem !important;
+        margin-top: 1.5rem !important;
     }
     
-    /* Fix untuk row yang berantakan */
-    .row.g-4 {
-        margin: 0 !important;
+    .sponsor-section-header {
+        margin-bottom: 1.5rem !important;
+        padding: 0 1rem;
     }
     
-    .row.g-4 > .col {
-        padding: 0.5rem !important;
+    .promo-title {
+        font-size: 1.1rem !important;
+        line-height: 1.4 !important;
     }
     
-    /* Hero section adjustments */
-    .hero-title {
-        font-size: 2rem !important;
+    /* Spacing untuk galeri */
+    .container.py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
     }
     
-    .hero-description {
-        font-size: 1rem !important;
-    }
-    
-    /* Section title adjustments */
-    .section-title {
-        font-size: 1.5rem !important;
+    /* Jarak antar komponen */
+    .scroll-animate + .scroll-animate {
+        margin-top: 0.5rem;
     }
 }
 
-/* Small mobile - UKURAN DIPERTAHANKAN */
-@media (max-width: 575.98px) {
-    #latestArticlesCarousel .carousel-item .card,
-    #popularArticlesCarousel .carousel-item .card {
-        height: 280px !important;
-    }
-    
-    #latestArticlesCarousel .carousel-item .card .ratio,
-    #popularArticlesCarousel .carousel-item .card .ratio {
-        flex: 0 0 140px !important;
-        height: 140px !important;
-    }
-    
-    /* Event cards small mobile - UKURAN DIPERTAHANKAN */
-    #upcomingEventsCarousel .carousel-item .col {
-        min-width: 280px !important; /* UKURAN DIPERTAHANKAN */
-        max-width: 300px !important; /* UKURAN DIPERTAHANKAN */
-        width: 300px !important; /* UKURAN DIPERTAHANKAN */
-    }
-    
-    #upcomingEventsCarousel .event-card {
-        height: 300px !important;
-        min-width: 260px !important; /* UKURAN DIPERTAHANKAN */
-    }
-    
-    #upcomingEventsCarousel .event-card .ratio {
-        flex: 0 0 140px !important;
-        height: 140px !important;
-    }
-    
-    #upcomingEventsCarousel .event-card h5 {
-        font-size: 0.9rem !important;
-        height: 2.2rem !important;
-    }
-    
-    #upcomingEventsCarousel .event-card .card-text {
-        font-size: 0.75rem !important;
-    }
-}
-
-/* Perbaikan untuk landscape mobile */
-@media (max-width: 992px) and (orientation: landscape) {
-    .registration-btn {
-        padding: 0.5rem 1rem !important;
-        font-size: 0.8rem !important;
-    }
-    
-    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
-        transform: scale(1.015) !important;
-    }
-}
-
-/* Touch enhancement untuk semua mobile device */
+/* Touch handling untuk mobile */
 @media (hover: none) and (pointer: coarse) {
-    /* Cards mendapat efek zoom saat touch */
-    #latestArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #popularArticlesCarousel .carousel-item .card-hover-zoom:active,
-    #upcomingEventsCarousel .event-card.card-hover-zoom:active { 
+    .carousel-item .card-hover-zoom:active {
         transform: scale(1.02) !important;
         z-index: 5 !important;
         transition: transform 0.1s ease !important;
     }
-    
-    /* Tombol mendapat efek press */
-    .btn:active, .registration-btn:active {
-        transform: scale(0.98) !important;
-        transition: transform 0.1s ease !important;
-    }
 }
 
-/* Memastikan semua link dan button bisa diklik di semua device */
-a, button, .btn {
-    position: relative;
-    z-index: 50;
-    pointer-events: auto;
-}
-
-/* Perbaikan tambahan untuk mobile responsiveness */
-@media (max-width: 767.98px) {
-    .card-body.flex-column { 
-        align-items: center !important; 
-    }
-    
-    .card-title.fw-bold { 
-        text-align: center !important; 
-        margin-bottom: 0.5rem !important; 
-    }
-    
-    .btn-sm { 
-        width: 100%; 
-    }
+/* Status badge colors */
+.bg-warning.text-dark {
+    background-color: #F4B704 !important;
+    color: #212529 !important;
 }
     </style>
 @endpush
@@ -1332,14 +942,14 @@ a, button, .btn {
 @push('scripts')
     <script src="{{ asset('js/carousel_gallery.js') }}"></script>
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 KAMCUP Event Card Script Loaded');
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('KAMCUP Website Script Loaded');
     
-    // ===== SCROLL ANIMATIONS SCRIPT =====
+    // ===== SCROLL ANIMATIONS SCRIPT ===== 
     function initScrollAnimations() {
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
+            rootMargin: '0px 0px -50px 0px'
         };
         
         const observer = new IntersectionObserver((entries) => {
@@ -1352,88 +962,71 @@ a, button, .btn {
                         element.classList.add('animate');
                     }, parseInt(delay));
                 } else {
-                    // Remove animation when scrolling back up
                     entry.target.classList.remove('animate');
                 }
             });
         }, observerOptions);
         
-        // Observe all scroll-animate elements
         const animateElements = document.querySelectorAll('.scroll-animate');
         animateElements.forEach(el => {
             observer.observe(el);
         });
         
-        console.log(`✅ Scroll animations initialized for ${animateElements.length} elements`);
+        console.log(`Scroll animations initialized for ${animateElements.length} elements`);
     }
     
-    // ===== PERBAIKAN EVENT CARD CLICKABLE =====
-    function makeEventCardsClickable() {
-        const eventCards = document.querySelectorAll('#upcomingEventsCarousel .event-card');
-        console.log(`Found ${eventCards.length} event cards`);
+    // ===== CAROUSEL INITIALIZATION ===== 
+    function initAllCarousels() {
+        const carouselIds = ['latestArticlesCarousel', 'popularArticlesCarousel', 'upcomingEventsCarousel'];
         
-        eventCards.forEach((card, index) => {
-            const link = card.querySelector('.stretched-link') || 
-                        card.querySelector('a[href*="events"]');
-            
-            if (link && link.href) {
-                console.log(`Setting up event card ${index + 1}:`, link.href);
+        carouselIds.forEach(carouselId => {
+            const carousel = document.getElementById(carouselId);
+            if (carousel) {
+                console.log(`Initializing ${carouselId}`);
                 
-                // Remove existing event listeners untuk prevent double binding
-                const newCard = card.cloneNode(true);
-                card.parentNode.replaceChild(newCard, card);
+                const bsCarousel = new bootstrap.Carousel(carousel, {
+                    interval: 5000,
+                    wrap: true,
+                    touch: true,
+                    keyboard: true
+                });
                 
-                // Re-query link di new card
-                const newLink = newCard.querySelector('.stretched-link') || 
-                               newCard.querySelector('a[href*="events"]');
+                // Navigation handlers
+                const prevBtn = carousel.querySelector('.carousel-control-prev');
+                const nextBtn = carousel.querySelector('.carousel-control-next');
                 
-                if (newLink) {
-                    // Make entire card clickable
-                    newCard.addEventListener('click', function(e) {
-                        console.log('Event card clicked!', newLink.href);
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.location.href = newLink.href;
+                        bsCarousel.prev();
                     });
-                    
-                    // Touch handler for mobile
-                    newCard.addEventListener('touchend', function(e) {
-                        console.log('Event card touched!', newLink.href);
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setTimeout(() => {
-                            window.location.href = newLink.href;
-                        }, 100);
-                    });
-                    
-                    // Visual feedback
-                    newCard.style.cursor = 'pointer';
                 }
-            } else {
-                console.warn(`No valid link found in event card ${index + 1}`);
+                
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        bsCarousel.next();
+                    });
+                }
+                
+                console.log(`${carouselId} initialized successfully`);
             }
         });
     }
     
-    // ===== FUNCTION UNTUK MOBILE DEVICE DETECTION =====
+    // ===== MOBILE DEVICE DETECTION ===== 
     function isMobileDevice() {
         return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
-    // ===== MOBILE TOUCH EVENTS HANDLING =====
+    // ===== MOBILE TOUCH EVENTS ===== 
     if (isMobileDevice()) {
         console.log('Mobile device detected - setting up touch handlers');
         
-        // Disable zoom untuk card registrasi di mobile
-        const registrationCards = document.querySelectorAll('.card.h-100');
-        registrationCards.forEach(card => {
-            card.style.transform = 'none';
-            card.style.transition = 'none';
-        });
-        
-        // Enable zoom untuk artikel cards dengan touch handling
-        const articleCards = document.querySelectorAll('.carousel-item .card-hover-zoom');
-        articleCards.forEach(card => {
+        const cards = document.querySelectorAll('.card-hover-zoom');
+        cards.forEach(card => {
             card.addEventListener('touchstart', function(e) {
                 this.style.transform = 'scale(1.02)';
                 this.style.zIndex = '5';
@@ -1452,52 +1045,24 @@ a, button, .btn {
                 this.style.zIndex = '1';
             }, { passive: true });
         });
-    } else {
-        // Initialize scroll animations only on desktop/tablet
-        initScrollAnimations();
     }
     
-    // ===== REGISTRATION BUTTON HANDLERS =====
-    const registrationBtns = document.querySelectorAll('.registration-btn');
-    registrationBtns.forEach(btn => {
+    // ===== BUTTON HANDLERS =====
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
         btn.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
             this.style.transform = 'scale(0.98)';
             this.style.transition = 'transform 0.1s ease';
-        }, { passive: false });
+        }, { passive: true });
         
         btn.addEventListener('touchend', function(e) {
-            e.stopPropagation();
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 100);
-        }, { passive: false });
-        
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    });
-    
-    // ===== ALL OTHER BUTTONS HANDLER =====
-    const allButtons = document.querySelectorAll('.btn:not(.registration-btn)');
-    allButtons.forEach(btn => {
-        btn.addEventListener('touchstart', function(e) {
-            if (isMobileDevice()) {
-                this.style.transform = 'scale(0.98)';
-                this.style.transition = 'transform 0.1s ease';
-            }
-        }, { passive: true });
-        
-        btn.addEventListener('touchend', function(e) {
-            if (isMobileDevice()) {
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 100);
-            }
         }, { passive: true });
     });
     
-    // ===== CAROUSEL GALLERY SCRIPT (DIPERTAHANKAN) =====
+    // ===== CAROUSEL GALLERY SCRIPT =====
     const carouselImagesContainer = document.querySelector('.carousel-images');
     const leftButton = document.querySelector('.nav-button.left');
     const rightButton = document.querySelector('.nav-button.right');
@@ -1517,112 +1082,92 @@ a, button, .btn {
         });
     }
     
-    // ===== SETUP EVENT CARDS CLICKABLE =====
-    makeEventCardsClickable();
-    
-    // ===== RE-RUN SAAT CAROUSEL BERUBAH =====
-    const eventCarousel = document.getElementById('upcomingEventsCarousel');
-    if (eventCarousel) {
-        eventCarousel.addEventListener('slid.bs.carousel', function() {
-            console.log('Event carousel changed - re-setting up click handlers');
-            setTimeout(makeEventCardsClickable, 200);
-        });
-    }
-    
-    // ===== FALLBACK - RE-RUN SETELAH DELAY =====
-    setTimeout(() => {
-        console.log('Running fallback event card setup');
-        makeEventCardsClickable();
+    // ===== KEYBOARD NAVIGATION =====
+    document.addEventListener('keydown', function(e) {
+        const activeCarousel = document.querySelector('.carousel:hover') || 
+                              document.querySelector('.carousel:focus-within');
         
-        // Re-initialize scroll animations if not mobile
-        if (!isMobileDevice()) {
+        if (activeCarousel) {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                const prevBtn = activeCarousel.querySelector('.carousel-control-prev');
+                if (prevBtn) prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                const nextBtn = activeCarousel.querySelector('.carousel-control-next');
+                if (nextBtn) nextBtn.click();
+            }
+        }
+    });
+    
+    // ===== INITIALIZE EVERYTHING =====
+    initScrollAnimations();
+    initAllCarousels();
+    
+    // ===== FALLBACK INITIALIZATION =====
+    setTimeout(() => {
+        console.log('Running fallback setup');
+        
+        const animateElements = document.querySelectorAll('.scroll-animate:not(.animate)');
+        if (animateElements.length > 0) {
+            console.log('Re-initializing scroll animations');
             initScrollAnimations();
         }
+        
+        initAllCarousels();
     }, 1000);
     
-    console.log('✅ All event card handlers and scroll animations setup complete');
+    console.log('All handlers setup complete');
 });
 
 // ===== WINDOW RESIZE HANDLER =====
 window.addEventListener('resize', function() {
-    if (window.innerWidth <= 768) {
-        const registrationCards = document.querySelectorAll('.card.h-100');
-        const eventCards = document.querySelectorAll('.event-card');
-        
-        registrationCards.forEach(card => {
-            card.style.transform = 'none';
-            card.style.transition = 'none';
-        });
-        
-        eventCards.forEach(card => {
-            // Tidak disable event cards di mobile, biarkan tetap clickable
-            card.style.cursor = 'pointer';
-        });
-    }
-});
-
-// ===== LOAD EVENT UNTUK CAROUSEL GALLERY =====
-window.addEventListener('load', function() {
-    // Re-setup event cards setelah semua asset loaded
     setTimeout(() => {
-        const eventCards = document.querySelectorAll('#upcomingEventsCarousel .event-card');
-        if (eventCards.length > 0) {
-            console.log('Window loaded - re-checking event cards');
-            // Function sudah dipanggil di DOMContentLoaded, ini hanya backup
-        }
-        
-        // Re-initialize scroll animations for desktop
-        if (window.innerWidth > 768) {
-            const animateElements = document.querySelectorAll('.scroll-animate');
-            if (animateElements.length > 0) {
-                console.log('Re-initializing scroll animations after page load');
-                
-                const observerOptions = {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -100px 0px'
-                };
-                
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const element = entry.target;
-                            const delay = element.getAttribute('data-delay') || 0;
-                            
-                            setTimeout(() => {
-                                element.classList.add('animate');
-                            }, parseInt(delay));
-                        } else {
-                            entry.target.classList.remove('animate');
-                        }
-                    });
-                }, observerOptions);
-                
-                animateElements.forEach(el => {
-                    observer.observe(el);
-                });
-            }
-        }
-    }, 500);
+        console.log('Window resized - re-checking carousels');
+    }, 200);
 });
 
 // ===== PERFORMANCE OPTIMIZATION =====
-// Use passive event listeners where possible
 document.addEventListener('scroll', function() {
-    // Scroll performance optimizations can be added here if needed
+    // Scroll optimizations
 }, { passive: true });
 
-// ===== DEBUGGING HELPER (UNCOMMENT FOR TESTING) =====
-// window.debugScrollAnimations = function() {
-//     const elements = document.querySelectorAll('.scroll-animate');
-//     console.log(`Total scroll animate elements: ${elements.length}`);
-//     elements.forEach((el, i) => {
-//         console.log(`Element ${i + 1}:`, {
-//             element: el,
-//             animation: el.getAttribute('data-animation'),
-//             delay: el.getAttribute('data-delay'),
-//             hasAnimateClass: el.classList.contains('animate')
-//         });
-//     });
-// };
+// ===== CAROUSEL INTERSECTION OBSERVER =====
+const carouselObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const carousel = entry.target;
+            
+            // Pause other carousels
+            const otherCarousels = document.querySelectorAll('.carousel');
+            otherCarousels.forEach(otherCarousel => {
+                if (otherCarousel !== carousel && otherCarousel.id) {
+                    const bsCarousel = bootstrap.Carousel.getInstance(otherCarousel);
+                    if (bsCarousel) {
+                        bsCarousel.pause();
+                    }
+                }
+            });
+            
+            // Resume current carousel
+            const bsCarousel = bootstrap.Carousel.getInstance(carousel);
+            if (bsCarousel) {
+                bsCarousel.cycle();
+            }
+        }
+    });
+}, {
+    threshold: 0.5
+});
+
+// Observe carousels after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        const carousels = document.querySelectorAll('.carousel');
+        carousels.forEach(carousel => {
+            carouselObserver.observe(carousel);
+        });
+    }, 1500);
+});
     </script>
 @endpush
