@@ -4,15 +4,15 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mt-5">Profile</h2>
+    <h2 class="text-center mt-5 scroll-reveal">Profile</h2>
 
-    <div class="text-center my-3">
+    <div class="text-center my-3 scroll-reveal">
         <img src="{{ Auth::user()->profile && Auth::user()->profile->profile_photo ? asset('storage/' . Auth::user()->profile->profile_photo) : asset('assets/img/profile-placeholder.png') }}" alt="Profile Photo" class="img-fluid img-square-profile">
     </div>
 
-    <h4 class="text-center mt-4 mb-3 profile-section-title">Informasi Dasar</h4>
+    <h4 class="text-center mt-4 mb-3 profile-section-title scroll-reveal">Informasi Dasar</h4>
 
-    <div class="card shadow-sm mb-4 profile-info-card">
+    <div class="card shadow-sm mb-4 profile-info-card scroll-reveal">
         <div class="card-body position-relative">
             <a href="{{ route('profile.edit') }}" class="btn btn-link p-0 position-absolute top-0 end-0 mt-3 me-3 edit-profile-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -49,7 +49,7 @@
     </div>
 
     {{-- Navigasi Tab --}}
-    <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+    <ul class="nav nav-tabs mb-4 scroll-reveal" id="profileTabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link @if(request('active_tab') == 'tim' || !request('active_tab')) active @endif" id="tim-tab" data-bs-toggle="tab" href="#tim" role="tab" aria-controls="tim" aria-selected="true">Tim</a>
         </li>
@@ -69,7 +69,7 @@
         {{-- Tab 'Tim' --}}
         <div class="tab-pane fade @if(request('active_tab') == 'tim' || !request('active_tab')) show active @endif" id="tim" role="tabpanel" aria-labelledby="tim-tab">
             @if (!$hasTeam)
-                <div class="d-flex justify-content-center align-items-center" style="min-height: 200px; border: 1px dashed #ccc; border-radius: 8px;">
+                <div class="d-flex justify-content-center align-items-center scroll-reveal" style="min-height: 200px; border: 1px dashed #ccc; border-radius: 8px;">
                     <a href="{{ route('team.create') }}" class="text-decoration-none text-muted" style="font-size: 3rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -79,8 +79,8 @@
                     </a>
                 </div>
             @else
-                <h4 class="text-center mt-4 mb-3 profile-section-title">Detail Tim</h4>
-                <div class="card shadow-sm mb-4 profile-info-card">
+                <h4 class="text-center mt-4 mb-3 profile-section-title scroll-reveal">Detail Tim</h4>
+                <div class="card shadow-sm mb-4 profile-info-card scroll-reveal">
                     <div class="card-body position-relative">
                        <a href="{{ route('team.edit', Crypt::encryptString($firstTeam->id)) }}" class="btn btn-link p-0 position-absolute top-0 end-0 mt-3 me-3 edit-profile-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -125,10 +125,10 @@
                     </div>
                 </div>
 
-                <h4 class="text-center mt-4 mb-3 profile-section-title">Anggota Tim</h4>
-                <div class="row row-cols-2 row-cols-md-5 g-3 d-flex align-items-stretch">
+                <h4 class="text-center mt-4 mb-3 profile-section-title scroll-reveal">Anggota Tim</h4>
+                <div class="row row-cols-2 row-cols-md-5 g-3 d-flex align-items-stretch scroll-reveal-stagger">
                     @for ($i = 0; $i < $firstTeam->member_count; $i++)
-                        <div class="col">
+                        <div class="col scroll-reveal-item">
                             @php
                                 $member = $teamMembers->get($i);
                             @endphp
@@ -184,10 +184,10 @@
         {{-- Tab 'Event Saya' --}}
         <div class="tab-pane fade @if(request('active_tab') == 'event-saya') show active @endif" id="event-saya" role="tabpanel" aria-labelledby="event-saya-tab">
             @if ($registeredTournaments->isEmpty())
-                <p class="text-center text-muted">Anda belum terdaftar ke lomba manapun.</p>
+                <p class="text-center text-muted scroll-reveal">Anda belum terdaftar ke lomba manapun.</p>
             @else
                 @foreach ($registeredTournaments as $registration)
-                    <div class="card shadow-sm mb-3">
+                    <div class="card shadow-sm mb-3 scroll-reveal">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h4>{{ $registration->tournament->title ?? 'Nama Turnamen' }}</h4>
@@ -233,13 +233,13 @@
         {{-- Tab 'Permohonan Tuan Rumah' --}}
         <div class="tab-pane fade @if(request('active_tab') == 'permohonan') show active @endif" id="permohonan" role="tabpanel" aria-labelledby="permohonan-tab">
             @if ($hostApplications->isEmpty())
-                <div class="text-center text-muted p-4 border rounded">
+                <div class="text-center text-muted p-4 border rounded scroll-reveal">
                     <p class="mb-0">Anda belum mengajukan permohonan tuan rumah.</p>
                     <p class="mt-2"><a href="{{ route('host-request.create') }}">Ajukan Permohonan Sekarang</a></p>
                 </div>
             @else
                 @foreach ($hostApplications as $hostApplication)
-                    <div class="card shadow-sm mb-3">
+                    <div class="card shadow-sm mb-3 scroll-reveal">
                         <div class="card-body">
                             <h5 class="card-title">{{ $hostApplication->tournament_title ?? 'Judul Turnamen' }}</h5>
                             <p class="card-text">
@@ -271,13 +271,13 @@
         {{-- Tab 'Donasi Saya' - VERSI SEDERHANA --}}
         <div class="tab-pane fade @if(request('active_tab') == 'donasi-saya') show active @endif" id="donasi-saya" role="tabpanel" aria-labelledby="donasi-saya-tab">
             @if ($userDonations->isEmpty())
-                <div class="text-center text-muted p-4 border rounded">
+                <div class="text-center text-muted p-4 border rounded scroll-reveal">
                     <p class="mb-0">Anda belum mengajukan donasi/sponsor.</p>
                     <p class="mt-2"><a href="{{ route('donations.create') }}">Ajukan Donasi/Sponsor Sekarang</a></p>
                 </div>
             @else
                 @foreach ($userDonations as $donation)
-                    <div class="card shadow-sm mb-3">
+                    <div class="card shadow-sm mb-3 scroll-reveal">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="card-title mb-0">{{ $donation->name_brand ?? 'Nama Brand' }}</h5>
@@ -307,7 +307,7 @@
 
                 {{-- Pagination untuk Donasi Saya --}}
                 @if($userDonations->hasPages())
-                    <div class="mt-4 d-flex justify-content-center">
+                    <div class="mt-4 d-flex justify-content-center scroll-reveal">
                         <nav aria-label="Page navigation for User Donations">
                             <ul class="pagination">
                                 {{-- Previous Page Link --}}
@@ -360,273 +360,446 @@
 @endsection
 
 @push('styles')
-    {{-- Memuat CSS eksternal Anda --}}
-    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
-    <style>
-        /* --- Gaya Khusus untuk Gambar Profil Kotak --- */
-        .img-square-profile {
-            width: 100px;  /* Atur lebar yang diinginkan */
-            height: 100px; /* Atur tinggi yang sama dengan lebar */
-            object-fit: cover; /* Penting! Memastikan gambar terpotong dan tidak terdistorsi */
-            border-radius: 8px; /* Untuk membuat sudut sedikit membulat */
-            border: 2px solid #ccc;
-        }
-        /* --- Gaya untuk Gambar Logo dan member Tim Kotak --- */
-        .img-square-team {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        .img-square-team-member {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-        /* Gaya tambahan yang mungkin relevan dari edit.blade.php */
-        .profile-info-card {
-            border-radius: 12px;
-            box-shadow:
-                8px 8px 0px 0px var(--shadow-color-cf2585),
-                5px 5px 15px rgba(0, 0, 0, 0.1) !important;
-            position: relative;
-            z-index: 1;
-            border: 1px solid #dee2e6;
-        }
-        .profile-section-title {
-            color: #212529;
-            font-weight: 600;
-        }
-        .edit-profile-btn {
-            z-index: 10; /* Pastikan tombol di atas konten lain */
-        }
-        /* Definisi variabel warna jika belum ada di tempat lain */
-        :root {
-            --shadow-color-cf2585: #cf2585; /* Sesuaikan dengan warna shadow Anda */
-            --kamcup-pink: #cb2786;
-            --kamcup-blue-green: #00617a;
-            --kamcup-yellow: #f4b704;
-            --kamcup-dark-text: #212529;
-            --kamcup-light-text: #ffffff;
-        }
-        /* Gaya umum untuk semua kartu anggota yang bisa diklik */
-        .member-card-link {
-            /* Pastikan elemen <a> ini berperilaku seperti card */
-            display: flex; /* Untuk mengaktifkan d-flex flex-column */
-            flex-direction: column; /* Untuk d-flex flex-column */
-            justify-content: center; /* Untuk justify-content-center */
-            align-items: center; /* Untuk align-items-center */
-            text-decoration: none; /* Hilangkan garis bawah link */
-            color: inherit; /* Warisi warna teks dari parent atau reset */
+   {{-- Memuat CSS eksternal Anda --}}
+   <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+   <style>
+       /* --- Scroll Reveal Animation Styles --- */
+       .scroll-reveal {
+           opacity: 0;
+           transform: translateY(30px);
+           transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+       }
 
-            /* Pastikan ini dapat diklik */
-            position: relative;
-            z-index: 1; /* Mungkin perlu disesuaikan jika ada overlay */
-            cursor: pointer;
-        }
-        /* Gaya untuk kartu "Tambah Anggota" (slot kosong) */
-        .add-member-card {
-            border: 1px dashed #ccc; /* Border putus-putus */
-            background-color: #f8f9fa; /* Latar belakang sedikit abu-abu */
-            transition: all 0.3s ease-in-out;
-        }
+       .scroll-reveal.revealed {
+           opacity: 1;
+           transform: translateY(0);
+       }
 
-        .add-member-card:hover {
-            /* Overwrite hover effect for add-member-card if needed, or let member-card-link handle it */
-            background-color: #e9ecef;
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
+       /* Staggered animation for multiple items */
+       .scroll-reveal-stagger .scroll-reveal-item {
+           opacity: 0;
+           transform: translateY(30px);
+           transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+       }
 
-        /* Pastikan card-body di dalam link tidak memiliki padding berlebihan jika tidak diinginkan */
-        .member-card-link .card-body {
-            width: 100%; /* Pastikan body mengisi lebar card link */
-        }
+       .scroll-reveal-stagger .scroll-reveal-item.revealed {
+           opacity: 1;
+           transform: translateY(0);
+       }
 
-        /* Gaya baru untuk pembungkus kartu anggota agar tombol hapus bisa diletakkan di bawah */
-        .member-card-wrapper {
-            position: relative;
-            background-color: #fff;
-            border-radius: 0.5rem;
-            border: 1px solid rgba(0,0,0,.125);
-            padding: 0;
-            transition: all 0.2s ease-in-out;
-        }
-        .member-card-wrapper:hover {
-             /* Konsisten dengan hover member-card-link */
-            border-color: #0d6efd;
-            background-color: #e9ecef;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
+       /* Different animation variants */
+       .scroll-reveal.fade-left {
+           transform: translateX(-50px);
+       }
 
-        /* --- Custom Pagination Styling --- */
-        .pagination {
-            --bs-pagination-color: var(--kamcup-blue-green); /* Default text color for links */
-            --bs-pagination-active-bg: var(--kamcup-pink); /* Background for active page */
-            --bs-pagination-active-border-color: var(--kamcup-pink); /* Border for active page */
-            --bs-pagination-hover-color: var(--kamcup-pink); /* Text color on hover */
-            --bs-pagination-hover-bg: #e9ecef; /* Background on hover for inactive links */
-            --bs-pagination-border-color: #dee2e6; /* Default border color for links */
-            --bs-pagination-disabled-color: #6c757d; /* Text color for disabled links */
-            --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(203, 39, 134, 0.25); /* Focus shadow using KAMCUP pink */
-        }
+       .scroll-reveal.fade-right {
+           transform: translateX(50px);
+       }
 
-        .page-item .page-link {
-            border-radius: 8px; /* Slightly rounded corners */
-            margin: 0 5px; /* Space between pagination buttons (changed from 4px to 5px based on your ref) */
-            min-width: 40px; /* Minimum width to make buttons consistent */
-            text-align: center;
-            transition: all 0.3s ease; /* Smooth transition for hover effects */
-            display: flex; /* Use flexbox for centering content */
-            align-items: center;
-            justify-content: center;
-            height: 40px; /* Consistent height for buttons */
-            font-weight: 500; /* Added from your ref */
-            color: var(--bs-pagination-color); /* Ensure text color respects variable */
-        }
+       .scroll-reveal.fade-up {
+           transform: translateY(50px);
+       }
 
-        /* Active page styling */
-        .pagination .page-item.active .page-link { /* Specificity added */
-            background-color: var(--secondary-color); /* From your ref */
-            border-color: var(--secondary-color); /* From your ref */
-            color: white; /* Text color for active page */
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(203, 39, 134, 0.3); /* Subtle shadow for active page */
-        }
+       .scroll-reveal.zoom-in {
+           transform: scale(0.8);
+       }
 
-        /* Hover effect for inactive pagination links */
-        .pagination .page-item .page-link:hover:not(.active) { /* Specificity added, combined with your ref */
-            background-color: var(--accent-color); /* From your ref */
-            border-color: var(--accent-color); /* From your ref */
-            color: white; /* Text color on hover */
-            transform: translateY(-2px); /* Slight lift on hover */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
-        }
+       .scroll-reveal.fade-left.revealed,
+       .scroll-reveal.fade-right.revealed,
+       .scroll-reveal.fade-up.revealed,
+       .scroll-reveal.zoom-in.revealed {
+           transform: translateX(0) translateY(0) scale(1);
+       }
 
-        /* Disabled page item styling */
-        .page-item.disabled .page-link {
-            opacity: 0.6; /* Slightly fade out disabled links */
-            cursor: not-allowed;
-            transform: none; /* Remove any hover transform */
-            box-shadow: none; /* Remove any hover shadow */
-        }
+       /* Smooth scrolling behavior */
+       html {
+           scroll-behavior: smooth;
+       }
 
-        /* Adjusting focus outline if needed (Bootstrap usually handles this well) */
-        .page-item .page-link:focus {
-            box-shadow: var(--bs-pagination-focus-box-shadow);
-            border-color: var(--kamcup-pink);
-        }
+       /* --- Gaya Khusus untuk Gambar Profil Kotak --- */
+       .img-square-profile {
+           width: 100px;  /* Atur lebar yang diinginkan */
+           height: 100px; /* Atur tinggi yang sama dengan lebar */
+           object-fit: cover; /* Penting! Memastikan gambar terpotong dan tidak terdistorsi */
+           border-radius: 8px; /* Untuk membuat sudut sedikit membulat */
+           border: 2px solid #ccc;
+       }
+       /* --- Gaya untuk Gambar Logo dan member Tim Kotak --- */
+       .img-square-team {
+           width: 90px;
+           height: 90px;
+           object-fit: cover;
+           border-radius: 8px;
+           border: 1px solid #ddd;
+       }
+       .img-square-team-member {
+           width: 70px;
+           height: 70px;
+           object-fit: cover;
+           border-radius: 8px;
+           border: 1px solid #ddd;
+       }
+       /* Gaya tambahan yang mungkin relevan dari edit.blade.php */
+       .profile-info-card {
+           border-radius: 12px;
+           box-shadow:
+               8px 8px 0px 0px var(--shadow-color-cf2585),
+               5px 5px 15px rgba(0, 0, 0, 0.1) !important;
+           position: relative;
+           z-index: 1;
+           border: 1px solid #dee2e6;
+       }
+       .profile-section-title {
+           color: #212529;
+           font-weight: 600;
+       }
+       .edit-profile-btn {
+           z-index: 10; /* Pastikan tombol di atas konten lain */
+       }
+       /* Definisi variabel warna jika belum ada di tempat lain */
+       :root {
+           --shadow-color-cf2585: #cf2585; /* Sesuaikan dengan warna shadow Anda */
+           --kamcup-pink: #cb2786;
+           --kamcup-blue-green: #00617a;
+           --kamcup-yellow: #f4b704;
+           --kamcup-dark-text: #212529;
+           --kamcup-light-text: #ffffff;
+       }
+       /* Gaya umum untuk semua kartu anggota yang bisa diklik */
+       .member-card-link {
+           /* Pastikan elemen <a> ini berperilaku seperti card */
+           display: flex; /* Untuk mengaktifkan d-flex flex-column */
+           flex-direction: column; /* Untuk d-flex flex-column */
+           justify-content: center; /* Untuk justify-content-center */
+           align-items: center; /* Untuk align-items-center */
+           text-decoration: none; /* Hilangkan garis bawah link */
+           color: inherit; /* Warisi warna teks dari parent atau reset */
 
-        /* Define new color variables from your reference, ensure they are recognized */
-        :root {
-            --primary-color: #cb2786;
-            --secondary-color: #00617a;
-            --accent-color: #f4b704;
-            --text-dark: #333;
-            --text-light: #f8f9fa;
+           /* Pastikan ini dapat diklik */
+           position: relative;
+           z-index: 1; /* Mungkin perlu disesuaikan jika ada overlay */
+           cursor: pointer;
+       }
+       /* Gaya untuk kartu "Tambah Anggota" (slot kosong) */
+       .add-member-card {
+           border: 1px dashed #ccc; /* Border putus-putus */
+           background-color: #f8f9fa; /* Latar belakang sedikit abu-abu */
+           transition: all 0.3s ease-in-out;
+       }
 
-            /* Mapped to your existing KAMCUP variables for consistency */
-            --kamcup-pink: var(--primary-color);
-            --kamcup-blue-green: var(--secondary-color);
-            --kamcup-yellow: var(--accent-color);
-            --kamcup-dark-text: var(--text-dark);
-            --kamcup-light-text: var(--text-light);
-        }
-    </style>
+       .add-member-card:hover {
+           /* Overwrite hover effect for add-member-card if needed, or let member-card-link handle it */
+           background-color: #e9ecef;
+           border-color: #0d6efd;
+           box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+       }
+
+       /* Pastikan card-body di dalam link tidak memiliki padding berlebihan jika tidak diinginkan */
+       .member-card-link .card-body {
+           width: 100%; /* Pastikan body mengisi lebar card link */
+       }
+
+       /* Gaya baru untuk pembungkus kartu anggota agar tombol hapus bisa diletakkan di bawah */
+       .member-card-wrapper {
+           position: relative;
+           background-color: #fff;
+           border-radius: 0.5rem;
+           border: 1px solid rgba(0,0,0,.125);
+           padding: 0;
+           transition: all 0.2s ease-in-out;
+       }
+       .member-card-wrapper:hover {
+            /* Konsisten dengan hover member-card-link */
+           border-color: #0d6efd;
+           background-color: #e9ecef;
+           box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+       }
+
+       /* --- Custom Pagination Styling --- */
+       .pagination {
+           --bs-pagination-color: var(--kamcup-blue-green); /* Default text color for links */
+           --bs-pagination-active-bg: var(--kamcup-pink); /* Background for active page */
+           --bs-pagination-active-border-color: var(--kamcup-pink); /* Border for active page */
+           --bs-pagination-hover-color: var(--kamcup-pink); /* Text color on hover */
+           --bs-pagination-hover-bg: #e9ecef; /* Background on hover for inactive links */
+           --bs-pagination-border-color: #dee2e6; /* Default border color for links */
+           --bs-pagination-disabled-color: #6c757d; /* Text color for disabled links */
+           --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(203, 39, 134, 0.25); /* Focus shadow using KAMCUP pink */
+       }
+
+       .page-item .page-link {
+           border-radius: 8px; /* Slightly rounded corners */
+           margin: 0 5px; /* Space between pagination buttons (changed from 4px to 5px based on your ref) */
+           min-width: 40px; /* Minimum width to make buttons consistent */
+           text-align: center;
+           transition: all 0.3s ease; /* Smooth transition for hover effects */
+           display: flex; /* Use flexbox for centering content */
+           align-items: center;
+           justify-content: center;
+           height: 40px; /* Consistent height for buttons */
+           font-weight: 500; /* Added from your ref */
+           color: var(--bs-pagination-color); /* Ensure text color respects variable */
+       }
+
+       /* Active page styling */
+       .pagination .page-item.active .page-link { /* Specificity added */
+           background-color: var(--secondary-color); /* From your ref */
+           border-color: var(--secondary-color); /* From your ref */
+           color: white; /* Text color for active page */
+           font-weight: bold;
+           box-shadow: 0 4px 8px rgba(203, 39, 134, 0.3); /* Subtle shadow for active page */
+       }
+
+       /* Hover effect for inactive pagination links */
+       .pagination .page-item .page-link:hover:not(.active) { /* Specificity added, combined with your ref */
+           background-color: var(--accent-color); /* From your ref */
+           border-color: var(--accent-color); /* From your ref */
+           color: white; /* Text color on hover */
+           transform: translateY(-2px); /* Slight lift on hover */
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+       }
+
+       /* Disabled page item styling */
+       .page-item.disabled .page-link {
+           opacity: 0.6; /* Slightly fade out disabled links */
+           cursor: not-allowed;
+           transform: none; /* Remove any hover transform */
+           box-shadow: none; /* Remove any hover shadow */
+       }
+
+       /* Adjusting focus outline if needed (Bootstrap usually handles this well) */
+       .page-item .page-link:focus {
+           box-shadow: var(--bs-pagination-focus-box-shadow);
+           border-color: var(--kamcup-pink);
+       }
+
+       /* Define new color variables from your reference, ensure they are recognized */
+       :root {
+           --primary-color: #cb2786;
+           --secondary-color: #00617a;
+           --accent-color: #f4b704;
+           --text-dark: #333;
+           --text-light: #f8f9fa;
+
+           /* Mapped to your existing KAMCUP variables for consistency */
+           --kamcup-pink: var(--primary-color);
+           --kamcup-blue-green: var(--secondary-color);
+           --kamcup-yellow: var(--accent-color);
+           --kamcup-dark-text: var(--text-dark);
+           --kamcup-light-text: var(--text-light);
+       }
+   </style>
 @endpush
 
 @push('scripts')
-    {{-- Pastikan SweetAlert2 sudah dimuat di layout master_nav atau di sini --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   {{-- Pastikan SweetAlert2 sudah dimuat di layout master_nav atau di sini --}}
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // SweetAlert for general success/error messages from session
-            @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                html: '{{ session('success') }}',
-                showConfirmButton: false,
-                timer: 2000
-            });
-            @endif
+   <script>
+       document.addEventListener('DOMContentLoaded', function () {
+           // ===== SCROLL REVEAL ANIMATION =====
+           let lastScrollTop = 0;
+           const scrollElements = document.querySelectorAll('.scroll-reveal');
+           const scrollStaggerElements = document.querySelectorAll('.scroll-reveal-stagger');
 
-            @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Terjadi Kesalahan!',
-                text: '{{ session('error') }}',
-                confirmButtonText: 'Oke'
-            });
-            @endif
+           // Function to check if element is partially in viewport
+           function isElementPartiallyInViewport(el) {
+               const rect = el.getBoundingClientRect();
+               const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+               return (
+                   rect.top < windowHeight * 0.8 && rect.bottom > 0
+               );
+           }
 
-            @if(session('info'))
-            Swal.fire({
-                icon: 'info',
-                title: 'Informasi',
-                text: '{{ session('info') }}',
-                confirmButtonText: 'Oke'
-            });
-            @endif
+           // Function to check if element is in top 30% of page (persistent elements)
+           function isElementInTopSection(el) {
+               const elementTop = el.getBoundingClientRect().top + window.pageYOffset;
+               const pageHeight = document.documentElement.scrollHeight;
+               return elementTop < pageHeight * 0.3; // Top 30% of page
+           }
 
-            // Fungsi untuk konfirmasi hapus anggota tim
-            window.confirmDeleteMember = function(event, form) {
-                event.preventDefault(); // Mencegah form disubmit secara default
+           // Function to reveal elements based on scroll direction
+           function revealElements() {
+               const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+               const scrollingDown = currentScrollTop > lastScrollTop;
 
-                Swal.fire({
-                    title: "Konfirmasi Hapus?",
-                    text: "Anda yakin ingin menghapus anggota tim ini? Data tidak bisa dikembalikan!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#dc3545", // Warna merah untuk konfirmasi hapus
-                    cancelButtonColor: "#6c757d", // Warna abu-abu untuk batal
-                    confirmButtonText: "Ya, Hapus!",
-                    cancelButtonText: "Batalkan"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // Jika dikonfirmasi, submit form
-                    }
-                });
-            }
+               // Handle regular scroll reveal elements
+               scrollElements.forEach((el) => {
+                   if (scrollingDown && isElementPartiallyInViewport(el)) {
+                       if (!el.classList.contains('revealed')) {
+                           el.classList.add('revealed');
+                       }
+                   } else if (!scrollingDown && currentScrollTop > 100) {
+                       // Don't hide elements that are in the top section (profile header area)
+                       if (!isElementInTopSection(el)) {
+                           const rect = el.getBoundingClientRect();
+                           if (rect.bottom < -50) { // Element is well above viewport
+                               el.classList.remove('revealed');
+                           }
+                       }
+                   }
+               });
 
-            // JavaScript to handle tab switching on page load if active_tab is in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const activeTab = urlParams.get('active_tab');
-            if (activeTab) {
-                const tabElement = document.getElementById(activeTab + '-tab');
-                if (tabElement) {
-                    const tab = new bootstrap.Tab(tabElement);
-                    tab.show();
-                }
-            }
+               // Handle staggered elements
+               scrollStaggerElements.forEach((container) => {
+                   const items = container.querySelectorAll('.scroll-reveal-item');
+                   
+                   if (scrollingDown && isElementPartiallyInViewport(container)) {
+                       items.forEach((item, index) => {
+                           setTimeout(() => {
+                               if (!item.classList.contains('revealed')) {
+                                   item.classList.add('revealed');
+                               }
+                           }, index * 100); // Stagger delay
+                       });
+                   } else if (!scrollingDown && currentScrollTop > 100) {
+                       // Don't hide staggered elements in top section
+                       if (!isElementInTopSection(container)) {
+                           const containerRect = container.getBoundingClientRect();
+                           if (containerRect.bottom < -50) {
+                               items.forEach((item) => {
+                                   item.classList.remove('revealed');
+                               });
+                           }
+                       }
+                   }
+               });
 
-            // Optional: Update URL on tab click for better UX when sharing/refreshing
-            const profileTabs = document.getElementById('profileTabs');
-            if (profileTabs) {
-                profileTabs.addEventListener('shown.bs.tab', function (event) {
-                    const newTabId = event.target.id; // e.g., "donasi-saya-tab"
-                    const tabName = newTabId.replace('-tab', ''); // e.g., "donasi-saya"
-                    const currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('active_tab', tabName);
+               lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+           }
 
-                    // Preserve other pagination parameters when switching tabs
-                    if (tabName !== 'event-saya') {
-                        currentUrl.searchParams.delete('page_registered');
-                    }
-                    if (tabName !== 'permohonan') {
-                        currentUrl.searchParams.delete('page_host');
-                    }
-                    if (tabName !== 'donasi-saya') {
-                        currentUrl.searchParams.delete('page_donations');
-                    }
+           // Initial reveal for elements already in viewport
+           function initialReveal() {
+               scrollElements.forEach((el) => {
+                   if (isElementPartiallyInViewport(el)) {
+                       el.classList.add('revealed');
+                   }
+               });
 
-                    window.history.pushState({}, '', currentUrl.toString());
-                });
-            }
-        });
-    </script>
+               scrollStaggerElements.forEach((container) => {
+                   if (isElementPartiallyInViewport(container)) {
+                       const items = container.querySelectorAll('.scroll-reveal-item');
+                       items.forEach((item, index) => {
+                           setTimeout(() => {
+                               item.classList.add('revealed');
+                           }, index * 100);
+                       });
+                   }
+               });
+           }
+
+           // Throttle scroll event for better performance
+           function throttle(func, wait) {
+               let timeout;
+               return function executedFunction(...args) {
+                   const later = () => {
+                       clearTimeout(timeout);
+                       func(...args);
+                   };
+                   clearTimeout(timeout);
+                   timeout = setTimeout(later, wait);
+               };
+           }
+
+           // Add scroll event listener with throttling
+           window.addEventListener('scroll', throttle(revealElements, 16)); // ~60fps
+
+           // Initial reveal on page load
+           initialReveal();
+
+           // Re-reveal when window is resized
+           window.addEventListener('resize', throttle(initialReveal, 250));
+
+           // ===== EXISTING FUNCTIONALITY =====
+           
+           // SweetAlert for general success/error messages from session
+           @if(session('success'))
+           Swal.fire({
+               icon: 'success',
+               title: 'Berhasil!',
+               html: '{{ session('success') }}',
+               showConfirmButton: false,
+               timer: 2000
+           });
+           @endif
+
+           @if(session('error'))
+           Swal.fire({
+               icon: 'error',
+               title: 'Terjadi Kesalahan!',
+               text: '{{ session('error') }}',
+               confirmButtonText: 'Oke'
+           });
+           @endif
+
+           @if(session('info'))
+           Swal.fire({
+               icon: 'info',
+               title: 'Informasi',
+               text: '{{ session('info') }}',
+               confirmButtonText: 'Oke'
+           });
+           @endif
+
+           // Fungsi untuk konfirmasi hapus anggota tim
+           window.confirmDeleteMember = function(event, form) {
+               event.preventDefault(); // Mencegah form disubmit secara default
+
+               Swal.fire({
+                   title: "Konfirmasi Hapus?",
+                   text: "Anda yakin ingin menghapus anggota tim ini? Data tidak bisa dikembalikan!",
+                   icon: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#dc3545", // Warna merah untuk konfirmasi hapus
+                   cancelButtonColor: "#6c757d", // Warna abu-abu untuk batal
+                   confirmButtonText: "Ya, Hapus!",
+                   cancelButtonText: "Batalkan"
+               }).then((result) => {
+                   if (result.isConfirmed) {
+                       form.submit(); // Jika dikonfirmasi, submit form
+                   }
+               });
+           }
+
+           // JavaScript to handle tab switching on page load if active_tab is in URL
+           const urlParams = new URLSearchParams(window.location.search);
+           const activeTab = urlParams.get('active_tab');
+           if (activeTab) {
+               const tabElement = document.getElementById(activeTab + '-tab');
+               if (tabElement) {
+                   const tab = new bootstrap.Tab(tabElement);
+                   tab.show();
+               }
+           }
+
+           // Optional: Update URL on tab click for better UX when sharing/refreshing
+           const profileTabs = document.getElementById('profileTabs');
+           if (profileTabs) {
+               profileTabs.addEventListener('shown.bs.tab', function (event) {
+                   const newTabId = event.target.id; // e.g., "donasi-saya-tab"
+                   const tabName = newTabId.replace('-tab', ''); // e.g., "donasi-saya"
+                   const currentUrl = new URL(window.location.href);
+                   currentUrl.searchParams.set('active_tab', tabName);
+
+                   // Preserve other pagination parameters when switching tabs
+                   if (tabName !== 'event-saya') {
+                       currentUrl.searchParams.delete('page_registered');
+                   }
+                   if (tabName !== 'permohonan') {
+                       currentUrl.searchParams.delete('page_host');
+                   }
+                   if (tabName !== 'donasi-saya') {
+                       currentUrl.searchParams.delete('page_donations');
+                   }
+
+                   window.history.pushState({}, '', currentUrl.toString());
+
+                   // Re-trigger scroll reveal for newly visible tab content
+                   setTimeout(() => {
+                       initialReveal();
+                   }, 100);
+               });
+           }
+       });
+   </script>
 @endpush
