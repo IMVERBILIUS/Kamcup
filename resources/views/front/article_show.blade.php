@@ -81,16 +81,14 @@
     <div class="row justify-content-center">
         <div class="col-lg-12">
 
-            <!-- Back Button -->
             <div class="d-flex justify-content-between mb-4 mt-4">
-                <a href="{{ route('front.index') }}" class="btn px-4 py-2"
-                style="background-color: #F0F5FF; color: #5B93FF; border-radius: 8px;">
-                    <i class="fas fa-arrow-left me-2"></i> Kembali
+            <a href="{{ route('front.articles') }}" class="btn px-4 py-2"
+            style="background-color: #F0F5FF; color: #5B93FF; border-radius: 8px;">
+            <i class="fas fa-arrow-left me-2"></i> Kembali
                 </a>
             </div>
 
-            <!-- Article Header -->
-            <div class="mb-4">
+            <div class="mb-4 scroll-animate" data-delay="0">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <span class="badge rounded-pill px-3 py-2"
                           style="background-color: {{ $article->status == 'Published' ? '#E6F7F1' : '#f5f5f5' }};
@@ -124,25 +122,22 @@
                 @endif
             </div>
 
-            <!-- Article Content -->
             <div class="mb-4">
-                <!-- Description Section -->
-                <div class="article-description mb-4">
+                <div class="article-description mb-4 scroll-animate" data-delay="200">
                     <div class="p-3 rounded-3" style="background-color: #F8FAFD;">
                         <p class="lead mb-0" style="color: #5F738C;">{{ $article->description }}</p>
                     </div>
                 </div>
 
-                <!-- Main Content -->
                 @if($article->subheadings->count())
                     <div class="article-content">
-                        @foreach($article->subheadings as $subheading)
-                            <div class="subheading-section mb-4">
+                        @foreach($article->subheadings as $index => $subheading)
+                            <div class="subheading-section mb-4 scroll-animate" data-delay="{{ 300 + ($index * 100) }}">
                                 <h3 class="fw-bold mb-3 article-text" style="color: #3A4A5C; padding-bottom: 10px; border-bottom: 2px solid #F0F5FF;">
                                     {{ $subheading->title }}
                                 </h3>
-                                @foreach($subheading->paragraphs as $paragraph)
-                                    <div class="paragraph mb-4">
+                                @foreach($subheading->paragraphs as $pIndex => $paragraph)
+                                    <div class="paragraph mb-4 scroll-animate" data-delay="{{ 400 + ($index * 100) + ($pIndex * 50) }}">
                                         <p style="line-height: 1.8; color: #5F738C;">{{ $paragraph->content }}</p>
                                     </div>
                                 @endforeach
@@ -152,12 +147,10 @@
                 @endif
             </div>
 
-            <!-- Comments Section -->
-            <div class="card border-0 rounded-4 shadow-sm mb-4">
+            <div class="card border-0 rounded-4 shadow-sm scroll-animate last-content-section" data-delay="600">
                 <div class="card-body p-4">
                     <h3 class="fw-bold fs-5 mb-4 article-text">Komentar ({{ $article->comments->count() }})</h3>
 
-                    <!-- Comment Form -->
                     @auth
                         <form action="{{ route('comments.store', $article->id) }}" method="POST" class="mb-4">
                             @csrf
@@ -179,10 +172,9 @@
                         </div>
                     @endauth
 
-                    <!-- Comments List -->
                     <div class="comments-list">
-                        @forelse($article->comments()->with('user')->latest()->get() as $comment)
-                            <div class="comment-item border-bottom py-3">
+                        @forelse($article->comments()->with('user')->latest()->get() as $index => $comment)
+                            <div class="comment-item border-bottom py-3 scroll-animate" data-delay="{{ 700 + ($index * 100) }}">
                                 <div class="d-flex align-items-start">
                                     <div class="d-flex justify-content-center align-items-center rounded-circle me-3"
                                          style="width: 40px; height: 40px; background-color: #F0F5FF;">
@@ -219,7 +211,7 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-4">
+                            <div class="text-center py-4 scroll-animate" data-delay="700">
                                 <p class="text-muted mb-0 article-text">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
                             </div>
                         @endforelse
@@ -244,11 +236,13 @@
         font-size: 1.15rem;
         font-weight: 400;
     }
+    
     .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
-}
- .comment-item:last-child {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
+    }
+    
+    .comment-item:last-child {
         border-bottom: none !important;
     }
 
@@ -265,6 +259,40 @@
         text-decoration: underline;
     }
 
+    /* Scroll Animation Styles */
+    .scroll-animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .scroll-animate.animate {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Stagger animation delays */
+    .scroll-animate[data-delay="0"] { transition-delay: 0ms; }
+    .scroll-animate[data-delay="100"] { transition-delay: 100ms; }
+    .scroll-animate[data-delay="200"] { transition-delay: 200ms; }
+    .scroll-animate[data-delay="300"] { transition-delay: 300ms; }
+    .scroll-animate[data-delay="400"] { transition-delay: 400ms; }
+    .scroll-animate[data-delay="500"] { transition-delay: 500ms; }
+    .scroll-animate[data-delay="600"] { transition-delay: 600ms; }
+    .scroll-animate[data-delay="700"] { transition-delay: 700ms; }
+    .scroll-animate[data-delay="800"] { transition-delay: 800ms; }
+    .scroll-animate[data-delay="900"] { transition-delay: 900ms; }
+    .scroll-animate[data-delay="1000"] { transition-delay: 1000ms; }
+
+
+    /* ========================================================== */
+    /* ===== SOLUSI FINAL: Beri jarak ideal ke footer ===== */
+    /* ========================================================== */
+    .last-content-section {
+        margin-bottom: 4rem; /* 4rem sekitar 1.5 cm. Ubah jika perlu */
+    }
+
+
     @media (max-width: 768px) {
         .article-content h3 {
             font-size: 1.3rem;
@@ -272,6 +300,10 @@
 
         img.img-fluid {
             max-width: 100% !important;
+        }
+        
+        .scroll-animate {
+            transform: translateY(20px);
         }
     }
 </style>
@@ -307,6 +339,40 @@
             });
         });
     });
+
+    // === SCROLL ANIMATION SYSTEM ===
+    
+    // Function untuk menginisialisasi scroll animation
+    function initScrollAnimation() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -10% 0px', // Trigger animasi saat elemen 90% terlihat
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Tambahkan class animate dengan delay
+                    const delay = entry.target.dataset.delay || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, parseInt(delay));
+                    
+                    // Stop observing setelah animasi dijalankan
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe semua elemen dengan scroll-animate
+        const animateElements = document.querySelectorAll('.scroll-animate');
+        animateElements.forEach(element => {
+            // Reset state sebelum mengamati
+            element.classList.remove('animate');
+            observer.observe(element);
+        });
+    }
 
     // === ENHANCED GOOGLE TRANSLATE FORCE SYSTEM ===
     
@@ -442,6 +508,9 @@
         console.log('Current language preference:', localStorage.getItem('preferredLanguage'));
         console.log('Current URL:', window.location.href);
         
+        // Initialize scroll animations
+        initScrollAnimation();
+        
         // Only proceed if we should be in English mode
         if (localStorage.getItem('preferredLanguage') === 'en' || 
             document.cookie.includes('googtrans=/id/en') ||
@@ -496,6 +565,13 @@
         localStorage.setItem('preferredLanguage', 'en');
         document.cookie = 'googtrans=/id/en; path=/; max-age=86400';
         window.location.href = window.location.pathname + '#googtrans(id|en)';
+    };
+    
+    // Debug scroll animation
+    window.resetScrollAnimation = function() {
+        const elements = document.querySelectorAll('.scroll-animate');
+        elements.forEach(el => el.classList.remove('animate'));
+        initScrollAnimation();
     };
 </script>
 

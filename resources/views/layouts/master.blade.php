@@ -30,11 +30,22 @@
         }
     </style>
 
+    {{-- =================================================================== --}}
+    {{-- ===== SOLUSI FINAL: OVERRIDE PAKSA ATURAN DARI style.css ===== --}}
+    {{-- =================================================================== --}}
+    <style>
+        .main-wrapper {
+            min-height: 0 !important;
+        }
+    </style>
+    {{-- =================================================================== --}}
+
+
     @stack('styles')
 </head>
 <body class="@yield('body-class')">
 
-    <div class="main-wrapper d-flex flex-column min-vh-100">
+<div class="main-wrapper d-flex flex-column">
         {{-- Navbar akan selalu dipanggil dari sini --}}
         {{-- Kita akan membuat file navbar terpisah agar rapi --}}
         
@@ -42,7 +53,7 @@
         {{-- Di Halaman Lain, navbar akan memiliki background solid --}}
         
         {{-- KONTEN UTAMA HALAMAN --}}
-        <main class="content flex-grow-1">
+        <main class="content">
             @yield('content')
         </main>
 
