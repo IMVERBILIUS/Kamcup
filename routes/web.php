@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FrontController; // <-- Ini adalah FrontController utama
+use App\Http\Controllers\SearchController; // <-- Tambahan untuk Search
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GalleryController;
@@ -48,6 +49,10 @@ Route::middleware('log.visit')->group(function () {
     Route::get('/events', [FrontController::class, 'events'])->name('front.events.index');
     // Event/Tournament Details (front-facing) - Sekarang ditangani oleh FrontController
     Route::get('/events/{event:slug}', [FrontController::class, 'showEvent'])->name('front.events.show');
+    
+    // === SEARCH ROUTES ===
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::get('/api/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 });
 
 // Authentication Routes
@@ -84,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/host-request', [TournamentHostRequestController::class, 'store'])->name('host-request.store');
 
     // Team Management (User facing) - {team} parameter is encrypted ID
+    Route::get('/tim', [TeamController::class, 'index'])->name('team.index'); // Tambahan untuk listing team user
     Route::get('/tim/buat', [TeamController::class, 'create'])->name('team.create');
     Route::post('/tim', [TeamController::class, 'store'])->name('team.store');
     // Using encrypted ID for team in edit/update/delete
