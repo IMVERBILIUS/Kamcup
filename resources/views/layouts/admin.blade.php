@@ -319,6 +319,9 @@
             <a href="{{ route('admin.tournaments.index') }}" class="{{ request()->routeIs('admin.tournaments.index') || request()->routeIs('admin.tournaments.create') || request()->routeIs('admin.tournaments.edit') ? 'active' : '' }}">
                 <i class="fas fa-trophy"></i> Manage Tournaments
             </a>
+            <a href="{{ route('admin.matches.index') }}" class="{{ request()->routeIs('admin.matches.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar"></i>Tournament Schedule
+            </a>
             <a href="{{ route('admin.host-requests.index') }}" class="{{ request()->routeIs('admin.host-requests.index') || request()->routeIs('admin.host-requests.show') ? 'active' : '' }}">
                 <i class="fas fa-clipboard-list"></i> Tournament Host Requests
             </a>

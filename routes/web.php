@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MatchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
@@ -49,7 +50,7 @@ Route::middleware('log.visit')->group(function () {
     Route::get('/events', [FrontController::class, 'events'])->name('front.events.index');
     // Event/Tournament Details (front-facing) - Sekarang ditangani oleh FrontController
     Route::get('/events/{event:slug}', [FrontController::class, 'showEvent'])->name('front.events.show');
-    
+
     // === SEARCH ROUTES ===
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::get('/api/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
@@ -112,7 +113,7 @@ Route::middleware(['auth'])->group(function () {
     // Form sponsorship/donasi - sekarang butuh login
     Route::get('/sponsorship', [DonationController::class, 'create'])->name('donations.create');
     Route::post('/sponsorship', [DonationController::class, 'store'])->name('donations.store');
-    
+
     // Alternative routes dengan URL yang berbeda
     Route::get('/donations', [DonationController::class, 'create'])->name('donation.form');
     Route::post('/donations', [DonationController::class, 'store'])->name('donation.store');
@@ -163,6 +164,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/donations/{donation}/status', [DonationController::class, 'updateStatus'])->name('donations.updateStatus');
     Route::get('/donations/export/csv', [DonationController::class, 'export'])->name('donations.export');
     Route::get('/donations/statistics/json', [DonationController::class, 'statistics'])->name('donations.statistics');
+
+    Route::get('/matches/{match}/score', [MatchController::class, 'getScore']);
+    Route::get('/matches/get-confirmed-teams', [MatchController::class, 'getConfirmedTeams'])->name('admin.matches.get-confirmed-teams');
+    Route::get('/matches/get-tournament-location', [MatchController::class, 'getTournamentLocation']);
+    Route::resource('matches', MatchController::class);
 });
 
 // --- Role-Based Dashboards ---

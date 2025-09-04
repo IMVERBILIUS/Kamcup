@@ -43,4 +43,14 @@ class Tournament extends Model
     public function sponsors() {
         return $this->belongsToMany(Sponsor::class, 'sponsor_tournament');
     }
+
+    public function matches()
+    {
+        return $this->hasMany(VolleyMatch::class);
+    }
+
+    public function teams()
+    {
+        return $this->hasMany(Team::class);
+    }
 }

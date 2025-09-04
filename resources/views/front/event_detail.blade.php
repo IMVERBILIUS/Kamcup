@@ -70,6 +70,11 @@
                                 data-bs-target="#contact-person" type="button" role="tab"
                                 aria-controls="contact-person" aria-selected="false">Contact Person</button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="jadwal-pertandingan-tab" data-bs-toggle="tab"
+                                data-bs-target="#jadwal-pertandingan" type="button" role="tab"
+                                aria-controls="jadwal-pertandingan" aria-selected="false">Jadwal Pertandingan</button>
+                        </li>
                         <li class="nav-item ms-auto social-icon-wrapper">
                             <a href="https://twitter.com" target="_blank" class="nav-link twitter-icon">
                                 <i class="fab fa-twitter"></i>
@@ -288,6 +293,74 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Jadwal Pertandingan Tab Content --}}
+                        <div class="tab-pane fade" id="jadwal-pertandingan" role="tabpanel"
+                            aria-labelledby="jadwal-pertandingan-tab">
+                            <h5 class="tab-content-title">JADWAL PERTANDINGAN</h5>
+                            @forelse ($event->matches as $match)
+                                <div data-match-id="{{ $match->id }}"
+                                    class="match-card mb-3 p-3 border rounded-3 d-flex align-items-center justify-content-between">
+                                    <div class="match-info d-flex align-items-center w-100">
+                                        {{-- Team 1 --}}
+                                        <div class="team-logo text-center me-3">
+                                            <img src="{{ $match->team1->logo ? asset('storage/' . $match->team1->logo) : 'https://via.placeholder.com/60x60/3498db/FFFFFF?text=T1' }}"
+                                                alt="Team 1 Logo" class="rounded-circle"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                            <h6 class="team-name mt-2 text-truncate">{{ $match->team1->name ?? 'Tim 1' }}
+                                            </h6>
+                                        </div>
+
+                                        {{-- Bagian Skor dan Status Live --}}
+                                        <div class="match-score-and-status text-center mx-3 flex-grow-1"
+                                            data-match-id="{{ $match->id }}">
+                                            {{-- Konten ini akan diperbarui oleh JavaScript --}}
+                                            <h4 class="score-display fw-bold" id="score-{{ $match->id }}">
+                                                @if ($match->status === 'completed' || $match->status === 'ongoing')
+                                                    {{ $match->score_team1 ?? '0' }} - {{ $match->score_team2 ?? '0' }}
+                                                @else
+                                                    vs
+                                                @endif
+                                            </h4>
+                                            <span class="badge" id="status-{{ $match->id }}">
+                                                @if ($match->status === 'completed')
+                                                    <span class="badge bg-success">Selesai</span>
+                                                @elseif($match->status === 'ongoing')
+                                                    <span class="badge bg-primary">Berlangsung</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Akan Datang</span>
+                                                @endif
+                                            </span>
+                                        </div>
+
+                                        {{-- Team 2 --}}
+                                        <div class="team-logo text-center ms-3">
+                                            <img src="{{ $match->team2->logo ? asset('storage/' . $match->team2->logo) : 'https://via.placeholder.com/60x60/e74c3c/FFFFFF?text=T2' }}"
+                                                alt="Team 2 Logo" class="rounded-circle"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                            <h6 class="team-name mt-2 text-truncate">{{ $match->team2->name ?? 'Tim 2' }}
+                                            </h6>
+                                        </div>
+
+                                        {{-- Match Details --}}
+                                        <div class="match-details ms-auto text-end">
+                                            <p class="match-date-time mb-0"><i class="far fa-clock me-1"></i>
+                                                {{ \Carbon\Carbon::parse($match->match_datetime)->format('d F Y, H:i') }}
+                                                WIB</p>
+                                            <p class="match-stage mb-0"><i class="fas fa-bullseye me-1"></i>
+                                                {{ $match->stage }}</p>
+                                            <p class="match-location mb-0 text-muted"><i
+                                                    class="fas fa-map-marker-alt me-1"></i> {{ $match->location }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-5">
+                                    <i class="far fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <p class="no-data-text">Belum ada jadwal pertandingan yang tersedia.</p>
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
 
@@ -491,6 +564,41 @@
         .modal-footer .btn {
             min-width: 100px;
         }
+
+        .match-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .match-info .team-logo .team-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            /* max-width: 80px; */
+        }
+
+        .match-details p {
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+
+        .match-details .match-date-time {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .match-details .match-stage {
+            font-weight: 500;
+            color: #5B93FF;
+        }
+
+        .no-data-text {
+            color: #777;
+            font-style: italic;
+        }
     </style>
 @endpush
 
@@ -502,6 +610,11 @@
             const registerBtnText = document.getElementById('registerBtnText');
             const registerBtnSpinner = document.getElementById('registerBtnSpinner');
             const registrationErrorMessage = document.getElementById('registrationErrorMessage');
+
+            // NEW: Elemen untuk menampilkan skor
+            const matchStatusElement = document.getElementById('match-status');
+            const team1ScoreElement = document.getElementById('team1-score');
+            const team2ScoreElement = document.getElementById('team2-score');
 
             // Initialize Bootstrap Modals
             const registrationConfirmModal = new bootstrap.Modal(document.getElementById(
@@ -654,7 +767,7 @@
                             if (registerEventBtn && registerEventBtn.disabled && isRegistrationOpen) {
                                 if (userRegistrationStatus ===
                                     'rejected'
-                                    ) { // If user was rejected, allow re-register button to show again
+                                ) { // If user was rejected, allow re-register button to show again
                                     registerEventBtn.disabled = false;
                                     registerBtnText.textContent = 'Daftar Ulang Event Ini';
                                     registerEventBtn.classList.remove('btn-primary', 'btn-secondary',
@@ -674,7 +787,85 @@
                         });
                 });
             }
+
+            // BAGIAN BARU UNTUK LIVE SCORE
+            /**
+             * Fungsi untuk mengambil data skor live dan memperbarui tampilan.
+             */
+            async function fetchLiveScores() {
+                // Ambil semua elemen match-card yang memiliki data-match-id
+                const matchCards = document.querySelectorAll('.match-card');
+                if (matchCards.length === 0) {
+                    console.log('Tidak ada pertandingan, menghentikan live score fetch.');
+                    return;
+                }
+
+                try {
+                    const eventId = {{ $event->id }};
+                    const response = await fetch(`/api/events/${eventId}/live-scores`);
+
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data skor live.');
+                    }
+
+                    const matches = await response.json();
+
+                    // Iterasi setiap kartu pertandingan di halaman
+                    matchCards.forEach(card => {
+                        const matchId = card.dataset.matchId;
+                        const matchData = matches.find(m => m.id == matchId);
+
+                        if (matchData) {
+                            // Temukan elemen skor dan status di dalam kartu
+                            const scoreElement = card.querySelector('.score-live');
+                            const statusElement = card.querySelector('.status-live');
+
+                            // Perbarui skor
+                            const scoreText =
+                                `${matchData.team1_score ?? 0} - ${matchData.team2_score ?? 0}`;
+                            if (scoreElement && scoreElement.textContent.trim() !== scoreText) {
+                                scoreElement.textContent = scoreText;
+                            }
+
+                            // Perbarui status
+                            let statusBadge;
+                            if (matchData.status === 'completed') {
+                                statusBadge = '<span class="badge bg-success">Selesai</span>';
+                            } else if (matchData.status === 'ongoing') {
+                                statusBadge = '<span class="badge bg-primary">Berlangsung</span>';
+                            }
+
+                            // Hanya perbarui status jika ada data yang sesuai
+                            if (statusBadge && statusElement && statusElement.innerHTML.trim() !==
+                                statusBadge) {
+                                statusElement.innerHTML = statusBadge;
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Error fetching live scores:', error);
+                }
+            }
+
+            // Panggil fungsi pertama kali saat halaman dimuat
+            fetchLiveScores();
+
+            // Panggil fungsi setiap 10 detik (10000ms) untuk memperbarui skor
+            const liveScoreInterval = setInterval(fetchLiveScores, 10000);
+
+            // Optional: Hentikan interval saat user beralih tab untuk menghemat resource
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(liveScoreInterval);
+                } else {
+                    // Mulai lagi saat kembali ke tab
+                    fetchLiveScores();
+                    liveScoreInterval = setInterval(fetchLiveScores, 10000);
+                }
+            });
         });
     </script>
+    <script src="{{ asset('js/live_score.js') }}"></script>
     <script src="{{ asset('js/animate.js') }}"></script>
 @endpush
