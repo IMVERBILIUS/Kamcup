@@ -55,6 +55,7 @@
                                 <th class="py-3">Tim 2</th>
                                 <th class="py-3">Lokasi</th>
                                 <th class="py-3">Status</th>
+                                <th class="py-3">Pemenang</th>
                                 <th class="py-3">Aksi</th>
                             </tr>
                         </thead>
@@ -64,10 +65,10 @@
                                     <td>{{ $match->tournament->title ?? '-' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($match->match_datetime)->format('d M Y H:i') }}</td>
                                     <td>{{ $match->team1->name ?? '-' }}</td>
-                                    <td>
+                                    <td id="score-match-{{ $match->id }}">
                                         @if ($match->status == 'completed' || $match->status == 'in-progress')
-                                            <strong>{{ $match->team1_score ?? 0 }}</strong> -
-                                            <strong>{{ $match->team2_score ?? 0 }}</strong>
+                                            <strong id="score-team1-{{ $match->id }}">{{ $match->team1_score ?? 0 }}</strong> - 
+                                            <strong id="score-team2-{{ $match->id }}">{{ $match->team2_score ?? 0 }}</strong>
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
@@ -95,6 +96,18 @@
                                         @endphp
                                         <span class="{{ $statusClass }}">{{ $statusText }}</span>
                                     </td>
+                                    <td id="winner-match-{{ $match->id }}">
+                                        @if ($match->status == 'completed' && $match->winner)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-trophy text-warning me-2"></i>
+                                                <span class="fw-bold text-success">{{ $match->winner->name }}</span>
+                                            </div>
+                                        @elseif ($match->status == 'completed' && !$match->winner)
+                                            <span class="badge bg-info">Draw</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="d-flex gap-2">
                                             <a href="{{ route('admin.matches.edit', $match->id) }}"
@@ -117,7 +130,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">Belum ada pertandingan tercatat.
+                                    <td colspan="9" class="text-center py-4 text-muted">Belum ada pertandingan tercatat.
                                     </td>
                                 </tr>
                             @endforelse
@@ -126,10 +139,20 @@
                 </div>
             </div>
         </div>
+
+        {{-- Refresh Button --}}
+        <div class="row mt-4">
+            <div class="col-12 text-end">
+                <button onclick="refreshScores()" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-sync-alt me-1"></i>Refresh Skor
+                </button>
+            </div>
+        </div>
     </div>
 
     {{-- SweetAlert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function confirmDelete(event, form) {
             event.preventDefault();
@@ -153,6 +176,74 @@
                 }
             });
         }
+
+        // Function untuk refresh skor individual match
+        function updateMatchScore(matchId) {
+            $.ajax({
+                url: `/admin/matches/${matchId}/score`,
+                type: 'GET',
+                success: function(data) {
+                    // Update skor
+                    $(`#score-team1-${matchId}`).text(data.team1_score || 0);
+                    $(`#score-team2-${matchId}`).text(data.team2_score || 0);
+                    
+                    // Update winner
+                    if (data.status === 'completed' && data.winner) {
+                        $(`#winner-match-${matchId}`).html(`
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-trophy text-warning me-2"></i>
+                                <span class="fw-bold text-success">${data.winner}</span>
+                            </div>
+                        `);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(`Error updating score for match ${matchId}:`, error);
+                }
+            });
+        }
+
+        // Function untuk refresh semua skor
+        function refreshScores() {
+            const matchRows = $('tbody tr[data-match-id]');
+            
+            if (matchRows.length === 0) {
+                // Fallback: reload halaman jika tidak ada data-match-id
+                location.reload();
+                return;
+            }
+
+            matchRows.each(function() {
+                const matchId = $(this).data('match-id');
+                if (matchId) {
+                    updateMatchScore(matchId);
+                }
+            });
+
+            // Tampilkan notifikasi
+            Swal.fire({
+                icon: 'success',
+                title: 'Skor berhasil direfresh!',
+                showConfirmButton: false,
+                timer: 1500,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+
+        // Auto-refresh setiap 30 detik untuk pertandingan yang in-progress
+        setInterval(function() {
+            $('tbody tr').each(function() {
+                const statusBadge = $(this).find('.badge.bg-primary');
+                if (statusBadge.length > 0) { // Status in-progress
+                    const row = $(this);
+                    const matchId = row.find('[id^="score-team1-"]').attr('id')?.split('-')[2];
+                    if (matchId) {
+                        updateMatchScore(matchId);
+                    }
+                }
+            });
+        }, 30000); // 30 detik
 
         @if (session('success'))
             Swal.fire({

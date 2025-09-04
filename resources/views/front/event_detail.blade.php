@@ -131,7 +131,6 @@
                             @empty
                                 <p class="no-data-text">Tidak ada peraturan yang disediakan.</p>
                             @endforelse
-
                         </div>
 
                         {{-- Event Detail Tab Content --}}
@@ -200,21 +199,9 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (
-                                !$event->registration_start &&
-                                    !$event->registration_end &&
-                                    !$event->event_start &&
-                                    !$event->event_end &&
-                                    !$event->location &&
-                                    !$event->registration_fee &&
-                                    !$event->prize_total &&
-                                    !$event->gender_category)
-                                <p class="no-data-text">Detail event belum tersedia.</p>
-                            @endif
                         </div>
 
-
-                        {{-- Partisipan Tab Content (uses real data) --}}
+                        {{-- Partisipan Tab Content --}}
                         <div class="tab-pane fade" id="partisipan" role="tabpanel" aria-labelledby="partisipan-tab">
                             <h5 class="tab-content-title">DAFTAR PARTISIPAN</h5>
                             @php
@@ -240,10 +227,8 @@
                                                         <span class="members-label"><i class="fas fa-users me-1"></i>
                                                             Anggota Tim:</span>
                                                         <ul class="list-unstyled mb-0 d-inline-block ms-2">
-                                                            @foreach ($registration->team->members as $index => $member)
-                                                                <li class="d-inline-block">{{ $member->name }}@if (!$loop->last)
-                                                                        ,
-                                                                    @endif
+                                                            @foreach ($registration->team->members as $member)
+                                                                <li class="d-inline-block">{{ $member->name }}@if (!$loop->last), @endif
                                                                 </li>
                                                             @endforeach
                                                         </ul>
@@ -273,9 +258,7 @@
                                         atas.</p>
                                     @if ($event->contact_person)
                                         @php
-                                            // Bersihkan nomor telepon dari karakter non-digit
                                             $phoneNumberClean = preg_replace('/[^0-9]/', '', $event->contact_person);
-                                            // Tambahkan awalan negara jika belum ada (contoh: untuk Indonesia, 62)
                                             if (substr($phoneNumberClean, 0, 1) === '0') {
                                                 $phoneNumberClean = '62' . substr($phoneNumberClean, 1);
                                             } elseif (
@@ -294,48 +277,70 @@
                             </div>
                         </div>
 
-                        {{-- Jadwal Pertandingan Tab Content --}}
+                        {{-- Jadwal Pertandingan Tab Content - DIPERBAIKI LENGKAP --}}
                         <div class="tab-pane fade" id="jadwal-pertandingan" role="tabpanel"
                             aria-labelledby="jadwal-pertandingan-tab">
                             <h5 class="tab-content-title">JADWAL PERTANDINGAN</h5>
+                            
+                            {{-- Refresh Button --}}
+                            <div class="d-flex justify-content-end mb-3">
+                                <button onclick="fetchLiveScores()" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh Skor
+                                </button>
+                            </div>
+
                             @forelse ($event->matches as $match)
                                 <div data-match-id="{{ $match->id }}"
                                     class="match-card mb-3 p-3 border rounded-3 d-flex align-items-center justify-content-between">
                                     <div class="match-info d-flex align-items-center w-100">
                                         {{-- Team 1 --}}
                                         <div class="team-logo text-center me-3">
-                                            <img src="{{ $match->team1->logo ? asset('storage/' . $match->team1->logo) : 'https://via.placeholder.com/60x60/3498db/FFFFFF?text=T1' }}"
+                                            <img src="{{ $match->team1 && $match->team1->logo ? asset('storage/' . $match->team1->logo) : 'https://via.placeholder.com/60x60/3498db/FFFFFF?text=T1' }}"
                                                 alt="Team 1 Logo" class="rounded-circle"
                                                 style="width: 50px; height: 50px; object-fit: cover;">
                                             <h6 class="team-name mt-2 text-truncate">{{ $match->team1->name ?? 'Tim 1' }}
                                             </h6>
                                         </div>
 
-                                        {{-- Bagian Skor dan Status Live --}}
+                                        {{-- Bagian Skor dan Status Live - DIPERBAIKI --}}
                                         <div class="match-score-and-status text-center mx-3 flex-grow-1"
                                             data-match-id="{{ $match->id }}">
-                                            {{-- Konten ini akan diperbarui oleh JavaScript --}}
-                                            <h4 class="score-display fw-bold" id="score-{{ $match->id }}">
-                                                @if ($match->status === 'completed' || $match->status === 'ongoing')
-                                                    {{ $match->score_team1 ?? '0' }} - {{ $match->score_team2 ?? '0' }}
+                                            <h4 class="score-display fw-bold score-live" id="score-{{ $match->id }}">
+                                                @if ($match->status === 'completed' || $match->status === 'in-progress')
+                                                    {{ $match->team1_score ?? '0' }} - {{ $match->team2_score ?? '0' }}
                                                 @else
                                                     vs
                                                 @endif
                                             </h4>
-                                            <span class="badge" id="status-{{ $match->id }}">
+                                            <div class="status-live" id="status-{{ $match->id }}">
                                                 @if ($match->status === 'completed')
                                                     <span class="badge bg-success">Selesai</span>
-                                                @elseif($match->status === 'ongoing')
+                                                    @if ($match->winner)
+                                                        <div class="winner-info mt-1">
+                                                            <small class="text-success fw-bold">
+                                                                <i class="fas fa-trophy"></i> {{ $match->winner->name }}
+                                                            </small>
+                                                        </div>
+                                                    @elseif ($match->team1_score == $match->team2_score && $match->team1_score !== null)
+                                                        <div class="winner-info mt-1">
+                                                            <small class="text-info fw-bold">
+                                                                <i class="fas fa-handshake"></i> Draw
+                                                            </small>
+                                                        </div>
+                                                    @endif
+                                                @elseif($match->status === 'in-progress')
                                                     <span class="badge bg-primary">Berlangsung</span>
+                                                @elseif($match->status === 'scheduled')
+                                                    <span class="badge bg-warning">Terjadwal</span>
                                                 @else
-                                                    <span class="badge bg-secondary">Akan Datang</span>
+                                                    <span class="badge bg-secondary">{{ ucfirst($match->status) }}</span>
                                                 @endif
-                                            </span>
+                                            </div>
                                         </div>
 
                                         {{-- Team 2 --}}
                                         <div class="team-logo text-center ms-3">
-                                            <img src="{{ $match->team2->logo ? asset('storage/' . $match->team2->logo) : 'https://via.placeholder.com/60x60/e74c3c/FFFFFF?text=T2' }}"
+                                            <img src="{{ $match->team2 && $match->team2->logo ? asset('storage/' . $match->team2->logo) : 'https://via.placeholder.com/60x60/e74c3c/FFFFFF?text=T2' }}"
                                                 alt="Team 2 Logo" class="rounded-circle"
                                                 style="width: 50px; height: 50px; object-fit: cover;">
                                             <h6 class="team-name mt-2 text-truncate">{{ $match->team2->name ?? 'Tim 2' }}
@@ -344,13 +349,13 @@
 
                                         {{-- Match Details --}}
                                         <div class="match-details ms-auto text-end">
-                                            <p class="match-date-time mb-0"><i class="far fa-clock me-1"></i>
-                                                {{ \Carbon\Carbon::parse($match->match_datetime)->format('d F Y, H:i') }}
+                                            <p class="match-date-time mb-1"><i class="far fa-clock me-1"></i>
+                                                {{ \Carbon\Carbon::parse($match->match_datetime)->format('d M Y, H:i') }}
                                                 WIB</p>
-                                            <p class="match-stage mb-0"><i class="fas fa-bullseye me-1"></i>
-                                                {{ $match->stage }}</p>
+                                            <p class="match-stage mb-1"><i class="fas fa-bullseye me-1"></i>
+                                                {{ $match->stage ?? 'TBA' }}</p>
                                             <p class="match-location mb-0 text-muted"><i
-                                                    class="fas fa-map-marker-alt me-1"></i> {{ $match->location }}</p>
+                                                    class="fas fa-map-marker-alt me-1"></i> {{ $match->location ?? 'TBA' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -402,6 +407,7 @@
         </div>
     </div>
 
+    {{-- Modals --}}
     <div class="modal fade" id="registrationConfirmModal" tabindex="-1" aria-labelledby="registrationConfirmModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -501,6 +507,7 @@
         </div>
     </div>
 @endsection
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/event_detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
@@ -508,17 +515,14 @@
         /* Custom styles for the register button and modals */
         .custom-register-btn {
             background-color: #F4B704;
-            /* Example primary color */
             border-color: #F4B704;
             color: #000;
-            /* Dark text for yellow button */
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .custom-register-btn:hover {
             background-color: #d19f00;
-            /* Darker yellow on hover */
             border-color: #d19f00;
             color: #000;
         }
@@ -565,24 +569,50 @@
             min-width: 100px;
         }
 
+        /* Match card styling - DIPERBAIKI */
         .match-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background: #fff;
+            border: 1px solid #e0e0e0 !important;
         }
 
         .match-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+            border-color: #007bff !important;
         }
 
         .match-info .team-logo .team-name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            /* max-width: 80px; */
+            max-width: 80px;
+            line-height: 1.2;
+        }
+
+        .score-live {
+            font-size: 1.8rem;
+            color: #007bff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .status-live .badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.8em;
+        }
+
+        .winner-info {
+            margin-top: 0.5rem;
+        }
+
+        .winner-info small {
+            font-size: 0.7rem;
+            font-weight: 700;
         }
 
         .match-details p {
-            font-size: 0.85rem;
-            line-height: 1.2;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
         }
 
         .match-details .match-date-time {
@@ -599,6 +629,42 @@
             color: #777;
             font-style: italic;
         }
+
+        /* Loading animation */
+        .loading-scores {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Refresh button */
+        .btn-outline-primary {
+            border-color: #007bff;
+            color: #007bff;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        /* Live indicator */
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #dc3545;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 @endpush
 
@@ -611,71 +677,52 @@
             const registerBtnSpinner = document.getElementById('registerBtnSpinner');
             const registrationErrorMessage = document.getElementById('registrationErrorMessage');
 
-            // NEW: Elemen untuk menampilkan skor
-            const matchStatusElement = document.getElementById('match-status');
-            const team1ScoreElement = document.getElementById('team1-score');
-            const team2ScoreElement = document.getElementById('team2-score');
-
             // Initialize Bootstrap Modals
-            const registrationConfirmModal = new bootstrap.Modal(document.getElementById(
-                'registrationConfirmModal'));
+            const registrationConfirmModal = new bootstrap.Modal(document.getElementById('registrationConfirmModal'));
             const profileCompletionModal = new bootstrap.Modal(document.getElementById('profileCompletionModal'));
             const teamNotFoundModal = new bootstrap.Modal(document.getElementById('teamNotFoundModal'));
-            const registrationSuccessModal = new bootstrap.Modal(document.getElementById(
-                'registrationSuccessModal'));
+            const registrationSuccessModal = new bootstrap.Modal(document.getElementById('registrationSuccessModal'));
             const registrationErrorModal = new bootstrap.Modal(document.getElementById('registrationErrorModal'));
 
-            // Data from backend (ensure these variables are passed from your controller)
+            // Data from backend
             const eventId = {{ $event->id }};
             const eventSlug = '{{ $event->slug }}';
             const userHasTeam = {{ json_encode($userHasTeam) }};
             const teamMemberCount = {{ json_encode($teamMemberCount) }};
             const minMembersRequired = {{ json_encode($minMembersRequired) }};
             const isRegistrationOpen = {{ json_encode($isRegistrationOpen) }};
-            const userRegistrationStatus = '{{ $userRegistrationStatus }}'; // NEW: Get user's registration status
+            let userRegistrationStatus = '{{ $userRegistrationStatus }}';
 
-            // Set initial state of the register button based on backend logic and event status
+            // Set initial state of the register button
             if (registerEventBtn) {
-                if (userRegistrationStatus === 'rejected') { // NEW: If rejected, style for re-register
+                if (userRegistrationStatus === 'rejected') {
                     registerEventBtn.classList.remove('btn-primary', 'btn-secondary', 'btn-danger');
-                    registerEventBtn.classList.add('btn-warning'); // Or a specific re-register color
+                    registerEventBtn.classList.add('btn-warning');
                     registerBtnText.textContent = 'Daftar Ulang Event Ini';
-                    registerEventBtn.disabled = false; // Enable for re-registration
-                } else if (userRegistrationStatus !==
-                    '') { // If registered with any status (not empty, so 'pending', 'approved', 'completed')
+                    registerEventBtn.disabled = false;
+                } else if (userRegistrationStatus !== '') {
                     registerEventBtn.disabled = true;
-                    registerEventBtn.classList.remove('btn-primary', 'custom-register-btn', 'btn-danger',
-                        'btn-warning');
+                    registerEventBtn.classList.remove('btn-primary', 'custom-register-btn', 'btn-danger', 'btn-warning');
                     registerEventBtn.classList.add('btn-secondary');
-                    registerBtnText.textContent = 'Anda Sudah Terdaftar (' + userRegistrationStatus.charAt(0)
-                        .toUpperCase() + userRegistrationStatus.slice(1) + ')';
-                } else if (!isRegistrationOpen) { // Check if tournament status is NOT 'registration'
+                    registerBtnText.textContent = 'Anda Sudah Terdaftar (' + userRegistrationStatus.charAt(0).toUpperCase() + userRegistrationStatus.slice(1) + ')';
+                } else if (!isRegistrationOpen) {
                     registerEventBtn.disabled = true;
-                    registerEventBtn.classList.remove('btn-primary', 'custom-register-btn', 'btn-secondary',
-                        'btn-warning');
+                    registerEventBtn.classList.remove('btn-primary', 'custom-register-btn', 'btn-secondary', 'btn-warning');
                     registerEventBtn.classList.add('btn-danger');
                     registerBtnText.textContent = 'Pendaftaran Ditutup';
                 }
-                // If none of the above, it means registration is open and user is not registered,
-                // so the default styling (btn-primary, custom-register-btn) applies and it's enabled.
             }
 
-
-            // Event listener for the main "Daftar Event Ini" button
+            // Event listener for the main register button
             if (registerEventBtn) {
                 registerEventBtn.addEventListener('click', function() {
-                    // Client-side checks. These mirror backend checks for immediate feedback.
                     if (!isRegistrationOpen) {
-                        registrationErrorMessage.textContent =
-                            'Periode pendaftaran untuk event ini sudah ditutup.';
+                        registrationErrorMessage.textContent = 'Periode pendaftaran untuk event ini sudah ditutup.';
                         registrationErrorModal.show();
                         return;
                     }
-                    // Check if user is already registered with a non-rejected status
                     if (userRegistrationStatus !== '' && userRegistrationStatus !== 'rejected') {
-                        registrationErrorMessage.textContent =
-                            'Anda sudah terdaftar di event ini dengan status: ' + userRegistrationStatus
-                            .charAt(0).toUpperCase() + userRegistrationStatus.slice(1) + '.';
+                        registrationErrorMessage.textContent = 'Anda sudah terdaftar di event ini dengan status: ' + userRegistrationStatus.charAt(0).toUpperCase() + userRegistrationStatus.slice(1) + '.';
                         registrationErrorModal.show();
                         return;
                     }
@@ -688,24 +735,21 @@
                         profileCompletionModal.show();
                         return;
                     }
-
-                    registrationConfirmModal.show(); // Show confirmation modal if all checks pass
+                    registrationConfirmModal.show();
                 });
             }
 
-            // Event listener for the "Ya, Daftar!" button in the confirmation modal
+            // Event listener for confirmation button
             if (confirmRegisterBtn) {
                 confirmRegisterBtn.addEventListener('click', function() {
-                    registrationConfirmModal.hide(); // Hide confirmation modal
+                    registrationConfirmModal.hide();
 
-                    // Show spinner and disable button while registering
                     if (registerEventBtn) {
                         registerBtnText.textContent = 'Mendaftar...';
                         registerBtnSpinner.classList.remove('d-none');
                         registerEventBtn.disabled = true;
                     }
 
-                    // Perform AJAX POST request to the registration route
                     fetch('{{ url('/events/') }}/' + eventSlug + '/register', {
                             method: 'POST',
                             headers: {
@@ -719,153 +763,171 @@
                         .then(response => {
                             if (!response.ok) {
                                 return response.json().then(errorData => {
-                                    throw new Error(errorData.message ||
-                                        'Terjadi kesalahan tidak diketahui.');
+                                    throw new Error(errorData.message || 'Terjadi kesalahan tidak diketahui.');
                                 }).catch(() => {
-                                    throw new Error(
-                                        'Server mengirim respons yang tidak valid. Mohon coba lagi atau hubungi administrator.'
-                                    );
+                                    throw new Error('Server mengirim respons yang tidak valid. Mohon coba lagi atau hubungi administrator.');
                                 });
                             }
                             return response.json();
                         })
                         .then(data => {
                             if (data.success) {
-                                registrationSuccessModal.show(); // Show success modal
-                                // Update UI button after successful registration
+                                registrationSuccessModal.show();
                                 if (registerEventBtn) {
                                     registerEventBtn.disabled = true;
-                                    registerEventBtn.classList.remove('btn-primary',
-                                        'custom-register-btn', 'btn-danger', 'btn-warning');
+                                    registerEventBtn.classList.remove('btn-primary', 'custom-register-btn', 'btn-danger', 'btn-warning');
                                     registerEventBtn.classList.add('btn-secondary');
-                                    registerBtnText.textContent =
-                                        'Anda Sudah Terdaftar (Pending)'; // After successful register, status is pending
+                                    registerBtnText.textContent = 'Anda Sudah Terdaftar (Pending)';
                                 }
-                                // Update the userRegistrationStatus variable globally to reflect new state
-                                userRegistrationStatus = 'pending'; // Reflect the new state
+                                userRegistrationStatus = 'pending';
                             } else {
-                                // Handle cases where response is OK but 'success' is false (e.g., custom validation messages from server)
-                                registrationErrorMessage.textContent = data.message ||
-                                    'Pendaftaran gagal.';
-                                if (data.redirect_to_profile) {
-                                    // Optionally, automatically redirect the user to their profile
-                                    // window.location.href = '{{ route('profile.index') }}';
-                                }
+                                registrationErrorMessage.textContent = data.message || 'Pendaftaran gagal.';
                                 registrationErrorModal.show();
                             }
                         })
                         .catch(error => {
                             console.error('Error during registration:', error);
-                            registrationErrorMessage.textContent = error.message ||
-                                'Terjadi kesalahan saat mendaftar. Silakan coba lagi.';
+                            registrationErrorMessage.textContent = error.message || 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.';
                             registrationErrorModal.show();
                         })
                         .finally(() => {
-                            // Hide spinner
                             registerBtnSpinner.classList.add('d-none');
-                            // Re-enable button if it was disabled ONLY for this attempt, and registration is still open/re-registrable
                             if (registerEventBtn && registerEventBtn.disabled && isRegistrationOpen) {
-                                if (userRegistrationStatus ===
-                                    'rejected'
-                                ) { // If user was rejected, allow re-register button to show again
+                                if (userRegistrationStatus === 'rejected') {
                                     registerEventBtn.disabled = false;
                                     registerBtnText.textContent = 'Daftar Ulang Event Ini';
-                                    registerEventBtn.classList.remove('btn-primary', 'btn-secondary',
-                                        'btn-danger');
+                                    registerEventBtn.classList.remove('btn-primary', 'btn-secondary', 'btn-danger');
                                     registerEventBtn.classList.add('btn-warning');
-                                } else if (userRegistrationStatus ===
-                                    '') { // If user was never registered, enable main button
+                                } else if (userRegistrationStatus === '') {
                                     registerEventBtn.disabled = false;
                                     registerBtnText.textContent = 'Daftar Event Ini';
-                                    registerEventBtn.classList.add('btn-primary',
-                                        'custom-register-btn');
-                                    registerEventBtn.classList.remove('btn-secondary', 'btn-danger',
-                                        'btn-warning');
+                                    registerEventBtn.classList.add('btn-primary', 'custom-register-btn');
+                                    registerEventBtn.classList.remove('btn-secondary', 'btn-danger', 'btn-warning');
                                 }
-                                // If userRegistrationStatus is pending/approved, it should remain disabled.
                             }
                         });
                 });
             }
 
-            // BAGIAN BARU UNTUK LIVE SCORE
+            // LIVE SCORE FUNCTIONALITY - DIPERBAIKI
+            let liveScoreInterval;
+
             /**
-             * Fungsi untuk mengambil data skor live dan memperbarui tampilan.
+             * Fungsi untuk mengambil data skor live dan memperbarui tampilan
              */
-            async function fetchLiveScores() {
-                // Ambil semua elemen match-card yang memiliki data-match-id
-                const matchCards = document.querySelectorAll('.match-card');
+            window.fetchLiveScores = async function() {
+                const matchCards = document.querySelectorAll('.match-card[data-match-id]');
                 if (matchCards.length === 0) {
-                    console.log('Tidak ada pertandingan, menghentikan live score fetch.');
+                    console.log('Tidak ada pertandingan untuk diupdate.');
                     return;
                 }
 
                 try {
-                    const eventId = {{ $event->id }};
-                    const response = await fetch(`/api/events/${eventId}/live-scores`);
+                    // Add loading indicator
+                    matchCards.forEach(card => card.classList.add('loading-scores'));
 
+                    const response = await fetch(`/api/events/${eventId}/live-scores`);
+                    
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data skor live.');
                     }
 
                     const matches = await response.json();
+                    console.log('Live scores fetched:', matches);
 
-                    // Iterasi setiap kartu pertandingan di halaman
+                    // Update setiap kartu pertandingan
                     matchCards.forEach(card => {
-                        const matchId = card.dataset.matchId;
-                        const matchData = matches.find(m => m.id == matchId);
+                        const matchId = parseInt(card.dataset.matchId);
+                        const matchData = matches.find(m => m.id === matchId);
 
                         if (matchData) {
-                            // Temukan elemen skor dan status di dalam kartu
+                            // Update skor
                             const scoreElement = card.querySelector('.score-live');
-                            const statusElement = card.querySelector('.status-live');
-
-                            // Perbarui skor
-                            const scoreText =
-                                `${matchData.team1_score ?? 0} - ${matchData.team2_score ?? 0}`;
-                            if (scoreElement && scoreElement.textContent.trim() !== scoreText) {
+                            if (scoreElement) {
+                                let scoreText;
+                                if (matchData.status === 'completed' || matchData.status === 'in-progress') {
+                                    scoreText = `${matchData.team1_score} - ${matchData.team2_score}`;
+                                } else {
+                                    scoreText = 'vs';
+                                }
                                 scoreElement.textContent = scoreText;
                             }
 
-                            // Perbarui status
-                            let statusBadge;
-                            if (matchData.status === 'completed') {
-                                statusBadge = '<span class="badge bg-success">Selesai</span>';
-                            } else if (matchData.status === 'ongoing') {
-                                statusBadge = '<span class="badge bg-primary">Berlangsung</span>';
-                            }
+                            // Update status
+                            const statusElement = card.querySelector('.status-live');
+                            if (statusElement) {
+                                let statusHTML = '';
+                                let liveIndicator = '';
+                                
+                                if (matchData.status === 'in-progress') {
+                                    liveIndicator = '<span class="live-indicator"></span>';
+                                }
 
-                            // Hanya perbarui status jika ada data yang sesuai
-                            if (statusBadge && statusElement && statusElement.innerHTML.trim() !==
-                                statusBadge) {
-                                statusElement.innerHTML = statusBadge;
+                                if (matchData.status === 'completed') {
+                                    statusHTML = '<span class="badge bg-success">Selesai</span>';
+                                    if (matchData.winner) {
+                                        statusHTML += `<div class="winner-info mt-1">
+                                            <small class="text-success fw-bold">
+                                                <i class="fas fa-trophy"></i> ${matchData.winner}
+                                            </small>
+                                        </div>`;
+                                    } else if (matchData.is_draw) {
+                                        statusHTML += `<div class="winner-info mt-1">
+                                            <small class="text-info fw-bold">
+                                                <i class="fas fa-handshake"></i> Draw
+                                            </small>
+                                        </div>`;
+                                    }
+                                } else if (matchData.status === 'in-progress') {
+                                    statusHTML = `<span class="badge bg-primary">Berlangsung${liveIndicator}</span>`;
+                                } else if (matchData.status === 'scheduled') {
+                                    statusHTML = '<span class="badge bg-warning">Terjadwal</span>';
+                                } else {
+                                    statusHTML = `<span class="badge bg-secondary">${matchData.status.charAt(0).toUpperCase() + matchData.status.slice(1)}</span>`;
+                                }
+
+                                statusElement.innerHTML = statusHTML;
                             }
                         }
                     });
 
+                    console.log('Live scores updated successfully');
+
                 } catch (error) {
                     console.error('Error fetching live scores:', error);
+                } finally {
+                    // Remove loading indicator
+                    setTimeout(() => {
+                        matchCards.forEach(card => card.classList.remove('loading-scores'));
+                    }, 500);
                 }
-            }
+            };
 
-            // Panggil fungsi pertama kali saat halaman dimuat
+            // Initial fetch
             fetchLiveScores();
 
-            // Panggil fungsi setiap 10 detik (10000ms) untuk memperbarui skor
-            const liveScoreInterval = setInterval(fetchLiveScores, 10000);
+            // Auto-refresh setiap 15 detik
+            liveScoreInterval = setInterval(fetchLiveScores, 15000);
 
-            // Optional: Hentikan interval saat user beralih tab untuk menghemat resource
+            // Pause/resume berdasarkan visibility
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
-                    clearInterval(liveScoreInterval);
+                    if (liveScoreInterval) {
+                        clearInterval(liveScoreInterval);
+                    }
                 } else {
-                    // Mulai lagi saat kembali ke tab
                     fetchLiveScores();
-                    liveScoreInterval = setInterval(fetchLiveScores, 10000);
+                    liveScoreInterval = setInterval(fetchLiveScores, 15000);
+                }
+            });
+
+            // Cleanup saat user meninggalkan halaman
+            window.addEventListener('beforeunload', () => {
+                if (liveScoreInterval) {
+                    clearInterval(liveScoreInterval);
                 }
             });
         });
     </script>
-    <script src="{{ asset('js/live_score.js') }}"></script>
     <script src="{{ asset('js/animate.js') }}"></script>
 @endpush
