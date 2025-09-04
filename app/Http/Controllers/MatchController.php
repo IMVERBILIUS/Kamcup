@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Models\Tournament;
 use App\Models\VolleyMatch;
 use App\Models\TournamentRegistration;
+use App\Models\Ranking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +24,6 @@ class MatchController extends Controller
                     ->latest('match_datetime')
                     ->get();
         
-        // Debug: Log untuk memastikan data ter-load dengan benar
         Log::info('Matches loaded for index view', [
             'total_matches' => $matches->count(),
             'matches_with_scores' => $matches->where('status', 'completed')->map(function($match) {
@@ -51,7 +51,6 @@ class MatchController extends Controller
                                 ->orderBy('title')
                                 ->get();
         
-        // Teams akan di-load via AJAX berdasarkan tournament yang dipilih
         $teams = collect(); // Empty collection
         
         return view('match.create', compact('tournaments', 'teams'));
@@ -106,10 +105,18 @@ class MatchController extends Controller
                 return back()->withInput()->with('error', 'Salah satu atau kedua tim belum terdaftar atau dikonfirmasi untuk turnamen ini.');
             }
 
-            // Set default status jika tidak disediakan
             $validated['status'] = $validated['status'] ?? 'scheduled';
 
             $match = VolleyMatch::create($validated);
+
+            // Update ranking jika match langsung completed
+            if ($validated['status'] === 'completed' && 
+                isset($validated['team1_score']) && 
+                isset($validated['team2_score'])) {
+                
+                $tournament = Tournament::find($match->tournament_id);
+                $tournament->refreshRankings();
+            }
 
             DB::commit();
             
@@ -176,6 +183,9 @@ class MatchController extends Controller
             $oldStatus = $match->status;
             $oldScores = ['team1' => $match->team1_score, 'team2' => $match->team2_score];
             
+            // Cek apakah perlu refresh ranking
+            $needsRankingRefresh = ($oldStatus === 'completed');
+            
             // Logic untuk menentukan pemenang dan pecundang berdasarkan status
             if ($validated['status'] === 'completed') {
                 $team1Score = $validated['team1_score'] ?? 0;
@@ -206,9 +216,14 @@ class MatchController extends Controller
 
             $match->update($validated);
 
+            // Update ranking system
+            if ($needsRankingRefresh || $validated['status'] === 'completed') {
+                $tournament = Tournament::find($match->tournament_id);
+                $tournament->refreshRankings();
+            }
+
             DB::commit();
             
-            // Log perubahan penting
             Log::info('Match updated successfully', [
                 'match_id' => $match->id,
                 'old_status' => $oldStatus,
@@ -243,8 +258,18 @@ class MatchController extends Controller
         try {
             $matchInfo = ($match->team1->name ?? 'Team 1') . ' vs ' . ($match->team2->name ?? 'Team 2');
             $matchId = $match->id;
+            $tournamentId = $match->tournament_id;
+            $wasCompleted = $match->status === 'completed';
             
             $match->delete();
+            
+            // Refresh ranking jika match yang dihapus sudah completed
+            if ($wasCompleted) {
+                $tournament = Tournament::find($tournamentId);
+                if ($tournament) {
+                    $tournament->refreshRankings();
+                }
+            }
             
             Log::info('Match deleted successfully', [
                 'match_id' => $matchId,
@@ -262,12 +287,11 @@ class MatchController extends Controller
     }
 
     /**
-     * API to get live score - DIPERBAIKI
+     * API to get live score
      */
     public function getScore(VolleyMatch $match)
     {
         try {
-            // Load relasi untuk memastikan data lengkap
             $match->load(['team1', 'team2', 'winner', 'loser']);
             
             $response = [
@@ -301,7 +325,85 @@ class MatchController extends Controller
     }
 
     /**
-     * Get confirmed teams for a specific tournament (AJAX endpoint) - DIPERBAIKI
+     * API untuk mendapatkan live scores multiple matches
+     */
+    public function getLiveScores($eventId)
+    {
+        try {
+            $matches = VolleyMatch::where('tournament_id', $eventId)
+                ->with(['team1', 'team2', 'winner'])
+                ->orderBy('match_datetime', 'asc')
+                ->get();
+
+            $response = $matches->map(function($match) {
+                return [
+                    'id' => $match->id,
+                    'team1_score' => $match->team1_score ?? 0,
+                    'team2_score' => $match->team2_score ?? 0,
+                    'status' => $match->status,
+                    'winner' => $match->winner ? $match->winner->name : null,
+                    'team1_name' => $match->team1 ? $match->team1->name : 'Team 1',
+                    'team2_name' => $match->team2 ? $match->team2->name : 'Team 2',
+                    'is_draw' => ($match->status === 'completed' && 
+                                 $match->team1_score === $match->team2_score && 
+                                 $match->team1_score !== null),
+                    'updated_at' => $match->updated_at->toISOString()
+                ];
+            });
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error('Error getting live scores: ' . $e->getMessage(), [
+                'event_id' => $eventId,
+                'exception' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Failed to get live scores'], 500);
+        }
+    }
+
+    /**
+     * API untuk mendapatkan rankings
+     */
+    public function getRankings($eventId)
+    {
+        try {
+            $tournament = Tournament::findOrFail($eventId);
+            $rankings = $tournament->getOrderedRankings();
+
+            $response = $rankings->map(function($ranking) {
+                $matchesPlayed = $ranking->wins + $ranking->losses + $ranking->draws;
+                $winPercentage = $matchesPlayed > 0 ? round(($ranking->wins / $matchesPlayed) * 100, 2) : 0;
+                $goalDifference = $ranking->goals_for - $ranking->goals_against;
+
+                return [
+                    'rank' => $ranking->rank ?: 0,
+                    'team_id' => $ranking->team_id,
+                    'team_name' => $ranking->team->name ?? 'Unknown Team',
+                    'team_logo' => $ranking->team->logo ? asset('storage/' . $ranking->team->logo) : null,
+                    'matches_played' => $matchesPlayed,
+                    'wins' => $ranking->wins,
+                    'draws' => $ranking->draws,
+                    'losses' => $ranking->losses,
+                    'goals_for' => $ranking->goals_for,
+                    'goals_against' => $ranking->goals_against,
+                    'goal_difference' => $goalDifference,
+                    'points' => $ranking->points,
+                    'win_percentage' => $winPercentage
+                ];
+            });
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error('Error getting rankings: ' . $e->getMessage(), [
+                'event_id' => $eventId,
+                'exception' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Failed to get rankings'], 500);
+        }
+    }
+
+    /**
+     * Get confirmed teams for a specific tournament (AJAX endpoint)
      */
     public function getConfirmedTeams(Request $request)
     {
@@ -313,7 +415,6 @@ class MatchController extends Controller
         }
 
         try {
-            // Ambil teams yang sudah terdaftar dan dikonfirmasi untuk tournament ini
             $teams = Team::whereHas('registrations', function($query) use ($tournamentId) {
                 $query->where('tournament_id', $tournamentId)
                       ->where('status', 'confirmed');
@@ -327,7 +428,6 @@ class MatchController extends Controller
                 'teams' => $teams->toArray()
             ]);
 
-            // Jika tidak ada teams, berikan response kosong dengan pesan
             if ($teams->isEmpty()) {
                 return response()->json([
                     'teams' => [],
@@ -347,7 +447,7 @@ class MatchController extends Controller
     }
 
     /**
-     * Get tournament location (AJAX endpoint) - DIPERBAIKI
+     * Get tournament location (AJAX endpoint)
      */
     public function getTournamentLocation(Request $request)
     {
@@ -402,7 +502,6 @@ class MatchController extends Controller
               ->orderBy('name')
               ->get();
 
-            // Format data dengan status registrasi
             $formattedTeams = $teams->map(function($team) {
                 return [
                     'id' => $team->id,
@@ -441,16 +540,13 @@ class MatchController extends Controller
                 'cancelled_matches' => $tournament->matches()->where('status', 'cancelled')->count(),
             ];
 
-            // Tambahan statistik teams jika relasi tersedia
             try {
-                $stats['total_teams'] = $tournament->teams()->count();
                 $stats['confirmed_teams'] = $tournament->confirmedTeams()->count();
             } catch (\Exception $e) {
                 Log::warning('Could not fetch team stats for tournament', [
                     'tournament_id' => $tournament->id,
                     'error' => $e->getMessage()
                 ]);
-                $stats['total_teams'] = 0;
                 $stats['confirmed_teams'] = 0;
             }
 
@@ -519,7 +615,6 @@ class MatchController extends Controller
     public function refreshMatches(Request $request)
     {
         try {
-            // Clear any potential cache
             if (function_exists('opcache_reset')) {
                 opcache_reset();
             }

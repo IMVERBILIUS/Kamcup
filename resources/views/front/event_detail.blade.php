@@ -75,6 +75,12 @@
                                 data-bs-target="#jadwal-pertandingan" type="button" role="tab"
                                 aria-controls="jadwal-pertandingan" aria-selected="false">Jadwal Pertandingan</button>
                         </li>
+                        {{-- TAMBAHAN BARU: Tab Peringkat --}}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="peringkat-tab" data-bs-toggle="tab"
+                                data-bs-target="#peringkat" type="button" role="tab"
+                                aria-controls="peringkat" aria-selected="false">Peringkat</button>
+                        </li>
                         <li class="nav-item ms-auto social-icon-wrapper">
                             <a href="https://twitter.com" target="_blank" class="nav-link twitter-icon">
                                 <i class="fab fa-twitter"></i>
@@ -277,7 +283,7 @@
                             </div>
                         </div>
 
-                        {{-- Jadwal Pertandingan Tab Content - DIPERBAIKI LENGKAP --}}
+                        {{-- Jadwal Pertandingan Tab Content --}}
                         <div class="tab-pane fade" id="jadwal-pertandingan" role="tabpanel"
                             aria-labelledby="jadwal-pertandingan-tab">
                             <h5 class="tab-content-title">JADWAL PERTANDINGAN</h5>
@@ -302,7 +308,7 @@
                                             </h6>
                                         </div>
 
-                                        {{-- Bagian Skor dan Status Live - DIPERBAIKI --}}
+                                        {{-- Bagian Skor dan Status Live --}}
                                         <div class="match-score-and-status text-center mx-3 flex-grow-1"
                                             data-match-id="{{ $match->id }}">
                                             <h4 class="score-display fw-bold score-live" id="score-{{ $match->id }}">
@@ -365,6 +371,63 @@
                                     <p class="no-data-text">Belum ada jadwal pertandingan yang tersedia.</p>
                                 </div>
                             @endforelse
+                        </div>
+
+                        {{-- TAMBAHAN BARU: Peringkat Tab Content --}}
+                        <div class="tab-pane fade" id="peringkat" role="tabpanel" aria-labelledby="peringkat-tab">
+                            <h5 class="tab-content-title">PERINGKAT TIM</h5>
+                            
+                            {{-- Refresh Rankings Button --}}
+                            <div class="d-flex justify-content-end mb-3">
+                                <button onclick="fetchRankings()" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh Peringkat
+                                </button>
+                            </div>
+
+                            {{-- Rankings Table --}}
+                            <div class="ranking-container" id="rankingContainer">
+                                <div class="table-responsive">
+                                    <table class="table table-hover ranking-table">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center" style="width: 60px;">#</th>
+                                                <th style="width: 250px;">Tim</th>
+                                                <th class="text-center" style="width: 80px;">Main</th>
+                                                <th class="text-center" style="width: 80px;">Menang</th>
+                                                <th class="text-center" style="width: 80px;">Seri</th>
+                                                <th class="text-center" style="width: 80px;">Kalah</th>
+                                                <th class="text-center" style="width: 80px;">GM</th>
+                                                <th class="text-center" style="width: 80px;">GK</th>
+                                                <th class="text-center" style="width: 80px;">SG</th>
+                                                <th class="text-center" style="width: 100px;"><strong>Poin</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="rankingTableBody">
+                                            {{-- Rankings akan di-load via JavaScript --}}
+                                            <tr>
+                                                <td colspan="10" class="text-center py-4">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <p class="mt-2 text-muted">Memuat peringkat...</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {{-- Legend Keterangan --}}
+                                <div class="ranking-legend mt-3">
+                                    <small class="text-muted">
+                                        <strong>Keterangan:</strong> 
+                                        Main = Pertandingan yang dimainkan | 
+                                        GM = Gol yang dicetak | 
+                                        GK = Gol yang kebobolan | 
+                                        SG = Selisih gol | 
+                                        Sistem poin: Menang = 3 poin, Seri = 1 poin, Kalah = 0 poin
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -569,7 +632,7 @@
             min-width: 100px;
         }
 
-        /* Match card styling - DIPERBAIKI */
+        /* Match card styling */
         .match-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             background: #fff;
@@ -664,6 +727,140 @@
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
+        }
+
+        /* TAMBAHAN BARU: Ranking Table Styles */
+        .ranking-table {
+            font-size: 0.9rem;
+        }
+
+        .ranking-table thead th {
+            background-color: #2c3e50 !important;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .ranking-table tbody td {
+            vertical-align: middle;
+            text-align: center;
+            border-color: #dee2e6;
+        }
+
+        .ranking-table .team-info {
+            text-align: left !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .ranking-table .team-logo {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .ranking-table .team-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .ranking-table .rank-position {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .ranking-table .points-column {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #27ae60;
+        }
+
+        .ranking-table .positive-stat {
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .ranking-table .negative-stat {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .ranking-table .neutral-stat {
+            color: #95a5a6;
+        }
+
+        .ranking-table tbody tr:nth-child(1) {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f39c12;
+        }
+
+        .ranking-table tbody tr:nth-child(2) {
+            background-color: #f8f9fa;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .ranking-table tbody tr:nth-child(3) {
+            background-color: #f8f9fa;
+            border-left: 4px solid #cd7f32;
+        }
+
+        .ranking-table tbody tr:hover {
+            background-color: #e8f4fd;
+            cursor: pointer;
+        }
+
+        .ranking-legend {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+
+        .btn-outline-success {
+            border-color: #28a745;
+            color: #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .loading-rankings {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Empty state styling */
+        .empty-ranking-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .empty-ranking-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+
+        .empty-ranking-state h5 {
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-ranking-state p {
+            margin: 0;
+            font-size: 0.9rem;
         }
     </style>
 @endpush
@@ -809,7 +1006,7 @@
                 });
             }
 
-            // LIVE SCORE FUNCTIONALITY - DIPERBAIKI
+            // LIVE SCORE FUNCTIONALITY
             let liveScoreInterval;
 
             /**
@@ -823,7 +1020,6 @@
                 }
 
                 try {
-                    // Add loading indicator
                     matchCards.forEach(card => card.classList.add('loading-scores'));
 
                     const response = await fetch(`/api/events/${eventId}/live-scores`);
@@ -835,13 +1031,11 @@
                     const matches = await response.json();
                     console.log('Live scores fetched:', matches);
 
-                    // Update setiap kartu pertandingan
                     matchCards.forEach(card => {
                         const matchId = parseInt(card.dataset.matchId);
                         const matchData = matches.find(m => m.id === matchId);
 
                         if (matchData) {
-                            // Update skor
                             const scoreElement = card.querySelector('.score-live');
                             if (scoreElement) {
                                 let scoreText;
@@ -853,7 +1047,6 @@
                                 scoreElement.textContent = scoreText;
                             }
 
-                            // Update status
                             const statusElement = card.querySelector('.status-live');
                             if (statusElement) {
                                 let statusHTML = '';
@@ -896,18 +1089,108 @@
                 } catch (error) {
                     console.error('Error fetching live scores:', error);
                 } finally {
-                    // Remove loading indicator
                     setTimeout(() => {
                         matchCards.forEach(card => card.classList.remove('loading-scores'));
                     }, 500);
                 }
             };
 
+            // TAMBAHAN BARU: RANKING FUNCTIONALITY
+            /**
+             * Fungsi untuk mengambil data peringkat dan memperbarui tampilan
+             */
+            window.fetchRankings = async function() {
+                const rankingContainer = document.getElementById('rankingContainer');
+                const rankingTableBody = document.getElementById('rankingTableBody');
+
+                try {
+                    rankingContainer.classList.add('loading-rankings');
+
+                    const response = await fetch(`/api/events/${eventId}/rankings`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data peringkat.');
+                    }
+
+                    const rankings = await response.json();
+                    console.log('Rankings fetched:', rankings);
+
+                    // Clear existing content
+                    rankingTableBody.innerHTML = '';
+
+                    if (rankings.length === 0) {
+                        // Show empty state
+                        rankingTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="10" class="text-center py-5">
+                                    <div class="empty-ranking-state">
+                                        <i class="fas fa-trophy"></i>
+                                        <h5>Belum Ada Peringkat</h5>
+                                        <p>Peringkat akan muncul setelah ada pertandingan yang selesai.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        // Populate table dengan data rankings
+                        rankings.forEach((ranking, index) => {
+                            const goalDifference = ranking.goal_difference;
+                            const goalDiffClass = goalDifference > 0 ? 'positive-stat' : 
+                                                  goalDifference < 0 ? 'negative-stat' : 'neutral-stat';
+
+                            const row = `
+                                <tr>
+                                    <td class="rank-position">${ranking.rank}</td>
+                                    <td class="team-info">
+                                        <img src="${ranking.team_logo || 'https://via.placeholder.com/30x30/3498db/FFFFFF?text=T'}" 
+                                             alt="Team Logo" class="team-logo">
+                                        <span class="team-name">${ranking.team_name}</span>
+                                    </td>
+                                    <td>${ranking.matches_played}</td>
+                                    <td class="positive-stat">${ranking.wins}</td>
+                                    <td class="neutral-stat">${ranking.draws}</td>
+                                    <td class="negative-stat">${ranking.losses}</td>
+                                    <td class="positive-stat">${ranking.goals_for}</td>
+                                    <td class="negative-stat">${ranking.goals_against}</td>
+                                    <td class="${goalDiffClass}">${goalDifference > 0 ? '+' : ''}${goalDifference}</td>
+                                    <td class="points-column">${ranking.points}</td>
+                                </tr>
+                            `;
+                            rankingTableBody.innerHTML += row;
+                        });
+                    }
+
+                    console.log('Rankings updated successfully');
+
+                } catch (error) {
+                    console.error('Error fetching rankings:', error);
+                    rankingTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="10" class="text-center py-4 text-danger">
+                                <i class="fas fa-exclamation-triangle mb-2"></i>
+                                <p>Gagal memuat peringkat. Silakan coba lagi.</p>
+                                <button onclick="fetchRankings()" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-sync-alt me-1"></i>Coba Lagi
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                } finally {
+                    setTimeout(() => {
+                        rankingContainer.classList.remove('loading-rankings');
+                    }, 500);
+                }
+            };
+
             // Initial fetch
             fetchLiveScores();
+            fetchRankings();
 
-            // Auto-refresh setiap 15 detik
-            liveScoreInterval = setInterval(fetchLiveScores, 15000);
+            // Auto-refresh setiap 30 detik untuk live scores
+            liveScoreInterval = setInterval(fetchLiveScores, 30000);
+
+            // Auto-refresh rankings setiap 2 menit (karena ranking berubah lebih jarang)
+            const rankingInterval = setInterval(fetchRankings, 120000);
 
             // Pause/resume berdasarkan visibility
             document.addEventListener('visibilitychange', () => {
@@ -915,9 +1198,12 @@
                     if (liveScoreInterval) {
                         clearInterval(liveScoreInterval);
                     }
+                    clearInterval(rankingInterval);
                 } else {
                     fetchLiveScores();
-                    liveScoreInterval = setInterval(fetchLiveScores, 15000);
+                    fetchRankings();
+                    liveScoreInterval = setInterval(fetchLiveScores, 30000);
+                    setInterval(fetchRankings, 120000);
                 }
             });
 
@@ -926,6 +1212,7 @@
                 if (liveScoreInterval) {
                     clearInterval(liveScoreInterval);
                 }
+                clearInterval(rankingInterval);
             });
         });
     </script>

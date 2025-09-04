@@ -22,7 +22,7 @@
         </div>
     </section>
 
-    {{-- Sisa konten tetap sama seperti sebelumnya --}}
+    {{-- Match Terdekat --}}
     @if ($next_match)
         <div class="container py-4 scroll-animate" data-animation="fadeInUp">
             <a href="{{ route('front.events.show', $next_match->slug) }}" class="text-decoration-none">
@@ -46,6 +46,43 @@
                     </div>
                 </div>
             </a>
+        </div>
+    @endif
+
+    {{-- Match Terakhir --}}
+    @if ($last_match)
+        <div class="container py-4 scroll-animate" data-animation="fadeInUp">
+            <div class="card bg-light border-0 shadow-sm card-hover-zoom" style="height: auto;">
+                <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
+                    <h5 class="card-title fw-bold mb-2 mb-md-0 me-md-3 text-center text-md-start article-text">
+                        <span class="main-text">Match</span> <span class="highlight-text">Terakhir:</span>
+                        {{ $last_match->tournament->title }}
+                        <br>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.85rem;">
+                            {{ $last_match->team1->name }} <span class="highlight-text fw-bold">{{ $last_match->team1_score }}</span> 
+                            - 
+                            <span class="highlight-text fw-bold">{{ $last_match->team2_score }}</span> {{ $last_match->team2->name }}
+                            @if ($last_match->winner)
+                                | 🏆 {{ $last_match->winner->name }}
+                            @endif
+                        </small>
+                    </h5>
+                    <div class="text-center text-md-end">
+                        <p class="mb-1 small text-muted article-text">
+                            <i class="bi bi-clock me-1"></i>
+                            {{ \Carbon\Carbon::parse($last_match->match_datetime)->format('d M Y, H:i') }}
+                        </p>
+                        @if ($last_match->location)
+                            <p class="mb-1 small text-muted article-text">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                {{ Str::limit($last_match->location, 30) }}
+                            </p>
+                        @endif
+                        <a href="{{ route('front.events.show', $last_match->tournament->slug) }}"
+                            class="btn btn-sm btn-outline-primary mt-2 mt-md-0">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
@@ -126,7 +163,67 @@
                     class="highlight-text">Populer</span></h3>
             <a href="{{ route('front.articles') }}" class="btn btn-outline-dark lihat-semua-btn px-4">Lihat semuanya</a>
         </div>
-        {{-- Carousel content sama dengan sebelumnya --}}
+        <div id="popularArticlesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+                @forelse ($popular_articles->chunk($chunk_size) as $chunkIndex => $chunk)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                        <div class="row gx-3 gy-3">
+                            @foreach ($chunk as $article)
+                                <div class="col-12 col-md-6 col-lg-4 scroll-animate" data-animation="fadeInUp"
+                                    data-delay="{{ $loop->index * 100 }}">
+                                    <a href="{{ route('front.articles.show', $article->slug) }}"
+                                        class="text-decoration-none">
+                                        <div class="card card-hover-zoom border-0 rounded-3 overflow-hidden h-100">
+                                            <div class="ratio ratio-16x9">
+                                                <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                                    class="img-fluid object-fit-cover w-100 h-100"
+                                                    alt="{{ $article->title }}">
+                                            </div>
+                                            <div class="card-body d-flex flex-column px-3 py-3">
+                                                <h5 class="card-title fw-semibold mb-2">
+                                                    {{ Str::limit($article->title, 60) }}</h5>
+                                                <p class="card-text text-muted mb-0 flex-grow-1">
+                                                    {{ Str::limit($article->description, 80) }}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @empty
+                    <div class="carousel-item active">
+                        <div class="col-12 text-center py-5">
+                            <p class="text-muted">Artikel populer akan segera hadir!</p>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- Carousel Controls untuk Desktop --}}
+            <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#popularArticlesCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next d-none d-md-flex" type="button" data-bs-target="#popularArticlesCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+            {{-- Carousel Indicators untuk Mobile --}}
+            @if ($popular_articles->count() > $chunk_size)
+                <div class="carousel-indicators d-md-none position-relative mt-3 mb-0">
+                    @foreach ($popular_articles->chunk($chunk_size) as $chunkIndex => $chunk)
+                        <button type="button" data-bs-target="#popularArticlesCarousel"
+                            data-bs-slide-to="{{ $chunkIndex }}" class="{{ $chunkIndex === 0 ? 'active' : '' }}"
+                            aria-current="{{ $chunkIndex === 0 ? 'true' : 'false' }}"
+                            aria-label="Slide {{ $chunkIndex + 1 }}"></button>
+                    @endforeach
+                </div>
+            @endif
+        </div>
     </div>
 
     {{-- Card Section for Registrations --}}
@@ -407,7 +504,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family+Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -594,6 +691,59 @@
             background-color: #e0ac00 !important;
             border-color: #e0ac00 !important;
             transform: translateY(-2px);
+        }
+
+        /* ===== STYLING UNTUK MATCH TERAKHIR ===== */
+        .match-result {
+            font-size: 0.9rem;
+        }
+
+        .match-result .team-info {
+            min-width: 100px;
+        }
+
+        .match-result .vs-separator {
+            font-weight: 600;
+        }
+
+        .winner-badge .badge {
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.3px !important;
+        }
+
+        /* Mobile responsive untuk match result */
+        @media (max-width: 767.98px) {
+            .match-result {
+                font-size: 0.85rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .match-result .team-info {
+                min-width: auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: rgba(0, 0, 0, 0.05);
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                width: 100%;
+            }
+
+            .match-result .vs-separator {
+                font-size: 0.8rem;
+                margin: 0;
+            }
+
+            .winner-badge {
+                margin-top: 1rem !important;
+            }
+
+            .winner-badge .badge {
+                font-size: 0.75rem !important;
+                padding: 0.5rem 1rem !important;
+            }
         }
 
         /* ===== GANTI CSS EVENT CARDS DENGAN INI ===== */

@@ -9,6 +9,8 @@ use App\Models\Sponsor;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TournamentRegistration;
+use App\Models\VolleyMatch; // TAMBAHAN BARU
+use App\Services\RankingService; // TAMBAHAN BARU
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +73,15 @@ class FrontController extends Controller
                                 ->orderBy('registration_start', 'asc')
                                 ->first();
 
+        // TAMBAHAN BARU: Last match terbaru yang sudah completed
+        $last_match = VolleyMatch::with(['tournament', 'team1', 'team2', 'winner'])
+                                 ->whereHas('tournament', function($query) {
+                                     $query->where('visibility_status', 'Published');
+                                 })
+                                 ->where('status', 'completed')
+                                 ->orderBy('match_datetime', 'desc')
+                                 ->first();
+
         // DIPERBAIKI: nama variabel konsisten dengan view
         return view('front.index', compact(
             'latest_articles',
@@ -79,7 +90,8 @@ class FrontController extends Controller
             'galleries',
             'events',
             'sponsorData',
-            'next_match'
+            'next_match',
+            'last_match' // TAMBAHAN BARU
         ));
     }
 
@@ -226,13 +238,23 @@ class FrontController extends Controller
 
     /**
      * Display a single event's details.
+     * DIPERBAIKI: Menambahkan load matches dengan relasi untuk ranking
      *
      * @param  \App\Models\Tournament  $event
      * @return \Illuminate\View\View
      */
     public function showEvent(Tournament $event)
     {
-        $event->load(['rules', 'registrations.team.members', 'registrations.user', 'sponsors']);
+        // DIPERBAIKI: Load semua relasi yang diperlukan termasuk matches
+        $event->load([
+            'rules', 
+            'registrations.team.members', 
+            'registrations.user', 
+            'sponsors',
+            'matches.team1', 
+            'matches.team2', 
+            'matches.winner'
+        ]);
 
         $user = Auth::user();
         $userHasTeam = false;
@@ -253,6 +275,15 @@ class FrontController extends Controller
             $registration = $event->registrations->where('user_id', $user->id)->first();
             if ($registration) {
                 $userRegistrationStatus = $registration->status;
+            }
+        }
+
+        // TAMBAHAN BARU: Cek dan refresh ranking jika diperlukan
+        if ($event->matches->where('status', 'completed')->isNotEmpty()) {
+            // Jika belum ada ranking atau ranking perlu di-update
+            if (!$event->hasRankings()) {
+                Log::info('Creating initial rankings for tournament', ['tournament_id' => $event->id]);
+                $event->refreshRankings();
             }
         }
 
@@ -352,7 +383,7 @@ class FrontController extends Controller
 
         try {
             $registration = new TournamentRegistration();
-            $registration->tournament_id = $event->id; // <-- KESALAHAN ADA DI SINI, SUDAH DIPERBAIKI
+            $registration->tournament_id = $event->id;
             $registration->user_id = $user->id;
             $registration->team_id = $user->team->id;
             $registration->status = 'pending';
@@ -397,7 +428,6 @@ class FrontController extends Controller
         $query = $request->input('query');
 
         // 3. Lakukan pencarian di database Articles
-        // DIPERBAIKI: Menggunakan kolom yang benar-benar ada di tabel articles
         $articles = Article::where('status', 'Published')
                             ->where(function($q) use ($query) {
                                 $q->where('title', 'LIKE', "%{$query}%")
@@ -407,7 +437,7 @@ class FrontController extends Controller
                             ->latest()
                             ->paginate(10);
 
-        // 4. Pencarian di Events/Tournaments - BERDASARKAN STRUKTUR TABEL YANG BENAR
+        // 4. Pencarian di Events/Tournaments
         $events = Tournament::where('visibility_status', 'Published')
                             ->where(function($q) use ($query) {
                                 $q->where('title', 'LIKE', "%{$query}%")
@@ -419,8 +449,8 @@ class FrontController extends Controller
                             ->take(5)
                             ->get();
 
-        // 5. Pencarian di Galleries - BERDASARKAN STRUKTUR TABEL YANG BENAR
-        $galleries = Gallery::where('status', 'Published') // Sesuaikan dengan enum: 'Draft' atau 'Published'
+        // 5. Pencarian di Galleries
+        $galleries = Gallery::where('status', 'Published')
                             ->where(function($q) use ($query) {
                                 $q->where('title', 'LIKE', "%{$query}%")
                                   ->orWhere('description', 'LIKE', "%{$query}%")
