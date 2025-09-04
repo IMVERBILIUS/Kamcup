@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FrontController; // <-- Ini adalah FrontController utama
-use App\Http\Controllers\SearchController; // <-- Tambahan untuk Search
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GalleryController;
@@ -51,11 +50,9 @@ Route::middleware('log.visit')->group(function () {
     // Event/Tournament Details (front-facing) - Sekarang ditangani oleh FrontController
     Route::get('/events/{event:slug}', [FrontController::class, 'showEvent'])->name('front.events.show');
 
-
+    // === SEARCH ROUTES - DIPERBAIKI ===
+    // Gunakan hanya satu route search dengan FrontController
     Route::get('/search', [FrontController::class, 'search'])->name('front.search');
-    // === SEARCH ROUTES ===
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/api/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 });
 
 // Authentication Routes
