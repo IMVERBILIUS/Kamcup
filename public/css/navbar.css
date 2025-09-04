@@ -12,17 +12,26 @@
     --bale-accent: #ee1d23; /* BTN Red */
 
     /* Combined Palette for Kamcup X Bale */
-    --collab-primary: var(--bale-primary); /* BTN Blue remains primary structural */
-    --collab-secondary: var(--kamcup-secondary); /* Kamcup secondary for depth */
-    --collab-accent: var(--bale-accent); /* Bale Red for main actions & emphasis! */
-    --collab-highlight: var(--kamcup-accent); /* Kamcup accent for strong highlights (e.g. text emphasis) */
-    --collab-cta-kamcup: var(--kamcup-primary); /* Kamcup Primary for specific Kamcup-focused CTAs */
+    --collab-primary: var(
+        --bale-primary
+    ); /* BTN Blue remains primary structural */
+    --collab-secondary: var(
+        --kamcup-secondary
+    ); /* Kamcup secondary for depth */
+    --collab-accent: var(
+        --bale-accent
+    ); /* Bale Red for main actions & emphasis! */
+    --collab-highlight: var(
+        --kamcup-accent
+    ); /* Kamcup accent for strong highlights (e.g. text emphasis) */
+    --collab-cta-kamcup: var(
+        --kamcup-primary
+    ); /* Kamcup Primary for specific Kamcup-focused CTAs */
 
     --text-dark: #212529; /* Warna teks gelap (digunakan untuk link navbar) */
     --text-light: #ffffff; /* Warna teks terang */
     --text-muted: #6c757d;
 }
-
 
 /* Navbar Umum */
 .navbar {
@@ -59,14 +68,15 @@
     box-shadow: none; /* Hilangkan shadow default focus Bootstrap */
 }
 
-
 /* Navbar Links */
 .navbar-nav .nav-item {
     margin-bottom: 0; /* Hapus margin antar item di mobile agar lebih rapat */
 }
 
 .navbar-nav .nav-link {
-    color: var(--text-dark) !important; /* PENTING: Warna teks link menjadi gelap */
+    color: var(
+        --text-dark
+    ) !important; /* PENTING: Warna teks link menjadi gelap */
     transition: color 0.3s ease; /* Transisi hanya pada warna */
     font-weight: 500;
     padding: 0.5rem 0.8rem; /* Padding yang lebih kecil agar lebih rapat */
@@ -74,7 +84,9 @@
 
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link:hover {
-    color: var(--collab-primary) !important; /* Warna BTN Blue saat aktif/hover */
+    color: var(
+        --collab-primary
+    ) !important; /* Warna BTN Blue saat aktif/hover */
     text-shadow: none; /* Hapus text-shadow untuk tampilan yang lebih bersih seperti di gambar */
 }
 
@@ -90,7 +102,9 @@
 }
 
 .navbar-nav .btn-outline-light:hover {
-    background-color: var(--collab-primary); /* Background BTN Blue saat hover */
+    background-color: var(
+        --collab-primary
+    ); /* Background BTN Blue saat hover */
     color: var(--text-light); /* Teks putih saat hover */
     box-shadow: none; /* Hapus shadow */
 }
@@ -98,14 +112,20 @@
 /* Responsive Adjustments untuk Navbar dan Logo */
 
 /* Collapse menu saat di mobile/tablet (ATURAN INI HANYA BERLAKU DI LAYAR KECIL) */
-@media (max-width: 991.98px) { /* Ini menargetkan layar di bawah breakpoint 'lg' (desktop) */
+@media (max-width: 991.98px) {
+    /* Ini menargetkan layar di bawah breakpoint 'lg' (desktop) */
     .navbar-collapse {
         /* Background untuk menu yang terbuka di mobile (agar teks terlihat jelas) */
-        background-color: rgba(255, 255, 255, 0.95); /* Putih sedikit transparan */
+        background-color: rgba(
+            255,
+            255,
+            255,
+            0.95
+        ); /* Putih sedikit transparan */
         border-radius: 0.5rem;
         margin-top: 10px;
         padding: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Tambah sedikit shadow */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Tambah sedikit shadow */
         border: none !important; /* Menghilangkan border pada collapse menu */
     }
 }
@@ -243,8 +263,8 @@ body {
     background-color: #fff;
     border-radius: 25px;
     padding: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
     /* Awalnya disembunyikan menggunakan transform & opacity */
     opacity: 0;
     transform: translateY(-50%) scaleX(0);
@@ -291,4 +311,29 @@ body {
 .search-submit-btn:hover {
     background-color: #1e5291; /* Sedikit lebih gelap saat hover */
     color: #fff;
+}
+.navbar-collapse.show .nav-link {
+    color: #ffffff !important; /* Warna teks link navigasi menjadi putih */
+}
+
+.navbar-collapse.show .search-icon {
+    color: #ffffff !important; /* Warna ikon pencarian menjadi putih */
+}
+
+.navbar-collapse.show .dropdown-toggle {
+    color: #ffffff !important; /* Warna teks dropdown menjadi putih */
+}
+
+/* Opsi: Gaya untuk item dropdown agar tetap terlihat */
+.navbar-collapse.show .dropdown-menu {
+    background-color: #1a426e; /* Latar belakang menu dropdown agar kontras */
+}
+
+.navbar-collapse.show .dropdown-item {
+    color: #ffffff !important; /* Warna teks item dropdown menjadi putih */
+}
+
+/* Opsi: Gaya untuk input search di dalam navbar yang ter-collapse */
+.navbar-collapse.show .search-form .search-input {
+    color: #000000 !important; /* Warna teks di dalam input menjadi hitam */
 }

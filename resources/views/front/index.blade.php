@@ -4,80 +4,6 @@
 @section('body-class', 'home-page')
 
 @section('content')
-
-    {{-- Navbar transparan untuk homepage --}}
-    <nav class="navbar navbar-expand-lg bg-transparent py-3 position-absolute top-0 start-0 w-100 z-3 navbar-transparent">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ route('front.index') }}"
-                style="width: 190px; overflow: hidden; height: 90px;">
-                <img src="{{ asset('assets/img/logo4.png') }}" alt="KAMCUP Logo" class="me-2 brand-logo"
-                    style="height: 100%; width: 100%; object-fit: cover;">
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"
-                    style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox=\'0 0 30 30\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath stroke=\'rgba%28255, 255, 255, 0.95%29\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-miterlimit=\'10\' d=\'M4 7h22M4 15h22M4 23h22\'/%3E%3C/svg%3E');"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ route('front.index') }}">HOME</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ route('front.articles') }}">BERITA</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ route('front.galleries') }}">GALERI</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ route('front.events.index') }}">EVENT</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ route('front.contact') }}">HUBUNGI KAMI</a>
-                    </li>
-
-                    {{-- Authentication Links --}}
-                    @guest
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('login') }}">LOGIN</a>
-                        </li>
-                    @else
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle fw-medium d-flex align-items-center" href="#"
-                                id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle me-1"></i>
-                                {{ Str::limit(Auth::user()->name ?? 'Profile', 15) }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('profile.index') }}">
-                                        <i class="bi bi-person me-2"></i>Profile Saya
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">
-                                            <i class="bi bi-box-arrow-right me-2"></i>Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @endguest
-
-                    {{-- Language Translator --}}
-                    <x-navbar-translate />
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <section class="position-relative hero-section">
         <div class="position-relative vh-100 d-flex align-items-center overflow-hidden">
             <img src="{{ asset('assets/img/jpn.jpg') }}"
@@ -168,13 +94,13 @@
             </div>
 
             {{-- Carousel Controls untuk Desktop --}}
-            <button class="carousel-control-prev d-none d-md-flex" type="button"
-                data-bs-target="#latestArticlesCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#latestArticlesCarousel"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next d-none d-md-flex" type="button"
-                data-bs-target="#latestArticlesCarousel" data-bs-slide="next">
+            <button class="carousel-control-next d-none d-md-flex" type="button" data-bs-target="#latestArticlesCarousel"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
