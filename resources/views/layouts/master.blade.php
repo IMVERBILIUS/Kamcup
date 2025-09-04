@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'KAMCUP')</title>
@@ -10,21 +11,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    
+
     {{-- CSS TAMBAHAN UNTUK MENGATUR WARNA NAVBAR DI HALAMAN INDEX --}}
     <style>
         /* Secara default, link navbar akan berwarna gelap (sesuai navbar di halaman lain) */
         .navbar-dark .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.75); /* Warna default Bootstrap untuk .navbar-dark */
+            color: rgba(255, 255, 255, 0.75);
+            /* Warna default Bootstrap untuk .navbar-dark */
         }
+
         .navbar-dark .navbar-nav .nav-link:hover {
             color: white;
         }
 
         /* KHUSUS untuk halaman dengan class 'home-page', paksa link navbar jadi putih */
         .home-page .navbar.navbar-transparent .nav-link {
-            color: white !important; /* !important untuk memastikan aturan ini menang */
+            color: white !important;
+            /* !important untuk memastikan aturan ini menang */
         }
+
         .home-page .navbar.navbar-transparent .nav-link:hover {
             color: #dddddd !important;
         }
@@ -43,15 +48,16 @@
 
     @stack('styles')
 </head>
+
 <body class="@yield('body-class')">
 
-<div class="main-wrapper d-flex flex-column">
+    <div class="main-wrapper d-flex flex-column">
         {{-- Navbar akan selalu dipanggil dari sini --}}
         {{-- Kita akan membuat file navbar terpisah agar rapi --}}
-        
+
         {{-- Di Halaman Index, navbar akan transparan --}}
         {{-- Di Halaman Lain, navbar akan memiliki background solid --}}
-        
+
         {{-- KONTEN UTAMA HALAMAN --}}
         <main class="content">
             @yield('content')
@@ -67,4 +73,5 @@
 
     @stack('translation-script')
 </body>
+
 </html>
