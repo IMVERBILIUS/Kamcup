@@ -16,16 +16,12 @@
 </head>
 
 <body style="font-family: 'Poppins', sans-serif">
-
-    {{-- ================================================================= --}}
-    {{-- ============= NAVBAR LENGKAP DENGAN SEARCH BAR ================ --}}
-    {{-- ================================================================= --}}
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0F62FF;">
+    <nav class="navbar navbar-expand-lg bg-transparent py-3 position-absolute top-0 start-0 w-100 z-3">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('front.index') }}"
-                style="width: 150px; height: 70px;">
-                <img src="{{ asset('assets/img/logo4.png') }}" alt="KAMCUP Logo" class="me-2 brand-logo"
-                    style="height: 100%; width: 100%; object-fit: cover;">
+                style="width: 260px; overflow: hidden; height: 130px;">
+                <img src="{{ asset('assets/img/logo5.png') }}" alt="KAMCUP Logo" class="me-2 brand-logo"
+                    style="height: 90%; width: 90%; object-fit: cover;">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
@@ -42,12 +38,10 @@
                     </li>
                     <li class="nav-item"><a class="nav-link fw-medium"
                             href="{{ route('front.events.index') }}">EVENT</a></li>
-                    <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.contact') }}">CONTACT
-                            US</a></li>
-                    <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('profile.index') }}">PROFILE</a>
+                    <li class="nav-item"><a class="nav-link fw-medium" href="{{ route('front.contact') }}">HUBUNGI
+                            KAMI</a></li>
                     </li>
 
-                    {{-- SEARCH BAR UNTUK HALAMAN NON-INDEX --}}
                     <li class="nav-item search-container">
                         <a href="#" class="nav-link search-icon" id="search-icon">
                             <i class="fas fa-search"></i>
@@ -95,27 +89,9 @@
                     {{-- Component Translator --}}
                     <x-navbar-translate />
                 </ul>
-
-                {{-- Mobile Search Bar --}}
-                <div class="d-lg-none mt-3">
-                    <form class="mobile-search-form" action="{{ route('front.search') }}" method="GET">
-                        <div class="mobile-search-container">
-                            <input type="text" name="query" class="mobile-search-input"
-                                placeholder="Cari berita, event, galeri..." value="{{ request('query') }}"
-                                autocomplete="off" required minlength="3">
-                            <button type="submit" class="mobile-search-btn" aria-label="Search">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </nav>
-    {{-- ================================================================= --}}
-    {{-- ======================= NAVBAR LENGKAP SELESAI ====================== --}}
-    {{-- ================================================================= --}}
-
     <div class="main-wrapper d-flex flex-column min-vh-100">
         <div class="container alert-fixed">
             @if (session('success'))

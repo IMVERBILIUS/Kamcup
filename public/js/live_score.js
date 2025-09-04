@@ -1,15 +1,3 @@
-/**
- * Skrip ini bertanggung jawab untuk mengambil skor pertandingan secara real-time
- * dan memperbarui tampilan HTML di halaman event.
- *
- * Catatan: Skrip ini mengasumsikan adanya elemen-elemen HTML dengan ID berikut:
- * - 'match-status'
- * - 'team1-score'
- * - 'team2-score'
- *
- * serta variabel 'eventId' dari backend Laravel.
- */
-
 document.addEventListener("DOMContentLoaded", function () {
     // Ambil referensi ke elemen-elemen DOM
     const matchStatusElement = document.getElementById("match-status");
