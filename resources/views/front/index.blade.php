@@ -38,19 +38,6 @@
                     <a class="nav-link fw-medium" href="{{ route('front.contact') }}">HUBUNGI KAMI</a>
                 </li>
                 
-                {{-- Search Bar Desktop --}}
-                <li class="nav-item d-none d-lg-block">
-                    <form class="search-form" action="{{ route('search') }}" method="GET">
-                        <div class="search-container transparent-search">
-                            <input type="text" name="q" class="search-input" placeholder="Cari..." 
-                                   value="{{ request('q') }}" autocomplete="off">
-                            <button type="submit" class="search-btn" aria-label="Search">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </li>
-                
                 {{-- Authentication Links --}}
                 @guest
                     <li class="nav-item">
@@ -86,19 +73,6 @@
                 {{-- Language Translator --}}
                 <x-navbar-translate />
             </ul>
-            
-            {{-- Mobile Search Bar --}}
-            <div class="d-lg-none mt-3">
-                <form class="mobile-search-form" action="{{ route('search') }}" method="GET">
-                    <div class="mobile-search-container transparent-mobile-search">
-                        <input type="text" name="q" class="mobile-search-input" placeholder="Cari berita, event, galeri..." 
-                               value="{{ request('q') }}" autocomplete="off">
-                        <button type="submit" class="mobile-search-btn" aria-label="Search">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 </nav>
@@ -206,9 +180,6 @@
         @endif
     </div>
 </div>
-
-{{-- Sisanya tetap sama... (artikel populer, cards section, upcoming events, etc.) --}}
-{{-- Saya akan singkat bagian ini karena sama dengan sebelumnya --}}
 
 {{-- Artikel Populer --}}
 <div class="container py-5 scroll-animate" data-animation="fadeInUp">
@@ -506,68 +477,7 @@
 .scroll-animate[data-animation="zoomIn"].animate {
     transform: scale(1) translateY(0);
 }
-.search-container.transparent-search {
-            background-color: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 50px; /* Membuat sudut membulat seperti pil */
-            padding: 4px 8px;
-            transition: background-color 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
 
-        .search-container.transparent-search:hover,
-        .search-container.transparent-search:focus-within {
-            background-color: rgba(255, 255, 255, 0.4);
-            border-color: #fff;
-        }
-
-        .transparent-search .search-input {
-            background: none;
-            border: none;
-            outline: none;
-            color: white; /* Warna teks input menjadi putih */
-            padding: 0 8px;
-            width: 140px;
-        }
-
-        .transparent-search .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.85); /* Warna placeholder */
-            opacity: 1;
-        }
-
-        .transparent-search .search-btn {
-            background: none;
-            border: none;
-            color: white; /* Warna ikon search menjadi putih */
-            padding: 0 5px;
-            cursor: pointer;
-        }
-
-        /* Untuk Tampilan Mobile */
-        .mobile-search-container.transparent-mobile-search {
-            background-color: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 50px;
-            padding: 6px 12px;
-        }
-
-        .transparent-mobile-search .mobile-search-input {
-            background: none;
-            border: none;
-            outline: none;
-            color: white;
-        }
-
-        .transparent-mobile-search .mobile-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .transparent-mobile-search .mobile-search-btn {
-            background: none;
-            border: none;
-            color: white;
-        }
 /* Staggered animation delays */
 .scroll-animate[data-delay="100"] { transition-delay: 0.1s; }
 .scroll-animate[data-delay="200"] { transition-delay: 0.2s; }
@@ -892,18 +802,6 @@
     }
 }
 
-/* ===== DEBUGGING - UNCOMMENT UNTUK CEK UKURAN ===== */
-/*
-#latestArticlesCarousel .card,
-#popularArticlesCarousel .card {
-    border: 2px solid blue !important;
-}
-
-#upcomingEventsCarousel .card {
-    border: 2px solid red !important;
-}
-*/
-
 /* ===== PERBAIKAN SPACING MOBILE ===== */
 @media (max-width: 767.98px) {
     /* Perbaikan spacing untuk section Upcoming Events */
@@ -964,7 +862,7 @@
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('KAMCUP Website Script Loaded');
-    
+
     // ===== SCROLL ANIMATIONS SCRIPT ===== 
     function initScrollAnimations() {
         const observerOptions = {
@@ -1035,8 +933,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    
     
     // ===== MOBILE DEVICE DETECTION ===== 
     function isMobileDevice() {
@@ -1138,7 +1034,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         initAllCarousels();
     }, 1000);
-    
+
+    // Observer untuk Carousel
+    setTimeout(() => {
+        const carousels = document.querySelectorAll('.carousel');
+        carousels.forEach(carousel => {
+            carouselObserver.observe(carousel);
+        });
+    }, 1500);
+
     console.log('All handlers setup complete');
 });
 
@@ -1180,18 +1084,6 @@ const carouselObserver = new IntersectionObserver((entries) => {
     });
 }, {
     threshold: 0.5
-});
-
-// Observe carousels after DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        const carousels = document.querySelectorAll('.carousel');
-        carousels.forEach(carousel => {
-            carouselObserver.observe(carousel);
-        });
-    }, 1500);
-
-    
 });
     </script>
 @endpush

@@ -49,10 +49,8 @@ Route::middleware('log.visit')->group(function () {
     Route::get('/events', [FrontController::class, 'events'])->name('front.events.index');
     // Event/Tournament Details (front-facing) - Sekarang ditangani oleh FrontController
     Route::get('/events/{event:slug}', [FrontController::class, 'showEvent'])->name('front.events.show');
-    
-    // === SEARCH ROUTES ===
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/api/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
+
+    Route::get('/search', [FrontController::class, 'search'])->name('front.search');
 });
 
 // Authentication Routes

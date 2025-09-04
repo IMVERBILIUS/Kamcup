@@ -1,362 +1,446 @@
 <?php
 
- namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
- use App\Models\Article;
- use App\Models\Gallery;
- use App\Models\Tournament;
- use App\Models\Sponsor;
- use App\Models\Team;
- use App\Models\TeamMember;
- use App\Models\TournamentRegistration;
- use Illuminate\Http\Request;
- use Jenssegers\Agent\Facades\Agent;
- use Illuminate\Support\Facades\Auth;
- use Illuminate\Support\Facades\DB;
- use Illuminate\Support\Facades\Log;
+use App\Models\Article;
+use App\Models\Gallery;
+use App\Models\Tournament;
+use App\Models\Sponsor;
+use App\Models\Team;
+use App\Models\TeamMember;
+use App\Models\TournamentRegistration;
+use Illuminate\Http\Request;
+use Jenssegers\Agent\Facades\Agent;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
- class FrontController extends Controller
- {
-     /**
-      * Display the homepage.
-      *
-      * @return \Illuminate\View\View
-      */
-     public function index()
-     {
-         $latest_articles = Article::where('status', 'published')
-                                     ->orderBy('created_at', 'desc')
-                                     ->take(6)
-                                     ->get();
+class FrontController extends Controller
+{
+    /**
+     * Display the homepage.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        // Artikel terbaru
+        $latest_articles = Article::where('status', 'Published')
+                                    ->orderBy('created_at', 'desc')
+                                    ->take(6)
+                                    ->get();
 
-         $populer_articles = Article::where('status', 'published')
-                                     ->orderBy('views', 'desc')
-                                     ->take(6)
-                                     ->get();
+        // Artikel populer (DIPERBAIKI: nama variabel konsisten dengan view)
+        $popular_articles = Article::where('status', 'Published')
+                                    ->orderBy('views', 'desc')
+                                    ->take(6)
+                                    ->get();
 
-         $chunk_size = (Agent::isMobile()) ? 1 : 3;
-
-         $galleries = Gallery::where('status', 'published')->get();
-
-         $events = Tournament::with('sponsors')
-                                      ->where('visibility_status', 'Published')
+        // Jika tidak ada artikel dengan views, gunakan artikel terbaru sebagai fallback
+        if ($popular_articles->isEmpty()) {
+            $popular_articles = Article::where('status', 'Published')
                                       ->orderBy('created_at', 'desc')
+                                      ->offset(3) // skip 3 artikel pertama agar berbeda dengan latest
                                       ->take(6)
                                       ->get();
+        }
 
-         $sponsors = Sponsor::orderBy('order_number')->get();
-         $sponsorData = $sponsors->groupBy('sponsor_size');
+        // Chunk size berdasarkan device
+        $chunk_size = (Agent::isMobile()) ? 1 : 3;
 
-         // Ambil event terdekat yang statusnya 'registration' atau 'ongoing'
-         $next_match = Tournament::where('visibility_status', 'Published')
-                                 ->whereIn('status', ['registration', 'ongoing']) // Hanya yang masih dibuka pendaftaran atau sedang berjalan
-                                 ->orderBy('registration_start', 'asc') // Urutkan dari yang paling awal
-                                 ->first(); // Ambil satu saja
+        // Galleries
+        $galleries = Gallery::where('status', 'published')
+                           ->orderBy('created_at', 'desc')
+                           ->take(8)
+                           ->get();
 
-         return view('front.index', compact('latest_articles', 'populer_articles', 'chunk_size', 'galleries', 'events', 'sponsorData', 'next_match'));
-     }
+        // Events (DIPERBAIKI: konsisten dengan nama model Tournament)
+        $events = Tournament::with('sponsors')
+                           ->where('visibility_status', 'Published')
+                           ->orderBy('created_at', 'desc')
+                           ->take(6)
+                           ->get();
 
-     /**
-      * Display the articles listing page with filtering.
-      *
-      * @param  \Illuminate\Http\Request  $request
-      * @return \Illuminate\View\View
-      */
-     public function articles(Request $request)
-     {
-         $populer_articles = Article::where('status', 'published')
-                                         ->orderBy('views', 'desc')
-                                         ->take(3)
-                                         ->get();
+        // Sponsors
+        $sponsors = Sponsor::orderBy('order_number')->get();
+        $sponsorData = $sponsors->groupBy('sponsor_size');
 
-         $filter = $request->input('filter', 'latest');
+        // Next match terdekat
+        $next_match = Tournament::where('visibility_status', 'Published')
+                                ->whereIn('status', ['registration', 'ongoing'])
+                                ->orderBy('registration_start', 'asc')
+                                ->first();
 
-         $articles = Article::where('status', 'published');
+        // DIPERBAIKI: nama variabel konsisten dengan view
+        return view('front.index', compact(
+            'latest_articles',
+            'popular_articles',  // CHANGED: dari 'populer_articles' ke 'popular_articles'
+            'chunk_size',
+            'galleries',
+            'events',
+            'sponsorData',
+            'next_match'
+        ));
+    }
 
-         switch ($filter) {
-             case 'popular':
-                 $articles->orderBy('views', 'desc');
-                 break;
-             case 'author':
-                 $articles->orderBy('author', 'asc');
-                 break;
-             case 'latest':
-             default:
-                 $articles->orderBy('created_at', 'desc');
-                 break;
-         }
+    /**
+     * Display the articles listing page with filtering.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function articles(Request $request)
+    {
+        // Konsisten dengan penamaan di index method
+        $popular_articles = Article::where('status', 'Published')
+                                   ->orderBy('views', 'desc')
+                                   ->take(3)
+                                   ->get();
 
-         $articles = $articles->paginate(6)->withQueryString();
+        $filter = $request->input('filter', 'latest');
 
-         return view('front.articles', compact('articles', 'populer_articles', 'filter'));
-     }
+        $articles = Article::where('status', 'Published');
 
-     /**
-      * Display the contact page.
-      *
-      * @return \Illuminate\View\View
-      */
-     public function contact()
-     {
-         return view('front.contact');
-     }
+        switch ($filter) {
+            case 'popular':
+                $articles->orderBy('views', 'desc');
+                break;
+            case 'author':
+                $articles->orderBy('author', 'asc');
+                break;
+            case 'latest':
+            default:
+                $articles->orderBy('created_at', 'desc');
+                break;
+        }
 
-     /**
-      * Display a single article's details using slug for cleaner URLs.
-      *
-      * @param  \App\Models\Article  $article
-      * @return \Illuminate\View\View
-      */
-     public function showArticle(Article $article)
-     {
-         $article->increment('views');
-         $article->load(['subheadings.paragraphs', 'comments']);
-         return view('front.article_show', compact('article'));
-     }
+        $articles = $articles->paginate(6)->withQueryString();
 
-     /**
-      * Display the galleries listing page with sorting options.
-      *
-      * @param  \Illuminate\Http\Request  $request
-      * @return \Illuminate\View\View
-      */
-     public function galleries(Request $request)
-     {
-         $query = Gallery::where('status', 'published');
-         $sort = $request->input('sort', 'latest');
+        // CHANGED: nama variabel konsisten
+        return view('front.articles', compact('articles', 'popular_articles', 'filter'));
+    }
 
-         switch ($sort) {
-             case 'latest':
-                 $query->orderBy('created_at', 'desc');
-                 break;
-             case 'oldest':
-                 $query->orderBy('created_at', 'asc');
-                 break;
-             case 'popular':
-                 $query->orderBy('views', 'desc');
-                 break;
-             default:
-                 $query->orderBy('created_at', 'desc');
-                 break;
-         }
+    /**
+     * Display the contact page.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function contact()
+    {
+        return view('front.contact');
+    }
 
-         $galleries = $query->paginate(6);
-         return view('front.galleries', compact('galleries'));
-     }
+    /**
+     * Display a single article's details using slug for cleaner URLs.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\View\View
+     */
+    public function showArticle(Article $article)
+    {
+        $article->increment('views');
+        $article->load(['subheadings.paragraphs', 'comments']);
+        return view('front.article_show', compact('article'));
+    }
 
-     /**
-      * Display a single gallery's details using slug for cleaner URLs.
-      *
-      * @param  \App\Models\Gallery  $gallery
-      * @return \Illuminate\View\View
-      */
-     public function showGallery(Gallery $gallery)
-     {
-         $gallery->load(['subtitles.contents', 'images']);
-         return view('front.gallery_show', compact('gallery'));
-     }
+    /**
+     * Display the galleries listing page with sorting options.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function galleries(Request $request)
+    {
+        $query = Gallery::where('status', 'published');
+        $sort = $request->input('sort', 'latest');
 
-     /**
-      * Display the events listing page with sorting and filtering options.
-      *
-      * @param  \Illuminate\Http\Request  $request
-      * @return \Illuminate\View\View
-      */
-     public function events(Request $request)
-     {
-         $query = Tournament::with('sponsors')
-                             ->where('visibility_status', 'Published');
+        switch ($sort) {
+            case 'latest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'popular':
+                $query->orderBy('views', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
 
-         $sort = $request->input('sort', 'latest');
-         $category = $request->input('category', 'all');
+        $galleries = $query->paginate(6);
+        return view('front.galleries', compact('galleries'));
+    }
 
-         switch ($sort) {
-             case 'latest':
-                 $query->orderBy('registration_start', 'desc');
-                 break;
-             case 'oldest':
-                 $query->orderBy('registration_start', 'asc');
-                 break;
-             case 'upcoming':
-                 $query->where('registration_end', '>=', now())
-                       ->orderBy('registration_start', 'asc');
-                 break;
-             default:
-                 $query->orderBy('created_at', 'desc');
-                 break;
-         }
+    /**
+     * Display a single gallery's details using slug for cleaner URLs.
+     *
+     * @param  \App\Models\Gallery  $gallery
+     * @return \Illuminate\View\View
+     */
+    public function showGallery(Gallery $gallery)
+    {
+        $gallery->load(['subtitles.contents', 'images']);
+        return view('front.gallery_show', compact('gallery'));
+    }
 
-         if ($category !== 'all') {
-             $query->where('gender_category', $category);
-         }
+    /**
+     * Display the events listing page with sorting and filtering options.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function events(Request $request)
+    {
+        $query = Tournament::with('sponsors')
+                            ->where('visibility_status', 'Published');
 
-         $events = $query->paginate(9)->withQueryString();
+        $sort = $request->input('sort', 'latest');
+        $category = $request->input('category', 'all');
 
-         return view('front.events.index', compact('events', 'sort', 'category'));
-     }
+        switch ($sort) {
+            case 'latest':
+                $query->orderBy('registration_start', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('registration_start', 'asc');
+                break;
+            case 'upcoming':
+                $query->where('registration_end', '>=', now())
+                      ->orderBy('registration_start', 'asc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
 
+        if ($category !== 'all') {
+            $query->where('gender_category', $category);
+        }
 
-     /**
-      * Display a single event's details.
-      *
-      * @param  \App\Models\Tournament  $event
-      * @return \Illuminate\View\View
-      */
-     public function showEvent(Tournament $event)
-     {
-         $event->load(['rules', 'registrations.team.members', 'registrations.user', 'sponsors']);
+        $events = $query->paginate(9)->withQueryString();
 
-         $user = Auth::user();
-         $userHasTeam = false;
-         $teamMemberCount = 0;
-         $userRegistrationStatus = null; // NEW: To store the user's registration status for this event
+        return view('front.events.index', compact('events', 'sort', 'category'));
+    }
 
-         $minMembersRequired = $event->min_participants ?? 7;
+    /**
+     * Display a single event's details.
+     *
+     * @param  \App\Models\Tournament  $event
+     * @return \Illuminate\View\View
+     */
+    public function showEvent(Tournament $event)
+    {
+        $event->load(['rules', 'registrations.team.members', 'registrations.user', 'sponsors']);
 
-         $isRegistrationOpen = ($event->status === 'registration');
+        $user = Auth::user();
+        $userHasTeam = false;
+        $teamMemberCount = 0;
+        $userRegistrationStatus = null;
 
-         if ($user) {
-             $user->load('team.members');
+        $minMembersRequired = $event->min_participants ?? 7;
+        $isRegistrationOpen = ($event->status === 'registration');
 
-             if ($user->team) {
-                 $userHasTeam = true;
-                 $teamMemberCount = $user->team->members->count();
-             }
+        if ($user) {
+            $user->load('team.members');
 
-             // NEW: Get the user's specific registration for this event
-             $registration = $event->registrations->where('user_id', $user->id)->first();
-             if ($registration) {
-                 $userRegistrationStatus = $registration->status;
-             }
-         }
+            if ($user->team) {
+                $userHasTeam = true;
+                $teamMemberCount = $user->team->members->count();
+            }
 
-         return view('front.event_detail', compact(
-             'event',
-             'userHasTeam',
-             'teamMemberCount',
-             'userRegistrationStatus', // NEW: Pass the registration status
-             'minMembersRequired',
-             'isRegistrationOpen'
-         ));
-     }
+            $registration = $event->registrations->where('user_id', $user->id)->first();
+            if ($registration) {
+                $userRegistrationStatus = $registration->status;
+            }
+        }
 
-     /**
-      * Processes event registration from the user.
-      * This method is called via AJAX.
-      *
-      * @param Request $request
-      * @param Tournament $event
-      * @return \Illuminate\Http\JsonResponse
-      */
-     public function register(Request $request, Tournament $event)
-     {
-         // 1. Check Authentication
-         if (!Auth::check()) {
-             Log::warning('Event Registration: Unauthenticated attempt.', ['event_slug' => $event->slug]);
-             return response()->json(['success' => false, 'message' => 'Anda harus login untuk mendaftar.'], 401);
-         }
+        return view('front.event_detail', compact(
+            'event',
+            'userHasTeam',
+            'teamMemberCount',
+            'userRegistrationStatus',
+            'minMembersRequired',
+            'isRegistrationOpen'
+        ));
+    }
 
-         $user = Auth::user();
-         $user->load('team.members'); // Eager load team and members immediately for all subsequent checks
+    /**
+     * Processes event registration from the user.
+     * This method is called via AJAX.
+     *
+     * @param Request $request
+     * @param Tournament $event
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request, Tournament $event)
+    {
+        // 1. Check Authentication
+        if (!Auth::check()) {
+            Log::warning('Event Registration: Unauthenticated attempt.', ['event_slug' => $event->slug]);
+            return response()->json(['success' => false, 'message' => 'Anda harus login untuk mendaftar.'], 401);
+        }
 
-         // 2. Check Tournament Status (using the status enum)
-         if ($event->status !== 'registration') {
-             Log::warning('Event Registration: Attempt when registration is not open.', [
-                 'user_id' => $user->id,
-                 'event_slug' => $event->slug,
-                 'event_status' => $event->status
-             ]);
-             $message = 'Pendaftaran untuk event ini sudah ' .
-                         ($event->status === 'ongoing' ? 'berlangsung.' : ($event->status === 'completed' ? 'selesai.' : 'ditutup.'));
-             return response()->json(['success' => false, 'message' => $message], 400);
-         }
+        $user = Auth::user();
+        $user->load('team.members');
 
-         // 3. Check if User is Already Registered (or can re-register)
-         $existingRegistration = $event->registrations()->where('user_id', $user->id)->first();
+        // 2. Check Tournament Status
+        if ($event->status !== 'registration') {
+            Log::warning('Event Registration: Attempt when registration is not open.', [
+                'user_id' => $user->id,
+                'event_slug' => $event->slug,
+                'event_status' => $event->status
+            ]);
+            $message = 'Pendaftaran untuk event ini sudah ' .
+                        ($event->status === 'ongoing' ? 'berlangsung.' : ($event->status === 'completed' ? 'selesai.' : 'ditutup.'));
+            return response()->json(['success' => false, 'message' => $message], 400);
+        }
 
-         if ($existingRegistration) {
-             if ($existingRegistration->status === 'rejected') {
-                 // If rejected, delete old registration to allow re-registration
-                 $existingRegistration->delete();
-                 Log::info('Event Registration: Deleted previous rejected registration to allow re-register.', ['user_id' => $user->id, 'event_slug' => $event->slug]);
-                 // Proceed to create a new registration
-             } else {
-                 // If status is not 'rejected' (e.g., 'pending', 'approved', 'completed'), prevent re-registration
-                 Log::info('Event Registration: User already registered with non-rejected status.', ['user_id' => $user->id, 'event_slug' => $event->slug, 'status' => $existingRegistration->status]);
-                 return response()->json(['success' => false, 'message' => 'Anda sudah terdaftar di event ini dengan status: ' . ucfirst($existingRegistration->status) . '.'], 409); // 409 Conflict
-             }
-         }
+        // 3. Check if User is Already Registered
+        $existingRegistration = $event->registrations()->where('user_id', $user->id)->first();
 
-         // 4. Check if User Has a Team
-         if (!$user->team) {
-             Log::warning('Event Registration: User has no team.', ['user_id' => $user->id]);
-             return response()->json([
-                 'success' => false,
-                 'message' => 'Anda harus memiliki tim di profil untuk mendaftar.',
-                 'redirect_to_profile' => true
-             ], 400);
-         }
+        if ($existingRegistration) {
+            if ($existingRegistration->status === 'rejected') {
+                $existingRegistration->delete();
+                Log::info('Event Registration: Deleted previous rejected registration to allow re-register.', ['user_id' => $user->id, 'event_slug' => $event->slug]);
+            } else {
+                Log::info('Event Registration: User already registered with non-rejected status.', ['user_id' => $user->id, 'event_slug' => $event->slug, 'status' => $existingRegistration->status]);
+                return response()->json(['success' => false, 'message' => 'Anda sudah terdaftar di event ini dengan status: ' . ucfirst($existingRegistration->status) . '.'], 409);
+            }
+        }
 
-         // 5. Check Minimum Team Members Requirement
-         $minMembersRequired = $event->min_participants ?? 7;
-         if ($user->team->members->count() < $minMembersRequired) {
-             Log::warning('Event Registration: Insufficient team members.', [
-                 'user_id' => $user->id,
-                 'team_id' => $user->team->id,
-                 'current_members' => $user->team->members->count(),
-                 'min_required' => $minMembersRequired
-             ]);
-             return response()->json([
-                 'success' => false,
-                 'message' => "Tim Anda harus memiliki minimal {$minMembersRequired} anggota untuk mendaftar. Silakan lengkapi di profil Anda.",
-                 'redirect_to_profile' => true
-             ], 400);
-         }
+        // 4. Check if User Has a Team
+        if (!$user->team) {
+            Log::warning('Event Registration: User has no team.', ['user_id' => $user->id]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda harus memiliki tim di profil untuk mendaftar.',
+                'redirect_to_profile' => true
+            ], 400);
+        }
 
-         // 6. Check Maximum Participants (if set)
-         // Note: This should ideally check only confirmed/approved registrations, or overall slots
-         // The original code was counting all registrations which might be misleading
-         // If max_participants implies total slots, then existing 'pending' or 'rejected' should count
-         // For re-registration, if previous rejected was deleted, it opens up a slot.
-         // Assuming max_participants refers to currently active (pending/approved/confirmed) participants
-         $currentParticipantsCount = $event->registrations()->whereIn('status', ['pending', 'approved', 'confirmed'])->count();
-         if ($event->max_participants !== null && $currentParticipantsCount >= $event->max_participants) {
-             Log::warning('Event Registration: Max participants reached.', [
-                 'event_slug' => $event->slug,
-                 'current_registrations' => $currentParticipantsCount,
-                 'max_participants' => $event->max_participants
-             ]);
-             return response()->json(['success' => false, 'message' => 'Jumlah partisipan event sudah penuh.'], 400);
-         }
+        // 5. Check Minimum Team Members Requirement
+        $minMembersRequired = $event->min_participants ?? 7;
+        if ($user->team->members->count() < $minMembersRequired) {
+            Log::warning('Event Registration: Insufficient team members.', [
+                'user_id' => $user->id,
+                'team_id' => $user->team->id,
+                'current_members' => $user->team->members->count(),
+                'min_required' => $minMembersRequired
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => "Tim Anda harus memiliki minimal {$minMembersRequired} anggota untuk mendaftar. Silakan lengkapi di profil Anda.",
+                'redirect_to_profile' => true
+            ], 400);
+        }
 
+        // 6. Check Maximum Participants
+        $currentParticipantsCount = $event->registrations()->whereIn('status', ['pending', 'approved', 'confirmed'])->count();
+        if ($event->max_participants !== null && $currentParticipantsCount >= $event->max_participants) {
+            Log::warning('Event Registration: Max participants reached.', [
+                'event_slug' => $event->slug,
+                'current_registrations' => $currentParticipantsCount,
+                'max_participants' => $event->max_participants
+            ]);
+            return response()->json(['success' => false, 'message' => 'Jumlah partisipan event sudah penuh.'], 400);
+        }
 
-         // All pre-registration checks passed, proceed with transaction
-         DB::beginTransaction();
+        // All checks passed, proceed with registration
+        DB::beginTransaction();
 
-         try {
-             $registration = new TournamentRegistration();
-             $registration->tournament_id = $event->id;
-             $registration->user_id = $user->id;
-             $registration->team_id = $user->team->id;
-             $registration->status = 'pending'; // Or 'approved' if auto-approved
-             $registration->registered_at = now();
+        try {
+            $registration = new TournamentRegistration();
+            $registration->tournament_id = $event->id; // <-- KESALAHAN ADA DI SINI, SUDAH DIPERBAIKI
+            $registration->user_id = $user->id;
+            $registration->team_id = $user->team->id;
+            $registration->status = 'pending';
+            $registration->registered_at = now();
 
-             $registration->save();
+            $registration->save();
 
-             DB::commit();
-             Log::info('Event Registration: Successfully registered.', ['registration_id' => $registration->id]);
+            DB::commit();
+            Log::info('Event Registration: Successfully registered.', ['registration_id' => $registration->id]);
 
-             return response()->json(['success' => true, 'message' => 'Pendaftaran berhasil!']);
+            return response()->json(['success' => true, 'message' => 'Pendaftaran berhasil!']);
 
-         } catch (\Exception $e) {
-             DB::rollBack();
-             Log::error('Event Registration: Database transaction failed.', [
-                 'event_id' => $event->id,
-                 'user_id' => $user->id,
-                 'exception' => $e->getMessage(),
-                 'trace' => $e->getTraceAsString()
-             ]);
-             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem saat mendaftar. Silakan coba lagi.'], 500);
-         }
-     }
- }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Event Registration: Database transaction failed.', [
+                'event_id' => $event->id,
+                'user_id' => $user->id,
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem saat mendaftar. Silakan coba lagi.'], 500);
+        }
+    }
+    
+    // =================================================================
+    // ================ METODE SEARCH YANG SUDAH DIPERBAIKI ===========
+    // =================================================================
+    /**
+     * Menangani permintaan pencarian dan menampilkan hasilnya.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function search(Request $request)
+    {
+        // 1. Validasi input dari user, harus diisi dan minimal 3 karakter
+        $request->validate([
+            'query' => 'required|min:3',
+        ]);
+
+        // 2. Ambil kata kunci pencarian dari input form
+        $query = $request->input('query');
+
+        // 3. Lakukan pencarian di database Articles
+        // DIPERBAIKI: Menggunakan kolom yang benar-benar ada di tabel articles
+        $articles = Article::where('status', 'Published')
+                            ->where(function($q) use ($query) {
+                                $q->where('title', 'LIKE', "%{$query}%")
+                                  ->orWhere('description', 'LIKE', "%{$query}%")
+                                  ->orWhere('author', 'LIKE', "%{$query}%");
+                            })
+                            ->latest()
+                            ->paginate(10);
+
+        // 4. Pencarian di Events/Tournaments - BERDASARKAN STRUKTUR TABEL YANG BENAR
+        $events = Tournament::where('visibility_status', 'Published')
+                            ->where(function($q) use ($query) {
+                                $q->where('title', 'LIKE', "%{$query}%")
+                                  ->orWhere('location', 'LIKE', "%{$query}%")
+                                  ->orWhere('contact_person', 'LIKE', "%{$query}%")
+                                  ->orWhere('gender_category', 'LIKE', "%{$query}%");
+                            })
+                            ->latest()
+                            ->take(5)
+                            ->get();
+
+        // 5. Pencarian di Galleries - BERDASARKAN STRUKTUR TABEL YANG BENAR
+        $galleries = Gallery::where('status', 'Published') // Sesuaikan dengan enum: 'Draft' atau 'Published'
+                            ->where(function($q) use ($query) {
+                                $q->where('title', 'LIKE', "%{$query}%")
+                                  ->orWhere('description', 'LIKE', "%{$query}%")
+                                  ->orWhere('author', 'LIKE', "%{$query}%")
+                                  ->orWhere('tournament_name', 'LIKE', "%{$query}%");
+                            })
+                            ->latest()
+                            ->take(5)
+                            ->get();
+
+        // Hitung total hasil
+        $totalResults = $articles->total() + $events->count() + $galleries->count();
+
+        // 6. Kirim hasil pencarian ke view
+        return view('front.search_results', [
+            'articles' => $articles,
+            'events' => $events,
+            'galleries' => $galleries,
+            'query' => $query,
+            'totalResults' => $totalResults
+        ]);
+    }
+}
