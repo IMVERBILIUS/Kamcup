@@ -25,23 +25,33 @@
     {{-- Match Terdekat --}}
     @if ($next_match)
         <div class="container py-4 scroll-animate" data-animation="fadeInUp">
-            <a href="{{ route('front.events.show', $next_match->slug) }}" class="text-decoration-none">
+            <a href="{{ route('front.events.show', $next_match->tournament->slug) }}" class="text-decoration-none">
                 <div class="card bg-light border-0 shadow-sm card-hover-zoom" style="height: auto;">
                     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
                         <h5 class="card-title fw-bold mb-2 mb-md-0 me-md-3 text-center text-md-start article-text">
                             <span class="main-text">Match</span> <span class="highlight-text">Terdekat:</span>
-                            {{ $next_match->title }}
+                            {{ $next_match->tournament->title }}
+                            <br>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.85rem;">
+                                {{ $next_match->team1->name }} vs {{ $next_match->team2->name }}
+                                @if ($next_match->stage)
+                                    | {{ $next_match->stage }}
+                                @endif
+                            </small>
                         </h5>
                         <div class="text-center text-md-end">
                             <p class="mb-1 small text-muted article-text">
                                 <i class="bi bi-calendar me-1"></i>
-                                {{ \Carbon\Carbon::parse($next_match->registration_start)->format('d M Y') }}
-                                @if ($next_match->registration_start != $next_match->registration_end)
-                                    - {{ \Carbon\Carbon::parse($next_match->registration_end)->format('d M Y') }}
-                                @endif
+                                {{ \Carbon\Carbon::parse($next_match->match_datetime)->format('d M Y, H:i') }}
                             </p>
-                            <a href="{{ route('front.events.show', $next_match->slug) }}"
-                                class="btn btn-sm btn-outline-primary mt-2 mt-md-0">Segera Daftar</a>
+                            @if ($next_match->location)
+                                <p class="mb-1 small text-muted article-text">
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    {{ Str::limit($next_match->location, 30) }}
+                                </p>
+                            @endif
+                            <a href="{{ route('front.events.show', $next_match->tournament->slug) }}"
+                                class="btn btn-sm btn-outline-primary mt-2 mt-md-0">Lihat Detail</a>
                         </div>
                     </div>
                 </div>

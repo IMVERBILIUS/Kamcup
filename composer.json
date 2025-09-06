@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "botman/botman": "^2.8",
+        "botman/driver-web": "^1.5",
         "google/apiclient": "^2.18",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/auth": "^9.0",

@@ -67,11 +67,15 @@ class FrontController extends Controller
         $sponsors = Sponsor::orderBy('order_number')->get();
         $sponsorData = $sponsors->groupBy('sponsor_size');
 
-        // Next match terdekat
-        $next_match = Tournament::where('visibility_status', 'Published')
-                                ->whereIn('status', ['registration', 'ongoing'])
-                                ->orderBy('registration_start', 'asc')
-                                ->first();
+        // Next match terdekat berdasarkan tanggal pertandingan
+        $next_match = VolleyMatch::with(['tournament', 'team1', 'team2'])
+                                 ->whereHas('tournament', function($query) {
+                                     $query->where('visibility_status', 'Published');
+                                 })
+                                 ->where('match_datetime', '>=', now())
+                                 ->whereIn('status', ['scheduled', 'in-progress'])
+                                 ->orderBy('match_datetime', 'asc')
+                                 ->first();
 
         // TAMBAHAN BARU: Last match terbaru yang sudah completed
         $last_match = VolleyMatch::with(['tournament', 'team1', 'team2', 'winner'])

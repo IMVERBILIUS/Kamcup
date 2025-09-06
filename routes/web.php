@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\BotManController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,17 @@ Route::get('/storage-link', function () {
     }
     return "Symlink already exists.";
 });
+
+/*
+|--------------------------------------------------------------------------
+| BotMan Chatbot Routes
+|--------------------------------------------------------------------------
+*/
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+Route::get('/botman/tinker', [BotManController::class, 'tinker']);
+Route::get('/chatbot-test', function () {
+    return view('chatbot.test');
+})->name('chatbot.test');
 
 /*
 |--------------------------------------------------------------------------
