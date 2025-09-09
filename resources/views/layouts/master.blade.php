@@ -154,14 +154,16 @@
                         <li class="nav-item">
                             <a class="nav-link fw-medium" href="{{ route('front.index') }}">HOME</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('front.articles') }}">BERITA</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('front.galleries') }}">GALERI</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium" href="{{ route('front.events.index') }}">EVENT</a>
+                        <li class="nav-item dropdown dropdown-hover">
+                            <a class="nav-link dropdown-toggle fw-medium" href="#" id="infoPublikDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                INFO PUBLIK
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="infoPublikDropdown">
+                                <li><a class="dropdown-item" href="{{ route('front.articles') }}">Berita</a></li>
+                                <li><a class="dropdown-item" href="{{ route('front.galleries') }}">Galeri</a></li>
+                                <li><a class="dropdown-item" href="{{ route('front.events.index') }}">Event</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link fw-medium" href="{{ route('front.contact') }}">HUBUNGI KAMI</a>

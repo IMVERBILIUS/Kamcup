@@ -11,39 +11,56 @@
     --bale-accent: #ee1d23; /* BTN Red */
 
     /* Combined Palette for Kamcup X Bale - **UPDATED FOR MORE BALE PRESENCE** */
-    --collab-primary: var(--bale-primary); /* BTN Blue remains primary structural */
-    --collab-secondary: var(--kamcup-secondary); /* Kamcup secondary for depth */
-    --collab-accent: var(--bale-accent); /* **UPDATED: Bale Red for main actions & emphasis!** */
-    --collab-highlight: var(--kamcup-accent); /* Kamcup accent for strong highlights (e.g. text emphasis) */
-    --collab-cta-kamcup: var(--kamcup-primary); /* **NEW: Kamcup Primary for specific Kamcup-focused CTAs** */
+    --collab-primary: var(
+        --bale-primary
+    ); /* BTN Blue remains primary structural */
+    --collab-secondary: var(
+        --kamcup-secondary
+    ); /* Kamcup secondary for depth */
+    --collab-accent: var(
+        --bale-accent
+    ); /* **UPDATED: Bale Red for main actions & emphasis!** */
+    --collab-highlight: var(
+        --kamcup-accent
+    ); /* Kamcup accent for strong highlights (e.g. text emphasis) */
+    --collab-cta-kamcup: var(
+        --kamcup-primary
+    ); /* **NEW: Kamcup Primary for specific Kamcup-focused CTAs** */
 
     /* Custom color for all buttons and the "PARTNER & SPONSOR KAMI" section downwards */
-    --custom-blue: #0F62FF;
+    --custom-blue: #0f62ff;
     --custom-blue-darken: #004ac2; /* A darker shade for hover effects */
 
     /* Specific color for box shadow */
-    --shadow-color-cf2585: #CF2585;
+    --shadow-color-cf2585: #cf2585;
 
     --text-dark: #212529;
     --text-light: #ffffff;
     --text-muted: #6c757d;
     --light-bg: #f8f9fa;
-    --dark-bg-overlay: rgba(41, 102, 177, 0.85); /* Increased opacity for BTN Blue overlay */
+    --dark-bg-overlay: rgba(
+        41,
+        102,
+        177,
+        0.85
+    ); /* Increased opacity for BTN Blue overlay */
 
     /* Old style colors for reference / integration (now mostly superseded by collab colors) */
-    --old-text-color: #0C2C5A; /* Specific color from old style, now generally covered by --text-dark or --collab-primary */
+    --old-text-color: #0c2c5a; /* Specific color from old style, now generally covered by --text-dark or --collab-primary */
 }
 
 html {
     box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     color: var(--text-dark);
 }
 
@@ -59,7 +76,6 @@ body {
     flex-grow: 1; /* Konten akan mengisi ruang yang tersisa */
 }
 
-
 /* Hero Section */
 .hero-section {
     position: relative;
@@ -73,13 +89,20 @@ body {
 }
 
 .hero-section .nav-link {
-    color: rgba(255, 255, 255, 0.95) !important; /* Even more opaque for better visibility */
+    color: rgba(
+        255,
+        255,
+        255,
+        0.95
+    ) !important; /* Even more opaque for better visibility */
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .hero-section .nav-link.active,
 .hero-section .nav-link:hover {
-    color: var(--collab-highlight) !important; /* Kamcup accent for active/hover */
+    color: var(
+        --collab-highlight
+    ) !important; /* Kamcup accent for active/hover */
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Stronger glow on hover */
 }
 
@@ -91,7 +114,9 @@ body {
 
 .hero-section .btn-outline-light:hover {
     background-color: var(--text-light);
-    color: var(--collab-primary); /* **UPDATED: Text color to BTN Blue for contrast** */
+    color: var(
+        --collab-primary
+    ); /* **UPDATED: Text color to BTN Blue for contrast** */
     box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
 }
 
@@ -104,7 +129,7 @@ body {
     font-size: clamp(2.5rem, 6vw, 4.8rem); /* Slightly larger title */
     font-weight: 800; /* Bolder title */
     color: var(--text-light);
-    text-shadow: 4px 4px 8px rgba(0,0,0,0.5); /* More prominent shadow */
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); /* More prominent shadow */
 }
 
 .hero-content .hero-description {
@@ -121,28 +146,32 @@ body {
 
 /* Updated hero button styling */
 .hero-content .hero-btn {
-    background-color: var(--custom-blue); /* All buttons now use this custom blue */
+    background-color: var(
+        --custom-blue
+    ); /* All buttons now use this custom blue */
     border-color: var(--custom-blue);
     color: var(--text-light); /* White font for all buttons */
     font-weight: bold;
     padding: 1.2rem 3rem;
     font-size: 1.25rem; /* Slightly larger button */
     transition: all 0.3s ease;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.3); /* Stronger shadow */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* Stronger shadow */
     border-radius: 8px !important; /* Smaller border-radius */
 }
 
 .hero-content .hero-btn:hover {
-    background-color: var(--custom-blue-darken); /* Darken custom blue on hover */
+    background-color: var(
+        --custom-blue-darken
+    ); /* Darken custom blue on hover */
     border-color: var(--custom-blue-darken);
     color: var(--text-light);
     transform: translateY(-4px); /* More lift effect on hover */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 /* Section Titles */
 .section-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 700;
     font-size: clamp(1.8rem, 4vw, 2.8rem); /* Larger font size */
     color: var(--text-dark);
@@ -152,13 +181,15 @@ body {
 }
 
 .section-title::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: 0;
     width: 90px; /* Longer underline */
     height: 6px; /* Thicker underline */
-    background-color: var(--collab-primary); /* **UPDATED: BTN Blue for underline** */
+    background-color: var(
+        --collab-primary
+    ); /* **UPDATED: BTN Blue for underline** */
     border-radius: 3px;
 }
 
@@ -173,7 +204,9 @@ body {
 }
 
 .see-all-btn:hover {
-    background-color: var(--custom-blue-darken); /* Darken custom blue on hover */
+    background-color: var(
+        --custom-blue-darken
+    ); /* Darken custom blue on hover */
     color: var(--text-light);
     box-shadow: 0 4px 10px rgba(15, 98, 255, 0.4); /* Shadow using custom blue */
 }
@@ -196,11 +229,11 @@ body {
 }
 
 .article-card-title-color {
-    color: #CF2585;
+    color: #cf2585;
 }
 
 .article-card-description-color {
-    color: #CF2585;
+    color: #cf2585;
 }
 
 .article-card {
@@ -211,7 +244,7 @@ body {
 
 .article-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 1.5rem 5rem rgba(0,0,0,.25) !important;
+    box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.25) !important;
     border-color: var(--collab-primary);
 }
 
@@ -252,8 +285,8 @@ body {
 
 /* Event Status Badge - UNCHANGED AS REQUESTED */
 .event-status-badge {
-    padding: .3em .6em;
-    border-radius: .3em;
+    padding: 0.3em 0.6em;
+    border-radius: 0.3em;
     font-weight: 600;
     font-size: 0.85em;
     display: inline-block;
@@ -286,7 +319,7 @@ body {
 
 .event-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 1.5rem 5rem rgba(0,0,0,.25) !important;
+    box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.25) !important;
     border-color: var(--collab-accent);
 }
 
@@ -328,7 +361,6 @@ body {
 .event-card .stretched-link:hover {
     color: #a4206e;
 }
-
 
 /* Bootstrap Carousel Control Overrides for Articles - UNCHANGED AS REQUESTED */
 .carousel-control-prev,
@@ -375,7 +407,6 @@ body {
     overflow: visible !important;
 }
 
-
 /* Custom Pagination Styles */
 .pagination {
     list-style: none;
@@ -415,13 +446,12 @@ body {
     pointer-events: none;
 }
 
-
 /* Sponsor Section Header */
 .sponsor-section-header {
     background-color: var(--collab-primary);
     padding: 2.2rem;
     border-radius: 15px;
-    box-shadow: 0 0.35rem 1rem rgba(0,0,0,.15);
+    box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.15);
     border: none;
 }
 
@@ -448,7 +478,6 @@ body {
     padding-left: 15px;
     padding-right: 15px;
 }
-
 
 .partner-sponsor-header {
     margin-bottom: 0 !important;
@@ -512,7 +541,7 @@ body {
     height: 480px;
     left: 25%;
     padding: 10px;
-    background-color: #ECBF00;
+    background-color: #ecbf00;
     transition: all 0.5s ease;
     cursor: pointer;
     transform-style: preserve-3d;
@@ -533,7 +562,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #ECBF00;
+    background-color: #ecbf00;
     color: var(--old-text-color);
     font-size: 20px;
     font-weight: bold;
@@ -550,13 +579,13 @@ body {
 .image-item.prev {
     z-index: 5;
     opacity: 1;
-    transform: translateX(-20%) scale(0.85) ;
+    transform: translateX(-20%) scale(0.85);
 }
 
 .image-item.next {
     z-index: 5;
     opacity: 1;
-    transform: translateX(20%) scale(0.85) ;
+    transform: translateX(20%) scale(0.85);
 }
 
 .image-item.prev-hidden {
@@ -576,7 +605,8 @@ body {
     transform: translateX(-200%) scale(0.7);
 }
 
-.nav-button { /* Changed from .carousel-button to .nav-button as per your HTML */
+.nav-button {
+    /* Changed from .carousel-button to .nav-button as per your HTML */
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -610,11 +640,10 @@ body {
 }
 
 .lihat-semua-btn:hover {
-    background-color: #0C2C5A !important;
+    background-color: #0c2c5a !important;
     color: white !important;
-    border-color: #0C2C5A !important;
+    border-color: #0c2c5a !important;
 }
-
 
 @media (max-width: 768px) {
     .carousel {
@@ -635,14 +664,14 @@ body {
     }
 }
 
-
 /* Sponsor Boxes */
 .sponsor-box {
     background-color: var(--text-light);
     border: 2px solid var(--collab-primary);
     border-radius: 0.8rem;
-    box-shadow: 0 0.15rem 0.6rem rgba(0,0,0,.1);
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0.15rem 0.6rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, border-color 0.2s ease,
+        box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -663,15 +692,23 @@ body {
     filter: grayscale(0%);
 }
 
-.sponsor-xxl img { max-height: 120px; }
-.sponsor-xl img { max-height: 90px; }
-.sponsor-l img { max-height: 70px; }
-.sponsor-ms img { max-height: 60px; }
+.sponsor-xxl img {
+    max-height: 120px;
+}
+.sponsor-xl img {
+    max-height: 90px;
+}
+.sponsor-l img {
+    max-height: 70px;
+}
+.sponsor-ms img {
+    max-height: 60px;
+}
 
 .sponsor-box:hover {
     transform: translateY(-7px);
     border-color: var(--collab-accent);
-    box-shadow: 0 0.6rem 1.8rem rgba(0,0,0,.2);
+    box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.2);
 }
 .sponsor-box p {
     font-weight: 600;
@@ -697,7 +734,6 @@ body {
     object-fit: cover; /* Perubahan: Mengisi wadah dan memotong jika perlu */
     margin-right: 10px;
 }
-
 
 /* Responsive Adjustments untuk navbar dan logo */
 
@@ -795,7 +831,9 @@ body {
         margin-right: 15px; /* Space from edge */
     }
     .navbar-collapse {
-        background-color: var(--collab-primary); /* Dark background for collapsed menu */
+        background-color: var(
+            --collab-primary
+        ); /* Dark background for collapsed menu */
         border-radius: 0.5rem;
         margin-top: 10px;
         padding: 15px;
@@ -862,7 +900,10 @@ body {
         min-height: 120px; /* Minimum height for small screens */
         padding: 10px;
     }
-    .sponsor-xxl img, .sponsor-xl img, .sponsor-l img, .sponsor-ms img {
+    .sponsor-xxl img,
+    .sponsor-xl img,
+    .sponsor-l img,
+    .sponsor-ms img {
         max-height: 50px; /* Smaller max height for images on very small screens */
     }
     .sponsor-box p {
@@ -924,7 +965,10 @@ body {
         height: auto;
         min-height: 140px;
     }
-    .sponsor-xxl img, .sponsor-xl img, .sponsor-l img, .sponsor-ms img {
+    .sponsor-xxl img,
+    .sponsor-xl img,
+    .sponsor-l img,
+    .sponsor-ms img {
         max-height: 60px;
     }
 }
@@ -976,10 +1020,18 @@ body {
     .sponsor-box {
         height: 170px; /* Original height for medium screens */
     }
-    .sponsor-xxl img { max-height: 100px; }
-    .sponsor-xl img { max-height: 80px; }
-    .sponsor-l img { max-height: 65px; }
-    .sponsor-ms img { max-height: 55px; }
+    .sponsor-xxl img {
+        max-height: 100px;
+    }
+    .sponsor-xl img {
+        max-height: 80px;
+    }
+    .sponsor-l img {
+        max-height: 65px;
+    }
+    .sponsor-ms img {
+        max-height: 55px;
+    }
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -1026,10 +1078,18 @@ body {
         height: 170px;
     }
     /* Specific heights for sponsor images */
-    .sponsor-xxl img { max-height: 120px; }
-    .sponsor-xl img { max-height: 90px; }
-    .sponsor-l img { max-height: 70px; }
-    .sponsor-ms img { max-height: 60px; }
+    .sponsor-xxl img {
+        max-height: 120px;
+    }
+    .sponsor-xl img {
+        max-height: 90px;
+    }
+    .sponsor-l img {
+        max-height: 70px;
+    }
+    .sponsor-ms img {
+        max-height: 60px;
+    }
 }
 
 /* --- Button Border Radius Adjustments --- */
@@ -1041,7 +1101,8 @@ body {
 
 /* For "Lihat semuanya" buttons */
 .lihat-semua-btn,
-.see-all-btn { /* Both classes apply to "Lihat semuanya" buttons */
+.see-all-btn {
+    /* Both classes apply to "Lihat semuanya" buttons */
     border-radius: 8px !important; /* Smaller border-radius */
 }
 
@@ -1055,9 +1116,35 @@ body {
 .card a.btn {
     border-radius: 8px !important; /* Apply smaller border-radius here as well */
 }
-@media (max-width: 767.98px) { /* Untuk ukuran layar di bawah tablet (mobile) */
+@media (max-width: 767.98px) {
+    /* Untuk ukuran layar di bawah tablet (mobile) */
     /* Menargetkan div container sebelum "Materi Promosi BY" */
     .container.py-5.mt-md-5 {
         margin-top: 8.5rem !important; /* Tambahkan jarak sesuai keinginan, misal 3.5rem atau 4rem */
     }
+}
+
+/* Dropdown menu Hover di navbar */
+@media (min-width: 992px) {
+    .dropdown-hover:hover > .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+
+    .dropdown-hover > .dropdown-toggle::after {
+        transform: rotate(-180deg);
+    }
+}
+
+.dropdown-menu {
+    transition: all 0.2s ease-in-out;
+}
+
+.dropdown-menu .dropdown-item {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--kamcup-primary); 
+    color: #ffffff;
 }
