@@ -69,9 +69,11 @@
                         {{ $last_match->tournament->title }}
                         <br>
                         <small class="text-muted d-block mt-1" style="font-size: 0.85rem;">
-                            {{ $last_match->team1->name }} <span class="highlight-text fw-bold">{{ $last_match->team1_score }}</span> 
-                            - 
-                            <span class="highlight-text fw-bold">{{ $last_match->team2_score }}</span> {{ $last_match->team2->name }}
+                            {{ $last_match->team1->name }} <span
+                                class="highlight-text fw-bold">{{ $last_match->team1_score }}</span>
+                            -
+                            <span class="highlight-text fw-bold">{{ $last_match->team2_score }}</span>
+                            {{ $last_match->team2->name }}
                             @if ($last_match->winner)
                                 | 🏆 {{ $last_match->winner->name }}
                             @endif
@@ -211,13 +213,13 @@
             </div>
 
             {{-- Carousel Controls untuk Desktop --}}
-            <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#popularArticlesCarousel"
-                data-bs-slide="prev">
+            <button class="carousel-control-prev d-none d-md-flex" type="button"
+                data-bs-target="#popularArticlesCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next d-none d-md-flex" type="button" data-bs-target="#popularArticlesCarousel"
-                data-bs-slide="next">
+            <button class="carousel-control-next d-none d-md-flex" type="button"
+                data-bs-target="#popularArticlesCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
