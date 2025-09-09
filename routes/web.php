@@ -269,3 +269,12 @@ Route::prefix('api')->name('api.')->group(function () {
             ->get();
     })->name('tournament.matches');
 });
+
+// Tes error page, bisa di hapus setelah testing atau presentasi
+Route::get('/401', fn() => abort(401, 'Unauthorized'));
+Route::get('/402', fn() => abort(402, 'Unauthorized'));
+Route::get('/403', fn() => abort(403, 'Forbidden'));
+Route::get('/419', fn() => abort(419, 'Page Expired'));
+Route::get('/429', fn() => abort(429, 'Too Many Requests'));
+Route::get('/500', fn() => abort(500, 'Internal Server Error'));
+Route::get('/503', fn() => abort(503, 'Service Unavailable'));
