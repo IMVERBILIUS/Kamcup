@@ -242,7 +242,7 @@
     <div class="container py-5 scroll-animate" data-animation="fadeInUp">
         <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
             <div class="col scroll-animate" data-animation="fadeInLeft" data-delay="100">
-                <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
+                <div class="card h-100 border-0 rounded-3 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                     style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                     <i class="bi bi-people-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                     <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tim</h4>
@@ -254,7 +254,7 @@
                 </div>
             </div>
             <div class="col scroll-animate" data-animation="fadeInUp" data-delay="200">
-                <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
+                <div class="card h-100 border-0 rounded-3 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                     style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                     <i class="bi bi-house-door-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                     <h4 class="card-title fw-bold mb-3">Daftar Sebagai Tuan Rumah</h4>
@@ -267,7 +267,7 @@
                 </div>
             </div>
             <div class="col scroll-animate" data-animation="fadeInRight" data-delay="300">
-                <div class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
+                <div class="card h-100 border-0 rounded-3 overflow-hidden shadow-sm p-3 p-md-4 d-flex flex-column justify-content-center align-items-center"
                     style="background-color: var(--collab-primary); color: var(--text-light); position: relative;">
                     <i class="bi bi-heart-fill display-4 mb-3" style="color: var(--collab-highlight);"></i>
                     <h4 class="card-title fw-bold mb-3">Daftar Sebagai Donatur</h4>
@@ -397,7 +397,7 @@
     </div>
 
     {{-- PERBAIKAN SPACING UNTUK MATERI PROMOSI --}}
-    <div class="container pt-5 pb-3 mt-4 scroll-animate" data-animation="fadeInUp">
+    <div class="container pt-5 pb-3 mt-4 scroll-animate rounded-2" data-animation="fadeInUp">
         <div class="text-center sponsor-section-header mb-4">
             <p class="mb-0 fw-bold fs-4 promo-title">Materi Promosi BY
                 @if (isset($sponsorData['xxl']) && $sponsorData['xxl']->isNotEmpty())

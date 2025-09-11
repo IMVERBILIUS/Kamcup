@@ -1444,11 +1444,14 @@ body {
     .chatbot-toggle i {
         font-size: 22px;
     }
+      .promo-title {
+        padding: 15px; /* Padding khusus untuk layar kecil */
+    }
 }
 
 @media (max-width: 480px) {
     .chatbot-container {
-        position: fixed; 
+        position: fixed;
         bottom: 80px;
         left: 50%;
         transform: translateX(-50%);
