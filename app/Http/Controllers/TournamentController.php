@@ -112,7 +112,7 @@ class TournamentController extends Controller
                 'thumbnail' => $thumbnailPath,
             ]);
 
-            if ($request->has('rules')) {
+            if ($request->has('rules') && is_array($request->rules)) {
                 foreach ($request->rules as $ruleText) {
                     if (!empty($ruleText)) {
                         $tournament->rules()->create([
@@ -134,6 +134,10 @@ class TournamentController extends Controller
             Log::error("Error creating tournament: " . $e->getMessage(), ['exception' => $e]);
             return back()->withInput()->with('error', 'Gagal membuat turnamen: ' . $e->getMessage());
         }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     dd($e->getMessage()); // Langsung tampilkan pesan error
+        // }
     }
 
     /**
