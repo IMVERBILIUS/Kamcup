@@ -353,6 +353,7 @@
                                                             {{ ucfirst($event->status) }}
                                                         </span>
                                                     </div>
+                                                    <p class="event-detail-text">Detail Event & Daftar</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -518,7 +519,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family+Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <style>
+        <style>
         :root {
             --shadow-color-cf2585: #CF2585;
         }
@@ -657,6 +658,68 @@
             font-size: 1.25rem;
         }
 
+        /* ===== BORDER KHUSUS UNTUK CAROUSEL CARDS SAJA (ARTIKEL & EVENT) ===== */
+        
+        /* Border kanan dan bawah untuk artikel terbaru */
+        #latestArticlesCarousel .carousel-item .card {
+            border: none !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Border kanan dan bawah untuk artikel populer */
+        #popularArticlesCarousel .carousel-item .card {
+            border: none !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Border kanan dan bawah untuk upcoming events */
+        #upcomingEventsCarousel .carousel-item .card {
+            border: none !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            position: relative !important;
+        }
+
+        /* Hover effects untuk cards dengan border khusus */
+        #latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
+        #popularArticlesCarousel .carousel-item .card-hover-zoom:hover,
+        #upcomingEventsCarousel .carousel-item .card-hover-zoom:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 8px 25px rgba(207, 37, 133, 0.3) !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+        }
+
+        /* Styling untuk text "Detail Event & Daftar" di upcoming events - spesifisitas tinggi */
+        #upcomingEventsCarousel .carousel-item .card .event-meta .event-detail-text {
+            color: #CF2585 !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            margin-top: 0.3rem !important;
+            margin-bottom: 0 !important;
+            text-align: left !important;
+            line-height: 1.2 !important;
+        }
+
+        /* Fallback dengan spesifisitas lebih tinggi lagi */
+        #upcomingEventsCarousel .event-detail-text {
+            color: #CF2585 !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            margin-top: 0.3rem !important;
+            margin-bottom: 0 !important;
+            text-align: left !important;
+            line-height: 1.2 !important;
+        }
+
         /* Zoom effect untuk desktop */
         .card-hover-zoom {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -758,7 +821,7 @@
             }
         }
 
-        /* ===== GANTI CSS EVENT CARDS DENGAN INI ===== */
+        /* ===== CAROUSEL STYLING ===== */
 
         /* Base styling untuk semua carousel - UKURAN YANG SAMA */
         .carousel-item .row {
@@ -780,10 +843,13 @@
             width: 100% !important;
             display: flex !important;
             flex-direction: column !important;
-            border: 1px solid rgba(0, 0, 0, 0.1) !important;
             border-radius: 12px !important;
             overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Tinggi khusus untuk upcoming events supaya text tidak terpotong */
+        #upcomingEventsCarousel .carousel-item .card {
+            height: 380px !important;
         }
 
         /* Image container SAMA PERSIS */
@@ -875,16 +941,6 @@
             padding: 0.25rem 0.5rem !important;
         }
 
-        /* Hover effects SAMA untuk semua cards */
-        .carousel-item .card-hover-zoom {
-            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-        }
-
-        .carousel-item .card-hover-zoom:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-        }
-
         /* ===== RESPONSIVE - UKURAN SAMA UNTUK SEMUA ===== */
 
         /* Desktop - 3 kolom SAMA */
@@ -904,7 +960,7 @@
             }
         }
 
-        /* Tablet - 2 kolom SAMA */
+            /* Tablet - 2 kolom SAMA */
         @media (max-width: 991.98px) {
             .carousel-item .row {
                 flex-wrap: wrap !important;
@@ -921,6 +977,11 @@
                 width: 100% !important;
             }
 
+            /* Tinggi khusus untuk upcoming events di tablet */
+            #upcomingEventsCarousel .carousel-item .card {
+                height: 350px !important;
+            }
+
             .carousel-item .card .ratio {
                 flex: 0 0 180px !important;
                 height: 180px !important;
@@ -935,7 +996,7 @@
             }
         }
 
-        /* Mobile - 1 kolom SAMA */
+            /* Mobile - 1 kolom SAMA */
         @media (max-width: 767.98px) {
             .carousel-item .row {
                 flex-direction: column !important;
@@ -954,6 +1015,11 @@
                 height: 350px !important;
                 width: 100% !important;
                 margin: 0 auto !important;
+            }
+
+            /* Tinggi khusus untuk upcoming events di mobile */
+            #upcomingEventsCarousel .carousel-item .card {
+                height: 380px !important;
             }
 
             .carousel-item .card .ratio {
@@ -978,6 +1044,27 @@
 
             #upcomingEventsCarousel .event-meta .badge {
                 font-size: 0.6rem !important;
+            }
+
+            /* Border untuk mobile - lebih tipis */
+            #latestArticlesCarousel .carousel-item .card,
+            #popularArticlesCarousel .carousel-item .card,
+            #upcomingEventsCarousel .carousel-item .card {
+                border-right: 3px solid #CF2585 !important;
+                border-bottom: 3px solid #CF2585 !important;
+            }
+
+            /* Text "Detail Event & Daftar" lebih kecil di mobile */
+            #upcomingEventsCarousel .event-detail-text,
+            #upcomingEventsCarousel .carousel-item .card .event-meta .event-detail-text {
+                font-size: 0.65rem !important;
+                margin-top: 0.2rem !important;
+                color: #CF2585 !important;
+            }
+
+            /* Override untuk memastikan warna pink muncul di mobile */
+            .event-detail-text {
+                color: #CF2585 !important;
             }
         }
 
@@ -1034,7 +1121,7 @@
             background-color: #F4B704 !important;
             color: #212529 !important;
         }
-    </style>
+</style>
 @endpush
 
 @push('scripts')
