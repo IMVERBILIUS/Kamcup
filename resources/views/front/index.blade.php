@@ -519,16 +519,24 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family+Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-        <style>
+
+    <style>
         :root {
             --shadow-color-cf2585: #CF2585;
+            --primary-blue: #0F62FF;
+            --accent-yellow: #F4B704;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --border-radius: 12px;
+            --transition-fast: 0.3s ease;
+            --transition-medium: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* ===== SCROLL ANIMATIONS - AKTIF DI SEMUA DEVICE ===== */
+        /* ===== SCROLL ANIMATIONS - OPTIMIZED ===== */
         .scroll-animate {
             opacity: 0;
             transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all var(--transition-medium);
             will-change: transform, opacity;
         }
 
@@ -537,36 +545,16 @@
             transform: translateY(0);
         }
 
-        /* Different animation types */
-        .scroll-animate[data-animation="fadeInUp"] {
-            transform: translateY(50px);
-        }
+        /* Animation types */
+        .scroll-animate[data-animation="fadeInUp"] { transform: translateY(50px); }
+        .scroll-animate[data-animation="fadeInDown"] { transform: translateY(-50px); }
+        .scroll-animate[data-animation="fadeInLeft"] { transform: translateX(-50px); }
+        .scroll-animate[data-animation="fadeInRight"] { transform: translateX(50px); }
+        .scroll-animate[data-animation="zoomIn"] { transform: scale(0.8) translateY(30px); }
+        .scroll-animate[data-animation="slideInLeft"] { transform: translateX(-100px); }
+        .scroll-animate[data-animation="slideInRight"] { transform: translateX(100px); }
 
-        .scroll-animate[data-animation="fadeInDown"] {
-            transform: translateY(-50px);
-        }
-
-        .scroll-animate[data-animation="fadeInLeft"] {
-            transform: translateX(-50px);
-        }
-
-        .scroll-animate[data-animation="fadeInRight"] {
-            transform: translateX(50px);
-        }
-
-        .scroll-animate[data-animation="zoomIn"] {
-            transform: scale(0.8) translateY(30px);
-        }
-
-        .scroll-animate[data-animation="slideInLeft"] {
-            transform: translateX(-100px);
-        }
-
-        .scroll-animate[data-animation="slideInRight"] {
-            transform: translateX(100px);
-        }
-
-        /* When animated */
+        /* Animated state */
         .scroll-animate[data-animation="fadeInUp"].animate,
         .scroll-animate[data-animation="fadeInDown"].animate,
         .scroll-animate[data-animation="fadeInLeft"].animate,
@@ -580,31 +568,241 @@
             transform: scale(1) translateY(0);
         }
 
-        /* Staggered animation delays */
-        .scroll-animate[data-delay="100"] {
-            transition-delay: 0.1s;
+        /* Staggered delays */
+        .scroll-animate[data-delay="100"] { transition-delay: 0.1s; }
+        .scroll-animate[data-delay="200"] { transition-delay: 0.2s; }
+        .scroll-animate[data-delay="300"] { transition-delay: 0.3s; }
+        .scroll-animate[data-delay="400"] { transition-delay: 0.4s; }
+        .scroll-animate[data-delay="500"] { transition-delay: 0.5s; }
+
+        /* ===== ENHANCED HOVER EFFECTS ===== */
+        .card-hover-zoom {
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
         }
 
-        .scroll-animate[data-delay="200"] {
-            transition-delay: 0.2s;
+        /* Enhanced zoom effect - bigger scale */
+        .card-hover-zoom:hover {
+            transform: scale(1.12) translateY(-8px);
+            z-index: 10;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
-        .scroll-animate[data-delay="300"] {
-            transition-delay: 0.3s;
+        .card-hover-zoom img {
+            transition: transform var(--transition-fast);
         }
 
-        .scroll-animate[data-delay="400"] {
-            transition-delay: 0.4s;
+        .card-hover-zoom:hover img {
+            transform: scale(1.05);
         }
 
-        .scroll-animate[data-delay="500"] {
-            transition-delay: 0.5s;
+        /* ===== COLOR SCHEME ===== */
+        .highlight-text { color: var(--accent-yellow); }
+        .main-text { color: var(--primary-blue); }
+        .article-text { color: var(--text-dark); }
+
+        /* ===== BUTTON STYLES ===== */
+        .registration-btn {
+            padding: 0.75rem 2rem !important;
+            font-size: 0.95rem !important;
+            transition: all var(--transition-fast);
+            background-color: var(--accent-yellow) !important;
+            border-color: var(--accent-yellow) !important;
+            color: var(--text-dark) !important;
         }
 
-        /* Mobile animations - lebih halus */
-        @media (max-width: 768px) {
+        .registration-btn:hover {
+            background-color: #e0ac00 !important;
+            border-color: #e0ac00 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(244, 183, 4, 0.3);
+        }
+
+        /* ===== CAROUSEL CARD BORDERS ===== */
+        #latestArticlesCarousel .carousel-item .card,
+        #popularArticlesCarousel .carousel-item .card,
+        #upcomingEventsCarousel .carousel-item .card {
+            border: none !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+            border-radius: var(--border-radius) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Enhanced hover for carousel cards */
+        #latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
+        #popularArticlesCarousel .carousel-item .card-hover-zoom:hover,
+        #upcomingEventsCarousel .carousel-item .card-hover-zoom:hover {
+            transform: scale(1.12) translateY(-8px) !important;
+            box-shadow: 0 20px 40px rgba(207, 37, 133, 0.3) !important;
+            border-right: 4px solid #CF2585 !important;
+            border-bottom: 4px solid #CF2585 !important;
+        }
+
+        /* ===== EVENT DETAIL TEXT STYLING ===== */
+        .event-detail-text,
+        #upcomingEventsCarousel .event-detail-text,
+        #upcomingEventsCarousel .carousel-item .card .event-meta .event-detail-text {
+            color: #CF2585 !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            margin-top: 0.3rem !important;
+            margin-bottom: 0 !important;
+            text-align: left !important;
+            line-height: 1.2 !important;
+        }
+
+        /* ===== CAROUSEL LAYOUT CONSISTENCY ===== */
+        .carousel-item .row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            align-items: stretch !important;
+        }
+
+        .carousel-item .col {
+            display: flex !important;
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            padding: 0 0.75rem !important;
+        }
+
+        /* Consistent card heights */
+        .carousel-item .card {
+            height: 360px !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            border-radius: var(--border-radius) !important;
+            overflow: hidden !important;
+        }
+
+        /* Special height for event cards */
+        #upcomingEventsCarousel .carousel-item .card {
+            height: 390px !important;
+        }
+
+        /* Image containers */
+        .carousel-item .card .ratio {
+            flex: 0 0 200px !important;
+            height: 200px !important;
+            margin-bottom: 0 !important;
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            overflow: hidden !important;
+        }
+
+        .carousel-item .card .ratio img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center !important;
+        }
+
+        /* Card body layout */
+        .carousel-item .card .card-body {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            padding: 1rem !important;
+            text-align: left !important;
+        }
+
+        /* Title consistency */
+        .carousel-item .card h5 {
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            line-height: 1.3 !important;
+            margin-bottom: 0.5rem !important;
+            color: var(--text-dark) !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            height: 2.6rem !important;
+        }
+
+        /* Article descriptions */
+        #latestArticlesCarousel .carousel-item .card p.card-text,
+        #popularArticlesCarousel .carousel-item .card p.card-text {
+            font-size: 0.85rem !important;
+            color: var(--text-muted) !important;
+            line-height: 1.4 !important;
+            margin-bottom: 0 !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            flex: 1 1 auto !important;
+        }
+
+        /* Event meta styling */
+        #upcomingEventsCarousel .event-meta {
+            font-size: 0.85rem !important;
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+        }
+
+        #upcomingEventsCarousel .event-meta p {
+            margin-bottom: 0.25rem !important;
+            line-height: 1.3 !important;
+            color: var(--text-muted) !important;
+        }
+
+        #upcomingEventsCarousel .event-meta i {
+            width: 12px !important;
+            text-align: center !important;
+            font-size: 0.8rem !important;
+        }
+
+        #upcomingEventsCarousel .event-meta .badge {
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.3px !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        /* Status badge colors */
+        .bg-warning.text-dark {
+            background-color: var(--accent-yellow) !important;
+            color: var(--text-dark) !important;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        
+        /* Desktop - 3 columns */
+        @media (min-width: 992px) {
+            .carousel-item .row { gap: 1rem !important; }
+            .carousel-item .col {
+                flex: 1 1 calc(33.333% - 1rem) !important;
+                max-width: calc(33.333% - 1rem) !important;
+            }
+        }
+
+        /* Tablet - 2 columns */
+        @media (max-width: 991.98px) {
+            .carousel-item .row { flex-wrap: wrap !important; }
+            .carousel-item .col {
+                flex: 1 1 calc(50% - 1rem) !important;
+                max-width: calc(50% - 1rem) !important;
+                margin-bottom: 1rem !important;
+            }
+            .carousel-item .card { height: 330px !important; }
+            #upcomingEventsCarousel .carousel-item .card { height: 360px !important; }
+            .carousel-item .card .ratio { height: 180px !important; }
+        }
+
+        /* Mobile - 1 column */
+        @media (max-width: 767.98px) {
             .scroll-animate {
-                transition: all 0.5s ease-out;
+                transition: all 0.6s ease-out;
                 transform: translateY(30px);
             }
 
@@ -619,156 +817,111 @@
             .scroll-animate[data-animation="fadeInRight"] {
                 transform: translateX(30px);
             }
+
+            .carousel-item .row {
+                flex-direction: column !important;
+                flex-wrap: nowrap !important;
+            }
+
+            .carousel-item .col {
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .carousel-item .card {
+                height: 360px !important;
+                margin: 0 auto !important;
+            }
+
+            #upcomingEventsCarousel .carousel-item .card {
+                height: 390px !important;
+            }
+
+            .carousel-item .card h5 {
+                font-size: 0.95rem !important;
+                height: 2.4rem !important;
+            }
+
+            #latestArticlesCarousel .carousel-item .card p.card-text,
+            #popularArticlesCarousel .carousel-item .card p.card-text {
+                font-size: 0.8rem !important;
+            }
+
+            #upcomingEventsCarousel .event-meta {
+                font-size: 0.75rem !important;
+            }
+
+            .event-detail-text,
+            #upcomingEventsCarousel .event-detail-text {
+                font-size: 0.65rem !important;
+                margin-top: 0.2rem !important;
+            }
+
+            /* Mobile borders */
+            #latestArticlesCarousel .carousel-item .card,
+            #popularArticlesCarousel .carousel-item .card,
+            #upcomingEventsCarousel .carousel-item .card {
+                border-right: 3px solid #CF2585 !important;
+                border-bottom: 3px solid #CF2585 !important;
+            }
+
+            /* Enhanced mobile hover effect */
+            .card-hover-zoom:hover {
+                transform: scale(1.08) translateY(-5px);
+            }
+
+            /* Mobile section spacing */
+            .py-5.mb-3 {
+                padding-top: 2rem !important;
+                padding-bottom: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .pt-5.pb-3.mt-4 {
+                padding-top: 2rem !important;
+                padding-bottom: 1rem !important;
+                margin-top: 1.5rem !important;
+            }
+
+            .promo-title {
+                font-size: 1.1rem !important;
+                line-height: 1.4 !important;
+            }
         }
 
-        /* Reduce motion for users who prefer it */
+        /* ===== TOUCH DEVICES ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .carousel-item .card-hover-zoom:active {
+                transform: scale(1.05) !important;
+                z-index: 5 !important;
+                transition: transform 0.1s ease !important;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
         @media (prefers-reduced-motion: reduce) {
             .scroll-animate {
                 transition: opacity 0.3s ease;
                 transform: none;
             }
-
             .scroll-animate.animate {
                 transform: none;
             }
+            .card-hover-zoom {
+                transition: none;
+            }
         }
 
-        .card a.btn {
-            background-color: #F4B704 !important;
-            border-color: #F4B704 !important;
-            color: #212529 !important;
-            transition: all 0.3s ease;
-        }
-
-        .card a.btn:hover {
-            background-color: #e0ac00 !important;
-            border-color: #e0ac00 !important;
-            color: #212529 !important;
-        }
-
-        .highlight-text {
-            color: #F4B704;
-        }
-
-        .main-text {
-            color: #0F62FF;
-        }
-
-        .card-title.fw-bold {
-            font-size: 1.25rem;
-        }
-
-        /* ===== BORDER KHUSUS UNTUK CAROUSEL CARDS SAJA (ARTIKEL & EVENT) ===== */
-        
-        /* Border kanan dan bawah untuk artikel terbaru */
-        #latestArticlesCarousel .carousel-item .card {
-            border: none !important;
-            border-right: 4px solid #CF2585 !important;
-            border-bottom: 4px solid #CF2585 !important;
-            border-radius: 12px !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* Border kanan dan bawah untuk artikel populer */
-        #popularArticlesCarousel .carousel-item .card {
-            border: none !important;
-            border-right: 4px solid #CF2585 !important;
-            border-bottom: 4px solid #CF2585 !important;
-            border-radius: 12px !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        /* Border kanan dan bawah untuk upcoming events */
-        #upcomingEventsCarousel .carousel-item .card {
-            border: none !important;
-            border-right: 4px solid #CF2585 !important;
-            border-bottom: 4px solid #CF2585 !important;
-            border-radius: 12px !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-            position: relative !important;
-        }
-
-        /* Hover effects untuk cards dengan border khusus */
-        #latestArticlesCarousel .carousel-item .card-hover-zoom:hover,
-        #popularArticlesCarousel .carousel-item .card-hover-zoom:hover,
-        #upcomingEventsCarousel .carousel-item .card-hover-zoom:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 8px 25px rgba(207, 37, 133, 0.3) !important;
-            border-right: 4px solid #CF2585 !important;
-            border-bottom: 4px solid #CF2585 !important;
-        }
-
-        /* Styling untuk text "Detail Event & Daftar" di upcoming events - spesifisitas tinggi */
-        #upcomingEventsCarousel .carousel-item .card .event-meta .event-detail-text {
-            color: #CF2585 !important;
-            font-size: 0.75rem !important;
-            font-weight: 600 !important;
-            margin-top: 0.3rem !important;
-            margin-bottom: 0 !important;
-            text-align: left !important;
-            line-height: 1.2 !important;
-        }
-
-        /* Fallback dengan spesifisitas lebih tinggi lagi */
-        #upcomingEventsCarousel .event-detail-text {
-            color: #CF2585 !important;
-            font-size: 0.75rem !important;
-            font-weight: 600 !important;
-            margin-top: 0.3rem !important;
-            margin-bottom: 0 !important;
-            text-align: left !important;
-            line-height: 1.2 !important;
-        }
-
-        /* Zoom effect untuk desktop */
-        .card-hover-zoom {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 3px 8px rgba(200, 200, 200, 0.3);
-        }
-
-        .card-hover-zoom:hover {
-            transform: scale(1.05);
-            z-index: 10;
-            box-shadow: 0 10px 30px rgba(150, 150, 150, 0.3);
-        }
-
-        .card-hover-zoom img {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card-hover-zoom:hover img {
-            transform: scale(1.02);
-        }
-
-        .article-text {
-            color: #212529;
-        }
-
+        /* ===== ADDITIONAL COMPONENTS ===== */
         .text-truncate {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .btn-ylw:hover {
-            transform: translateY(-2px);
-        }
-
-        .registration-btn {
-            padding: 0.75rem 2rem !important;
-            font-size: 0.95rem !important;
-            transition: all 0.3s ease;
-        }
-
-        .registration-btn:hover {
-            background-color: #e0ac00 !important;
-            border-color: #e0ac00 !important;
-            transform: translateY(-2px);
-        }
-
-        /* ===== STYLING UNTUK MATCH TERAKHIR ===== */
         .match-result {
             font-size: 0.9rem;
         }
@@ -777,17 +930,6 @@
             min-width: 100px;
         }
 
-        .match-result .vs-separator {
-            font-weight: 600;
-        }
-
-        .winner-badge .badge {
-            font-size: 0.8rem !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.3px !important;
-        }
-
-        /* Mobile responsive untuk match result */
         @media (max-width: 767.98px) {
             .match-result {
                 font-size: 0.85rem;
@@ -805,335 +947,20 @@
                 border-radius: 0.5rem;
                 width: 100%;
             }
-
-            .match-result .vs-separator {
-                font-size: 0.8rem;
-                margin: 0;
-            }
-
-            .winner-badge {
-                margin-top: 1rem !important;
-            }
-
-            .winner-badge .badge {
-                font-size: 0.75rem !important;
-                padding: 0.5rem 1rem !important;
-            }
         }
-
-        /* ===== CAROUSEL STYLING ===== */
-
-        /* Base styling untuk semua carousel - UKURAN YANG SAMA */
-        .carousel-item .row {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            align-items: stretch !important;
-        }
-
-        .carousel-item .col {
-            display: flex !important;
-            flex: 1 1 0 !important;
-            min-width: 0 !important;
-            padding: 0 0.75rem !important;
-        }
-
-        /* Card styling PERSIS SAMA untuk artikel dan event */
-        .carousel-item .card {
-            height: 350px !important;
-            width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            border-radius: 12px !important;
-            overflow: hidden !important;
-        }
-
-        /* Tinggi khusus untuk upcoming events supaya text tidak terpotong */
-        #upcomingEventsCarousel .carousel-item .card {
-            height: 380px !important;
-        }
-
-        /* Image container SAMA PERSIS */
-        .carousel-item .card .ratio {
-            flex: 0 0 200px !important;
-            height: 200px !important;
-            margin-bottom: 0 !important;
-            border-radius: 12px 12px 0 0 !important;
-            overflow: hidden !important;
-        }
-
-        .carousel-item .card .ratio img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            object-position: center !important;
-        }
-
-        /* Card body SAMA PERSIS */
-        .carousel-item .card .card-body {
-            flex: 1 1 auto !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
-            padding: 1rem !important;
-            text-align: left !important;
-        }
-
-        /* Title styling SAMA PERSIS untuk semua card */
-        .carousel-item .card h5 {
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            line-height: 1.3 !important;
-            margin-bottom: 0.5rem !important;
-            color: #212529 !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 2 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            height: 2.6rem !important;
-        }
-
-        /* Description untuk ARTIKEL CARDS */
-        #latestArticlesCarousel .carousel-item .card p.card-text,
-        #popularArticlesCarousel .carousel-item .card p.card-text {
-            font-size: 0.85rem !important;
-            color: #6c757d !important;
-            line-height: 1.4 !important;
-            margin-bottom: 0 !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 3 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            flex: 1 1 auto !important;
-        }
-
-        /* Event meta untuk EVENT CARDS - STYLING YANG LEBIH COMPACT */
-        #upcomingEventsCarousel .event-meta {
-            font-size: 0.85rem !important;
-            flex: 1 1 auto !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: space-between !important;
-        }
-
-        #upcomingEventsCarousel .event-meta p {
-            margin-bottom: 0.25rem !important;
-            line-height: 1.3 !important;
-            color: #6c757d !important;
-        }
-
-        #upcomingEventsCarousel .event-meta i {
-            width: 12px !important;
-            text-align: center !important;
-            font-size: 0.8rem !important;
-        }
-
-        #upcomingEventsCarousel .event-meta .d-flex {
-            margin-top: 0.5rem !important;
-        }
-
-        #upcomingEventsCarousel .event-meta .badge {
-            font-size: 0.7rem !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.3px !important;
-            padding: 0.25rem 0.5rem !important;
-        }
-
-        /* ===== RESPONSIVE - UKURAN SAMA UNTUK SEMUA ===== */
-
-        /* Desktop - 3 kolom SAMA */
-        @media (min-width: 992px) {
-            .carousel-item .row {
-                gap: 1rem !important;
-            }
-
-            .carousel-item .col {
-                flex: 1 1 calc(33.333% - 1rem) !important;
-                max-width: calc(33.333% - 1rem) !important;
-            }
-
-            .carousel-item .card {
-                height: 350px !important;
-                width: 100% !important;
-            }
-        }
-
-            /* Tablet - 2 kolom SAMA */
-        @media (max-width: 991.98px) {
-            .carousel-item .row {
-                flex-wrap: wrap !important;
-            }
-
-            .carousel-item .col {
-                flex: 1 1 calc(50% - 1rem) !important;
-                max-width: calc(50% - 1rem) !important;
-                margin-bottom: 1rem !important;
-            }
-
-            .carousel-item .card {
-                height: 320px !important;
-                width: 100% !important;
-            }
-
-            /* Tinggi khusus untuk upcoming events di tablet */
-            #upcomingEventsCarousel .carousel-item .card {
-                height: 350px !important;
-            }
-
-            .carousel-item .card .ratio {
-                flex: 0 0 180px !important;
-                height: 180px !important;
-            }
-
-            #upcomingEventsCarousel .event-meta {
-                font-size: 0.8rem !important;
-            }
-
-            #upcomingEventsCarousel .event-meta .badge {
-                font-size: 0.65rem !important;
-            }
-        }
-
-            /* Mobile - 1 kolom SAMA */
-        @media (max-width: 767.98px) {
-            .carousel-item .row {
-                flex-direction: column !important;
-                flex-wrap: nowrap !important;
-            }
-
-            .carousel-item .col {
-                flex: 1 1 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                padding: 0 1rem !important;
-                margin-bottom: 1rem !important;
-            }
-
-            .carousel-item .card {
-                height: 350px !important;
-                width: 100% !important;
-                margin: 0 auto !important;
-            }
-
-            /* Tinggi khusus untuk upcoming events di mobile */
-            #upcomingEventsCarousel .carousel-item .card {
-                height: 380px !important;
-            }
-
-            .carousel-item .card .ratio {
-                flex: 0 0 180px !important;
-                height: 180px !important;
-            }
-
-            .carousel-item .card h5 {
-                font-size: 0.95rem !important;
-                height: 2.4rem !important;
-            }
-
-            /* Text sizing sama untuk mobile */
-            #latestArticlesCarousel .carousel-item .card p.card-text,
-            #popularArticlesCarousel .carousel-item .card p.card-text {
-                font-size: 0.8rem !important;
-            }
-
-            #upcomingEventsCarousel .event-meta {
-                font-size: 0.75rem !important;
-            }
-
-            #upcomingEventsCarousel .event-meta .badge {
-                font-size: 0.6rem !important;
-            }
-
-            /* Border untuk mobile - lebih tipis */
-            #latestArticlesCarousel .carousel-item .card,
-            #popularArticlesCarousel .carousel-item .card,
-            #upcomingEventsCarousel .carousel-item .card {
-                border-right: 3px solid #CF2585 !important;
-                border-bottom: 3px solid #CF2585 !important;
-            }
-
-            /* Text "Detail Event & Daftar" lebih kecil di mobile */
-            #upcomingEventsCarousel .event-detail-text,
-            #upcomingEventsCarousel .carousel-item .card .event-meta .event-detail-text {
-                font-size: 0.65rem !important;
-                margin-top: 0.2rem !important;
-                color: #CF2585 !important;
-            }
-
-            /* Override untuk memastikan warna pink muncul di mobile */
-            .event-detail-text {
-                color: #CF2585 !important;
-            }
-        }
-
-        /* ===== PERBAIKAN SPACING MOBILE ===== */
-        @media (max-width: 767.98px) {
-
-            /* Perbaikan spacing untuk section Upcoming Events */
-            .py-5.mb-3 {
-                padding-top: 2rem !important;
-                padding-bottom: 1.5rem !important;
-                margin-bottom: 1rem !important;
-            }
-
-            /* Perbaikan spacing untuk section Materi Promosi */
-            .pt-5.pb-3.mt-4 {
-                padding-top: 2rem !important;
-                padding-bottom: 1rem !important;
-                margin-top: 1.5rem !important;
-            }
-
-            .sponsor-section-header {
-                margin-bottom: 1.5rem !important;
-                padding: 0 1rem;
-            }
-
-            .promo-title {
-                font-size: 1.1rem !important;
-                line-height: 1.4 !important;
-            }
-
-            /* Spacing untuk galeri */
-            .container.py-5 {
-                padding-top: 2rem !important;
-                padding-bottom: 2rem !important;
-            }
-
-            /* Jarak antar komponen */
-            .scroll-animate+.scroll-animate {
-                margin-top: 0.5rem;
-            }
-        }
-
-        /* Touch handling untuk mobile */
-        @media (hover: none) and (pointer: coarse) {
-            .carousel-item .card-hover-zoom:active {
-                transform: scale(1.02) !important;
-                z-index: 5 !important;
-                transition: transform 0.1s ease !important;
-            }
-        }
-
-        /* Status badge colors */
-        .bg-warning.text-dark {
-            background-color: #F4B704 !important;
-            color: #212529 !important;
-        }
-</style>
+    </style>
 @endpush
 
 @push('scripts')
     <script src="{{ asset('js/carousel_gallery.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('KAMCUP Website Script Loaded');
+            console.log('KAMCUP Enhanced Website Script Loaded');
 
-            // ===== SCROLL ANIMATIONS SCRIPT ===== 
+            // ===== OPTIMIZED SCROLL ANIMATIONS ===== 
             function initScrollAnimations() {
                 const observerOptions = {
-                    threshold: 0.1,
+                    threshold: [0.1, 0.3],
                     rootMargin: '0px 0px -50px 0px'
                 };
 
@@ -1141,12 +968,13 @@
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             const element = entry.target;
-                            const delay = element.getAttribute('data-delay') || 0;
+                            const delay = parseInt(element.getAttribute('data-delay')) || 0;
 
                             setTimeout(() => {
                                 element.classList.add('animate');
-                            }, parseInt(delay));
-                        } else {
+                            }, delay);
+                        } else if (entry.intersectionRatio === 0) {
+                            // Only remove animation if completely out of view
                             entry.target.classList.remove('animate');
                         }
                     });
@@ -1157,219 +985,393 @@
                     observer.observe(el);
                 });
 
-                console.log(`Scroll animations initialized for ${animateElements.length} elements`);
+                console.log(`Enhanced scroll animations initialized for ${animateElements.length} elements`);
             }
 
-            // ===== CAROUSEL INITIALIZATION ===== 
+            // ===== ENHANCED CAROUSEL SYSTEM ===== 
             function initAllCarousels() {
-                const carouselIds = ['latestArticlesCarousel', 'popularArticlesCarousel', 'upcomingEventsCarousel'];
+                const carouselConfigs = [
+                    { id: 'latestArticlesCarousel', interval: 6000 },
+                    { id: 'popularArticlesCarousel', interval: 6500 },
+                    { id: 'upcomingEventsCarousel', interval: 7000 }
+                ];
 
-                carouselIds.forEach(carouselId => {
-                    const carousel = document.getElementById(carouselId);
+                carouselConfigs.forEach(config => {
+                    const carousel = document.getElementById(config.id);
                     if (carousel) {
-                        console.log(`Initializing ${carouselId}`);
+                        console.log(`Initializing enhanced ${config.id}`);
 
                         const bsCarousel = new bootstrap.Carousel(carousel, {
-                            interval: 5000,
+                            interval: config.interval,
                             wrap: true,
                             touch: true,
-                            keyboard: true
+                            keyboard: true,
+                            pause: 'hover'
                         });
 
-                        // Navigation handlers
+                        // Enhanced navigation
                         const prevBtn = carousel.querySelector('.carousel-control-prev');
                         const nextBtn = carousel.querySelector('.carousel-control-next');
 
-                        if (prevBtn) {
-                            prevBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                bsCarousel.prev();
-                            });
-                        }
+                        [prevBtn, nextBtn].forEach((btn, index) => {
+                            if (btn) {
+                                btn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    index === 0 ? bsCarousel.prev() : bsCarousel.next();
+                                });
+                            }
+                        });
 
-                        if (nextBtn) {
-                            nextBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                bsCarousel.next();
+                        // Intersection observer for performance
+                        const carouselObserver = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    bsCarousel.cycle();
+                                } else {
+                                    bsCarousel.pause();
+                                }
                             });
-                        }
+                        }, { threshold: 0.3 });
 
-                        console.log(`${carouselId} initialized successfully`);
+                        carouselObserver.observe(carousel);
+                        console.log(`${config.id} enhanced initialization complete`);
                     }
                 });
             }
 
-            // ===== MOBILE DEVICE DETECTION ===== 
-            function isMobileDevice() {
-                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
-                    .test(navigator.userAgent);
-            }
+            // ===== ENHANCED TOUCH INTERACTIONS ===== 
+            function initTouchInteractions() {
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                
+                if (isTouchDevice) {
+                    console.log('Touch device detected - setting up enhanced interactions');
 
-            // ===== MOBILE TOUCH EVENTS ===== 
-            if (isMobileDevice()) {
-                console.log('Mobile device detected - setting up touch handlers');
+                    const cards = document.querySelectorAll('.card-hover-zoom');
+                    cards.forEach(card => {
+                        let touchTimeout;
 
-                const cards = document.querySelectorAll('.card-hover-zoom');
-                cards.forEach(card => {
-                    card.addEventListener('touchstart', function(e) {
-                        this.style.transform = 'scale(1.02)';
-                        this.style.zIndex = '5';
-                        this.style.transition = 'transform 0.1s ease';
-                    }, {
-                        passive: true
-                    });
+                        card.addEventListener('touchstart', function(e) {
+                            clearTimeout(touchTimeout);
+                            this.style.transform = 'scale(1.08) translateY(-5px)';
+                            this.style.zIndex = '5';
+                            this.style.transition = 'transform 0.15s ease';
+                        }, { passive: true });
 
-                    card.addEventListener('touchend', function(e) {
-                        setTimeout(() => {
+                        card.addEventListener('touchend', function(e) {
+                            touchTimeout = setTimeout(() => {
+                                this.style.transform = 'scale(1)';
+                                this.style.zIndex = '1';
+                                this.style.transition = 'transform 0.3s ease';
+                            }, 150);
+                        }, { passive: true });
+
+                        card.addEventListener('touchcancel', function(e) {
+                            clearTimeout(touchTimeout);
                             this.style.transform = 'scale(1)';
                             this.style.zIndex = '1';
-                        }, 100);
-                    }, {
-                        passive: true
+                        }, { passive: true });
+                    });
+                }
+            }
+
+            // ===== ENHANCED BUTTON INTERACTIONS =====
+            function initButtonInteractions() {
+                const buttons = document.querySelectorAll('.btn, .registration-btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('mouseenter', function() {
+                        if (!('ontouchstart' in window)) {
+                            this.style.transform = 'translateY(-3px)';
+                            this.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+                        }
                     });
 
-                    card.addEventListener('touchcancel', function(e) {
-                        this.style.transform = 'scale(1)';
-                        this.style.zIndex = '1';
-                    }, {
-                        passive: true
+                    btn.addEventListener('mouseleave', function() {
+                        if (!('ontouchstart' in window)) {
+                            this.style.transform = 'translateY(0)';
+                            this.style.boxShadow = '';
+                        }
                     });
+
+                    btn.addEventListener('touchstart', function(e) {
+                        this.style.transform = 'scale(0.95) translateY(2px)';
+                        this.style.transition = 'transform 0.1s ease';
+                    }, { passive: true });
+
+                    btn.addEventListener('touchend', function(e) {
+                        setTimeout(() => {
+                            this.style.transform = 'scale(1) translateY(0)';
+                        }, 100);
+                    }, { passive: true });
                 });
             }
 
-            // ===== BUTTON HANDLERS =====
-            const buttons = document.querySelectorAll('.btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('touchstart', function(e) {
-                    this.style.transform = 'scale(0.98)';
-                    this.style.transition = 'transform 0.1s ease';
-                }, {
-                    passive: true
-                });
+            // ===== ENHANCED GALLERY CAROUSEL =====
+            function initGalleryCarousel() {
+                const carouselContainer = document.querySelector('.carousel-images');
+                const leftButton = document.querySelector('.nav-button.left');
+                const rightButton = document.querySelector('.nav-button.right');
 
-                btn.addEventListener('touchend', function(e) {
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 100);
-                }, {
-                    passive: true
-                });
-            });
+                if (carouselContainer && leftButton && rightButton) {
+                    const getScrollAmount = () => {
+                        const itemWidth = carouselContainer.querySelector('.image-item')?.offsetWidth || 300;
+                        return itemWidth + 30; // Add gap
+                    };
 
-            // ===== CAROUSEL GALLERY SCRIPT =====
-            const carouselImagesContainer = document.querySelector('.carousel-images');
-            const leftButton = document.querySelector('.nav-button.left');
-            const rightButton = document.querySelector('.nav-button.right');
+                    leftButton.addEventListener('click', () => {
+                        carouselContainer.scrollBy({
+                            left: -getScrollAmount(),
+                            behavior: 'smooth'
+                        });
+                    });
 
-            if (carouselImagesContainer && leftButton && rightButton) {
-                const scrollAmount = () => {
-                    let itemWidth = carouselImagesContainer.querySelector('.image-item')?.offsetWidth;
-                    return itemWidth ? itemWidth + 30 : carouselImagesContainer.offsetWidth / 2;
+                    rightButton.addEventListener('click', () => {
+                        carouselContainer.scrollBy({
+                            left: getScrollAmount(),
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // Auto-scroll pause on hover
+                    carouselContainer.addEventListener('mouseenter', () => {
+                        carouselContainer.style.scrollBehavior = 'smooth';
+                    });
+
+                    // Touch support for gallery
+                    let startX = 0;
+                    let scrollLeft = 0;
+
+                    carouselContainer.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].pageX - carouselContainer.offsetLeft;
+                        scrollLeft = carouselContainer.scrollLeft;
+                    });
+
+                    carouselContainer.addEventListener('touchmove', (e) => {
+                        if (!startX) return;
+                        e.preventDefault();
+                        const x = e.touches[0].pageX - carouselContainer.offsetLeft;
+                        const walk = (x - startX) * 2;
+                        carouselContainer.scrollLeft = scrollLeft - walk;
+                    });
+
+                    carouselContainer.addEventListener('touchend', () => {
+                        startX = 0;
+                    });
+                }
+            }
+
+            // ===== ENHANCED KEYBOARD NAVIGATION =====
+            document.addEventListener('keydown', function(e) {
+                const focusedCarousel = document.querySelector('.carousel:focus-within, .carousel:hover');
+                
+                if (focusedCarousel && ['ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                    const isLeft = e.key === 'ArrowLeft';
+                    const btn = focusedCarousel.querySelector(
+                        isLeft ? '.carousel-control-prev' : '.carousel-control-next'
+                    );
+                    if (btn) btn.click();
                 }
 
-                leftButton.addEventListener('click', () => {
-                    carouselImagesContainer.scrollBy({
-                        left: -scrollAmount(),
-                        behavior: 'smooth'
-                    });
-                });
-
-                rightButton.addEventListener('click', () => {
-                    carouselImagesContainer.scrollBy({
-                        left: scrollAmount(),
-                        behavior: 'smooth'
-                    });
-                });
-            }
-
-            // ===== KEYBOARD NAVIGATION =====
-            document.addEventListener('keydown', function(e) {
-                const activeCarousel = document.querySelector('.carousel:hover') ||
-                    document.querySelector('.carousel:focus-within');
-
-                if (activeCarousel) {
+                // Gallery navigation
+                const galleryCarousel = document.querySelector('.carousel-images');
+                if (galleryCarousel && document.activeElement === galleryCarousel) {
                     if (e.key === 'ArrowLeft') {
-                        e.preventDefault();
-                        const prevBtn = activeCarousel.querySelector('.carousel-control-prev');
-                        if (prevBtn) prevBtn.click();
+                        document.querySelector('.nav-button.left')?.click();
                     } else if (e.key === 'ArrowRight') {
-                        e.preventDefault();
-                        const nextBtn = activeCarousel.querySelector('.carousel-control-next');
-                        if (nextBtn) nextBtn.click();
+                        document.querySelector('.nav-button.right')?.click();
                     }
                 }
             });
 
-            // ===== INITIALIZE EVERYTHING =====
+            // ===== PERFORMANCE OPTIMIZATIONS =====
+            let scrollTimeout;
+            let isScrolling = false;
+
+            document.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    window.requestAnimationFrame(() => {
+                        // Perform scroll-based calculations here
+                        isScrolling = false;
+                    });
+                    isScrolling = true;
+                }
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    // Scroll end operations
+                }, 100);
+            }, { passive: true });
+
+            // ===== MOBILE DEVICE DETECTION =====
+            function isMobileDevice() {
+                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
+            // ===== CAROUSEL INTERSECTION OBSERVER =====
+            const carouselObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const carousel = entry.target;
+                        
+                        // Pause other carousels
+                        const otherCarousels = document.querySelectorAll('.carousel');
+                        otherCarousels.forEach(otherCarousel => {
+                            if (otherCarousel !== carousel && otherCarousel.id) {
+                                const bsCarousel = bootstrap.Carousel.getInstance(otherCarousel);
+                                if (bsCarousel) {
+                                    bsCarousel.pause();
+                                }
+                            }
+                        });
+
+                        // Resume current carousel
+                        const bsCarousel = bootstrap.Carousel.getInstance(carousel);
+                        if (bsCarousel) {
+                            bsCarousel.cycle();
+                        }
+                    }
+                });
+            }, { 
+                threshold: 0.5,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            // ===== INITIALIZE ALL ENHANCED FEATURES =====
             initScrollAnimations();
             initAllCarousels();
+            initTouchInteractions();
+            initButtonInteractions();
+            initGalleryCarousel();
 
-            // ===== FALLBACK INITIALIZATION =====
+            // Apply mobile optimizations
+            if (isMobileDevice()) {
+                console.log('Mobile optimizations applied');
+                document.body.classList.add('mobile-device');
+                
+                // Reduce animation intensity on mobile
+                const style = document.createElement('style');
+                style.textContent = `
+                    .card-hover-zoom:hover {
+                        transform: scale(1.05) translateY(-3px) !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // ===== FALLBACK & ERROR HANDLING =====
             setTimeout(() => {
-                console.log('Running fallback setup');
-
-                const animateElements = document.querySelectorAll('.scroll-animate:not(.animate)');
-                if (animateElements.length > 0) {
-                    console.log('Re-initializing scroll animations');
+                console.log('Running enhanced fallback checks...');
+                
+                // Re-initialize scroll animations if needed
+                const unanimatedElements = document.querySelectorAll('.scroll-animate:not(.animate)');
+                if (unanimatedElements.length > 0) {
+                    console.log('Re-initializing scroll animations for missed elements');
                     initScrollAnimations();
                 }
 
-                initAllCarousels();
-            }, 1000);
-
-            // Observer untuk Carousel
-            setTimeout(() => {
+                // Verify and re-initialize carousels
                 const carousels = document.querySelectorAll('.carousel');
                 carousels.forEach(carousel => {
+                    if (!bootstrap.Carousel.getInstance(carousel)) {
+                        console.log(`Re-initializing carousel: ${carousel.id}`);
+                        new bootstrap.Carousel(carousel, {
+                            interval: 5000,
+                            wrap: true,
+                            touch: true
+                        });
+                    }
+                    // Observe carousel for intersection
                     carouselObserver.observe(carousel);
                 });
+
+                // Check for JavaScript errors
+                window.addEventListener('error', function(e) {
+                    console.error('JavaScript error detected:', e.error);
+                });
+
             }, 1500);
 
-            console.log('All handlers setup complete');
-        });
-
-        // ===== WINDOW RESIZE HANDLER =====
-        window.addEventListener('resize', function() {
-            setTimeout(() => {
-                console.log('Window resized - re-checking carousels');
-            }, 200);
-        });
-
-        // ===== PERFORMANCE OPTIMIZATION =====
-        document.addEventListener('scroll', function() {
-            // Scroll optimizations
-        }, {
-            passive: true
-        });
-
-        // ===== CAROUSEL INTERSECTION OBSERVER =====
-        const carouselObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const carousel = entry.target;
-
-                    // Pause other carousels
-                    const otherCarousels = document.querySelectorAll('.carousel');
-                    otherCarousels.forEach(otherCarousel => {
-                        if (otherCarousel !== carousel && otherCarousel.id) {
-                            const bsCarousel = bootstrap.Carousel.getInstance(otherCarousel);
-                            if (bsCarousel) {
-                                bsCarousel.pause();
-                            }
+            // ===== ADDITIONAL ENHANCEMENTS =====
+            
+            // Preload images for better performance
+            function preloadImages() {
+                const images = document.querySelectorAll('img[data-src]');
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            imageObserver.unobserve(img);
                         }
                     });
+                });
 
-                    // Resume current carousel
+                images.forEach(img => imageObserver.observe(img));
+            }
+
+            // Initialize image preloading
+            preloadImages();
+
+            // Add loading states for better UX
+            const loadingElements = document.querySelectorAll('[data-loading]');
+            loadingElements.forEach(element => {
+                element.classList.remove('loading');
+            });
+
+            console.log('Enhanced KAMCUP website initialization complete');
+        });
+
+        // ===== ENHANCED RESIZE HANDLER =====
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                console.log('Enhanced resize handling...');
+                
+                // Recalculate carousel layouts
+                const carousels = document.querySelectorAll('.carousel');
+                carousels.forEach(carousel => {
                     const bsCarousel = bootstrap.Carousel.getInstance(carousel);
                     if (bsCarousel) {
                         bsCarousel.cycle();
                     }
+                });
+
+                // Update gallery scroll calculations
+                const galleryContainer = document.querySelector('.carousel-images');
+                if (galleryContainer) {
+                    galleryContainer.style.scrollBehavior = 'auto';
+                    setTimeout(() => {
+                        galleryContainer.style.scrollBehavior = 'smooth';
+                    }, 100);
                 }
-            });
-        }, {
-            threshold: 0.5
+            }, 250);
+        });
+
+        // ===== GLOBAL ERROR HANDLING =====
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
+
+        // ===== PAGE VISIBILITY API FOR PERFORMANCE =====
+        document.addEventListener('visibilitychange', function() {
+            const carousels = document.querySelectorAll('.carousel');
+            
+            if (document.hidden) {
+                // Pause all carousels when page is hidden
+                carousels.forEach(carousel => {
+                    const bsCarousel = bootstrap.Carousel.getInstance(carousel);
+                    if (bsCarousel) bsCarousel.pause();
+                });
+            } else {
+                // Resume carousels when page becomes visible
+                carousels.forEach(carousel => {
+                    const bsCarousel = bootstrap.Carousel.getInstance(carousel);
+                    if (bsCarousel) bsCarousel.cycle();
+                });
+            }
         });
     </script>
 @endpush
