@@ -12,24 +12,17 @@
     <style>
         :root {
             --primary-color: #cb2786;
-            /* Physique: Inspiration, Sportive */
             --secondary-color: #00617a;
-            /* Culture: Commitment, Growth */
             --accent-color: #f4b704;
-            /* Reflection: Youthful */
             --text-dark: #343a40;
             --text-muted: #6c757d;
             --bg-light: #F8F8FF;
-            /* Background for content */
             --bg-sidebar: #FFFFFF;
             --active-bg: rgba(203, 39, 134, 0.1);
-            /* Light tint of primary color */
             --active-text: var(--primary-color);
             --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-
             --sidebar-width: 280px;
-            /* Definisi lebar sidebar yang jelas */
         }
 
         body {
@@ -40,24 +33,22 @@
 
         .wrapper {
             display: flex;
-            /* Menggunakan Flexbox untuk layout utama */
             min-height: 100vh;
         }
 
         .sidebar {
             width: var(--sidebar-width);
-            /* Menggunakan variabel lebar sidebar */
             height: 100vh;
             background-color: var(--bg-sidebar);
             box-shadow: var(--shadow-sm);
-            padding-top: 30px;
+            padding-top: 20px; /* Disesuaikan */
             overflow-y: auto;
             flex-shrink: 0;
-            /* Penting: mencegah sidebar mengecil */
             position: fixed;
             left: 0;
             top: 0;
-            z-index: 1000;
+            z-index: 1030; /* Pastikan di atas konten */
+            transition: transform 0.3s ease-in-out; /* BARU: Transisi untuk slide */
         }
 
         .sidebar-content {
@@ -104,27 +95,23 @@
             background-color: var(--active-bg);
             color: var(--active-text);
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.15);
+            box-shadow: 0 2px 8px rgba(203, 39, 134, 0.15);
         }
 
         .main-content-wrapper {
-            /* Tambahkan wrapper baru untuk konten utama */
             margin-left: var(--sidebar-width);
-            /* Dorong konten utama sebesar lebar sidebar */
             flex-grow: 1;
-            /* Biarkan konten utama mengisi sisa ruang */
-            padding: 30px;
+            padding: 20px; /* Disesuaikan */
             background-color: var(--bg-light);
-            /* Background untuk area di luar card */
+            width: calc(100% - var(--sidebar-width)); /* BARU */
+            transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out; /* BARU */
         }
 
         .content {
-            padding: 30px;
-            /* Padding di dalam card, bukan di luar */
-            background-color: var(--bg-light);
-            /* Background untuk content di dalam card */
+            padding: 20px; /* Disesuaikan */
+            background-color: #FFFFFF; /* Warna putih untuk card konten */
             border-radius: 15px;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-logout {
@@ -144,12 +131,7 @@
         }
 
         .btn-logout:hover {
-            background-color: rgba(var(--primary-color-rgb), 0.05);
-            box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.2);
-        }
-
-        .btn-logout i {
-            margin-right: 8px;
+            background-color: rgba(203, 39, 134, 0.05);
         }
 
         .logo-container {
@@ -166,7 +148,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
-            border: 1px solid rgba(var(--primary-color-rgb), 0.2);
+            border: 1px solid rgba(203, 39, 134, 0.2);
         }
 
         .logo-container .logo i {
@@ -177,155 +159,81 @@
         .nav-links {
             flex-grow: 1;
         }
-
-        /* Mobile Block Styling (unchanged, as it's a fallback) */
-        .mobile-block {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
+        
+        /* --- BARU: STYLING UNTUK MOBILE --- */
+        .mobile-topbar {
+            display: none; /* Sembunyi di desktop */
+            background-color: #fff;
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, var(--bg-light) 0%, var(--active-bg) 100%);
-            padding: 2rem;
-            text-align: center;
-            overflow: hidden;
-            position: relative;
-            z-index: 9999;
         }
 
-        .mobile-block-content {
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-            width: 90%;
-            max-width: 400px;
-            animation: fadeIn 0.8s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mobile-icon {
-            font-size: 3.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        .mobile-block h2 {
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .mobile-block p {
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .desktop-btn {
-            background-color: var(--primary-color);
-            color: white;
+        .menu-toggle {
+            background: none;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 auto;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.2);
+            font-size: 1.5rem;
+            color: var(--text-dark);
         }
-
-        .desktop-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(var(--primary-color-rgb), 0.3);
+        
+        .topbar-brand {
+             font-weight: 600;
+             color: var(--primary-color);
         }
-
-        .bg-shapes::before,
-        .bg-shapes::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            z-index: -1;
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1029;
         }
-
-        .bg-shapes::before {
-            top: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background-color: rgba(var(--primary-color-rgb), 0.1);
-        }
-
-        .bg-shapes::after {
-            bottom: -70px;
-            left: -70px;
-            width: 250px;
-            height: 250px;
-            background-color: rgba(var(--primary-color-rgb), 0.08);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        
+        /* Tampilan di bawah 992px (Tablet dan Mobile) */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%); /* Sembunyikan sidebar ke kiri */
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .sidebar.show {
+                transform: translateX(0); /* Tampilkan sidebar */
+            }
+
+            .main-content-wrapper {
+                margin-left: 0; /* Konten memenuhi layar */
+                width: 100%;
+                padding: 15px;
+            }
+
+            .mobile-topbar {
+                display: flex; /* Tampilkan topbar di mobile */
+            }
+            
+            .sidebar-overlay.show {
+                display: block; /* Tampilkan overlay saat sidebar aktif */
+            }
+            
+            .content {
+                 padding: 15px;
             }
         }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        @media (max-width: 768px) {
-            body>*:not(.mobile-block) {
-                display: none !important;
-            }
-
-            .mobile-block {
-                display: flex !important;
-            }
-        }
+        
     </style>
 </head>
 
 <body>
 
-    <div class="mobile-block">
-        <div class="mobile-block-content">
-            <div class="bg-shapes"></div>
-            <div class="mobile-icon">
-                <i class="fas fa-laptop"></i>
-            </div>
-            <h2>Desktop Experience Required</h2>
-            <p>This admin dashboard is optimized for larger screens to provide you with the best management experience.
-                Please switch to a tablet or desktop device.</p>
-            <button class="desktop-btn">
-                <i class="fas fa-desktop"></i> Best on Desktop
-            </button>
-        </div>
-    </div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <div class="wrapper"> {{-- Pembungkus baru untuk sidebar dan main content --}}
-        <div class="sidebar">
+    <div class="wrapper">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-content">
                 <div class="logo-container">
                     <div class="logo">
@@ -386,16 +294,46 @@
             </div>
         </div>
 
-        <div class="main-content-wrapper"> {{-- Perubahan di sini --}}
-            <div class="content">
+        <div class="main-content-wrapper">
+            <div class="mobile-topbar">
+                 <button class="menu-toggle" id="menu-toggle">
+                     <i class="fas fa-bars"></i>
+                 </button>
+                 <span class="topbar-brand">Kamcup Admin</span>
+                 <span></span> </div>
+            
+            <main class="content mt-3">
                 @yield('content')
-            </div>
+            </main>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- Hapus duplikasi Chart.js karena sudah ada di admin.blade.php (jika perlu) --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}} 
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', toggleSidebar);
+            }
+            
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
+        });
+    </script>
+    
     @stack('scripts')
 
 </body>
