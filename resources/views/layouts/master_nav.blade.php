@@ -115,7 +115,8 @@
         </div>
 
         {{-- Content Section --}}
-        <div class="content flex-grow-1">
+        {{-- MODIFICATION: Added conditional style to push content down on all pages except the homepage --}}
+        <div class="content flex-grow-1" @if(!Request::is('/')) style="padding-top: 140px;" @endif>
             @yield('content')
         </div>
         @include('layouts.footer')

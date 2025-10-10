@@ -1,7 +1,8 @@
 @extends('../layouts/master_nav')
 
 @section('content')
-    <section class="py-5">
+    {{-- MODIFICATION: Added inline style 'margin-top: 140px;' to push content below the absolute navbar --}}
+    <section class="pb-5" style="margin-top: 140px;">
         <div class="container">
             <div class="d-flex justify-content-between scroll-animate" data-animation="fadeInLeft">
                 <a href="{{ route('front.index') }}" class="btn px-4 py-2"
@@ -132,7 +133,7 @@
                                 <p class="mb-1">
                                     <a href="tel:+6282220955595" class="text-decoration-none text-muted"
                                         style="transition: color 0.3s ease;">+62 822-2095-5595</a>
-                                </p>
+                                 </p>
                             </div>
                         </div>
                     </div>
