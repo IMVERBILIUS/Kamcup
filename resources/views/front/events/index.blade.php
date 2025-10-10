@@ -1,5 +1,4 @@
 @extends('../layouts/master_nav')
-
 @section('title', 'Semua Event KAMCUP')
 
 @section('content')
@@ -220,7 +219,6 @@
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             color: var(--text-light);
             padding: 60px 0;
-            margin-top: 5rem;
             text-align: center;
             border-bottom-left-radius: 50px;
             border-bottom-right-radius: 50px;

@@ -60,7 +60,6 @@
         background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
         color: var(--text-light);
         padding: 60px 0;
-        margin-top: 5rem; /* Adjust based on navbar height */
         text-align: center;
         border-bottom-left-radius: 50px; /* Youthful, dynamic shape */
         border-bottom-right-radius: 50px;
