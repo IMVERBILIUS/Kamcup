@@ -17,6 +17,23 @@
                     </div>
                 </div>
             </div>
+
+            <style>
+            /* Mobile card used by donations list */
+            .mobile-sponsor-card {
+                border: 1px solid #e9ecef;
+                border-radius: 1rem;
+                background-color: #fff;
+                overflow: hidden;
+            }
+            .mobile-sponsor-card .card-body { padding: 0.85rem; }
+            .mobile-sponsor-card .card-title { font-weight: 600; }
+            .mobile-sponsor-card .action-buttons .btn { border-radius: 0.5rem; }
+
+            @media (max-width: 575.98px) {
+                .btn-sm { padding: 0.35rem 0.6rem; }
+            }
+            </style>
         </div>
 
         {{-- Sorting & Filtering Form --}}
@@ -40,7 +57,6 @@
                 </form>
             </div>
         </div>
-
         {{-- Table --}}
         <div class="card shadow-sm border-0 rounded-4">
             <div class="card-body p-0">
@@ -56,6 +72,47 @@
                         <i class="fas fa-info-circle me-2"></i>Tidak ada permintaan host yang perlu ditinjau saat ini.
                     </div>
                 @else
+                    {{-- Mobile Card View (visible on small screens) --}}
+                    <div class="d-block d-lg-none p-3">
+                        @foreach ($donations as $request)
+                            <div class="mobile-sponsor-card shadow-sm mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h3 class="card-title fs-6 mb-1">{{ $request->name_brand }}</h3>
+                                            <div class="text-muted small">{{ $request->donation_type }} - {{ $request->sponsor_type ?? '-' }}</div>
+                                            <div class="text-muted small">{{ $request->event_name }}</div>
+                                            <div class="text-muted small">{{ $request->created_at->format('d M Y H:i') }}</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <a href="{{ route('admin.donations.show', $request->id) }}" class="btn btn-sm text-white rounded-pill mb-1" style="background-color: #00617a;" title="Lihat Detail" aria-label="Lihat Detail {{ $request->name_brand }}">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                            </a>
+                                            @if ($request->status == 'pending')
+                                                <form action="{{ route('admin.donations.updateStatus', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="approved">
+                                                    <button type="button" onclick="confirmAction(event, this.parentElement, 'approve')" class="btn btn-sm text-white rounded-pill mb-1" style="background-color: #f4b704;" title="Success" aria-label="Approve {{ $request->name_brand }}">
+                                                        <i class="fas fa-check-circle me-1"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('admin.donations.updateStatus', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="status" value="rejected">
+                                                    <button type="button" onclick="confirmAction(event, this.parentElement, 'reject')" class="btn btn-sm text-white rounded-pill" style="background-color: #cb2786;" title="Cancel" aria-label="Reject {{ $request->name_brand }}">
+                                                        <i class="fas fa-times-circle me-1"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
                     <div class="table-responsive p-4">
                         <table class="table table-hover align-middle">
                             <thead>
@@ -116,7 +173,7 @@
                                                 <a href="{{ route('admin.donations.show', $request->id) }}"
                                                     class="btn btn-sm text-white rounded-pill"
                                                     style="background-color: #00617a; border-color: #00617a;"
-                                                    title="Lihat Detail">
+                                                    title="Lihat Detail" aria-label="Lihat Detail {{ $request->name_brand }}">
                                                     <i class="fas fa-info-circle me-1"></i>
                                                 </a>
                                                 @if ($request->status == 'pending')

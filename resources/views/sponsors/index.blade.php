@@ -28,6 +28,31 @@
     object-fit: contain;
     border-radius: 0.375rem; /* Consistent rounded corners */
 }
+
+/* Mobile sponsor card (shows on small screens) */
+.mobile-sponsor-card {
+    border: 1px solid #e9ecef;
+    border-radius: 1rem;
+    background-color: #fff;
+    overflow: hidden;
+}
+.mobile-sponsor-card .logo-wrapper {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+.mobile-sponsor-card .card-body { padding: 0.85rem; }
+.mobile-sponsor-card .card-title { font-weight: 600; }
+.mobile-sponsor-card .action-buttons .btn { border-radius: 0.5rem; }
+
+@media (max-width: 575.98px) {
+    .logo-img { width: 100px; height: 48px; }
+    .btn-sm { padding: 0.35rem 0.6rem; }
+}
 </style>
 
 <div class="container-fluid px-4" style="min-height: 100vh;">
@@ -91,6 +116,50 @@
                         </select>
                     </form>
                 </div>
+            </div>
+
+            {{-- Mobile Card View (visible on small screens) --}}
+            <div class="d-block d-lg-none">
+                @forelse($sponsors as $sponsor)
+                    <div class="mobile-sponsor-card shadow-sm mb-3">
+                        <div class="logo-wrapper">
+                            @if($sponsor->logo)
+                                <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }} logo" class="logo-img">
+                            @else
+                                <div style="width:120px; height:60px; display:flex; align-items:center; justify-content:center;">
+                                    <span class="text-muted small">Tanpa Logo</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h3 class="card-title fs-6 mb-1">{{ $sponsor->name }}</h3>
+                                    <div class="text-muted small">{{ ucfirst($sponsor->sponsor_size) }}</div>
+                                </div>
+                                <div class="text-end">
+                                    {{-- actions as small icons/buttons --}}
+                                    <a href="{{ route('admin.sponsors.edit', $sponsor->id) }}" class="btn btn-sm px-2 py-1 rounded-pill mb-1" style="background-color: #f4b704; color: #212529;" title="Edit" aria-label="Edit Sponsor {{ $sponsor->name }}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.sponsors.destroy', $sponsor->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete(event, this.parentElement)" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #cb2786; color: white;" title="Hapus" aria-label="Hapus Sponsor {{ $sponsor->name }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <p class="mb-2 text-truncate" style="max-width:100%;">{{ $sponsor->description }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-box-open me-2 fs-3"></i>
+                        <p class="mt-2">Belum ada sponsor ditemukan.</p>
+                    </div>
+                @endforelse
             </div>
 
             <div class="table-responsive">

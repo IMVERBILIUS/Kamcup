@@ -2,41 +2,90 @@
 
 @section('content')
 <style>
-/* Custom select dropdown styling, updated to match the new design aesthetic */
-.custom-select-dropdown {
-    background-color: #f5f5f5; /* Light gray for a modern, clean look */
-    border-radius: 0.5rem; /* More rounded corners for sporty youthful feel */
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #495057;
-    transition: all 0.3s ease;
-    border: 1px solid #dee2e6; /* subtle border */
-}
-.custom-select-dropdown:focus {
-    border-color: #00617a; /* Primary color for focus */
-    box-shadow: 0 0 0 0.2rem rgba(0, 97, 122, 0.25); /* Primary color shadow */
-}
+    /* Variabel Warna Utama */
+    :root {
+        --theme-primary: #00617a;
+        --theme-accent: #f4b704;
+        --theme-danger: #cb2786;
+    }
+
+    /* Dropdown Filter */
+    .custom-select-dropdown {
+        background-color: #f5f5f5;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Styling untuk Tampilan Kartu Mobile */
+    .mobile-gallery-card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    .mobile-gallery-card .card-thumbnail {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+    .mobile-gallery-card .card-thumbnail-placeholder {
+        width: 100%;
+        height: 160px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mobile-gallery-card .card-body-content {
+        padding: 1rem;
+    }
+    .mobile-gallery-card .card-title {
+        font-weight: 700;
+        color: #212529;
+        font-size: 1.05rem;
+        margin-bottom: 0.75rem;
+    }
+    .mobile-gallery-card .meta-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .mobile-gallery-card .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    .mobile-gallery-card .action-buttons .btn {
+        background-color: #fff;
+        border-width: 1.5px;
+        border-style: solid;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border-radius: 0.75rem;
+    }
+    .mobile-gallery-card .btn-view-custom { border-color: var(--theme-primary); color: var(--theme-primary); }
+    .mobile-gallery-card .btn-edit-custom { border-color: var(--theme-accent); color: var(--theme-accent); }
+    .mobile-gallery-card .btn-delete-custom { border-color: var(--theme-danger); color: var(--theme-danger); }
 </style>
 
-<div class="container-fluid px-4" style="min-height: 100vh;">
+<div class="container-fluid px-3 px-md-4" style="min-height: 100vh;">
 
     {{-- Header --}}
     <div class="row mb-4">
         <div class="col-12">
-            {{-- Applying sportive.inspiration refresh with a bold left border and primary color --}}
             <div class="bg-white rounded-4 shadow-sm p-4" style="border-left: 8px solid #00617a;">
                 <div class="d-flex align-items-center">
-                    {{-- Interactive care: icon background with primary color transparency, reflecting sporty visioner --}}
-                    <div class="d-flex justify-content-center align-items-center rounded-circle me-4"
-                         style="width: 70px; height: 70px; background-color: rgba(0, 97, 122, 0.1);">
-                        {{-- Icon for documentation, reflecting sporty events --}}
+                    <div class="d-flex justify-content-center align-items-center rounded-circle me-4" style="width: 70px; height: 70px; background-color: rgba(0, 97, 122, 0.1);">
                         <i class="fas fa-camera-retro fs-2" style="color: #00617a;"></i>
                     </div>
                     <div>
-                        {{-- Sporty youthful title with main color --}}
                         <h2 class="fs-3 fw-bold mb-1" style="color: #00617a;">Manajemen Dokumentasi Turnamen</h2>
-                        {{-- Reflecting community active process and growth --}}
                         <p class="text-muted mb-0">Kelola video dan gambar turnamen untuk komunitas Anda.</p>
                     </div>
                 </div>
@@ -44,37 +93,32 @@
         </div>
     </div>
 
-    {{-- Add Button --}}
+    {{-- Tombol Tambah --}}
     <div class="row mb-4">
         <div class="col-md-12 d-flex justify-content-end">
-            {{-- Expressive competitive: bold button with primary color for main action --}}
-            <a href="{{ route('admin.galleries.create') }}" class="btn text-white d-flex align-items-center px-4 py-2 rounded-pill"
-               style="background-color: #f4b704; border: none; font-weight: 600;"> {{-- Changed to #f4b704 (yellow) for 'add new' as a prominent action --}}
+            <a href="{{ route('admin.galleries.create') }}" class="btn text-white d-flex align-items-center px-4 py-2 rounded-pill" style="background-color: #f4b704; border: none; font-weight: 600;">
                 <i class="fas fa-plus me-2"></i>
                 <span class="fw-small">Tambah Dokumentasi Baru</span>
             </a>
         </div>
     </div>
 
-    {{-- Documentation Table --}}
-    {{-- Sporty youthful: rounded card with shadow --}}
+    {{-- Konten Utama --}}
     <div class="card border-0 rounded-4 shadow-sm">
-        <div class="card-body p-4">
+        <div class="card-body p-3 p-md-4">
             @if(session('success'))
-                {{-- Expressive: success alert with consistent styling --}}
                 <div class="alert rounded-3 text-white m-0" style="background-color: #00617a; border: none;">
                     <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
                 </div>
             @endif
 
-            {{-- Sort Filter --}}
-            <div class="d-flex justify-content-between align-items-center mb-4 mt-3"> {{-- Added mt-3 for spacing after alert --}}
-                {{-- Personality: community active process - clear heading for the table --}}
-                <h1 class="fs-5 fw-semibold" style="color: #00617a;">Semua Dokumentasi</h1>
-                <form method="GET" class="d-flex align-items-center gap-2">
-                    <span class="text-muted fw-semibold">Urutkan Berdasarkan:</span>
-                    <select name="sort" class="form-select form-select-sm custom-select-dropdown border-0" onchange="this.form.submit()" style="width: auto; cursor: pointer;">
-                        {{-- Commitment growth: clear sorting options --}}
+            {{-- [PERBAIKAN] Filter dibuat responsif --}}
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 mt-3">
+                <h1 class="fs-5 fw-semibold mb-3 mb-md-0" style="color: #00617a;">Semua Dokumentasi</h1>
+                <form method="GET" class="d-flex align-items-center gap-2 w-100 w-md-auto">
+                    {{-- Teks "Urutkan" disembunyikan di mobile --}}
+                    <span class="text-muted fw-semibold d-none d-md-inline">Urutkan:</span>
+                    <select name="sort" class="form-select form-select-sm custom-select-dropdown border-0 flex-grow-1" onchange="this.form.submit()" style="cursor: pointer;">
                         <option value="latest" {{ request('sort', 'latest') == 'latest' ? 'selected' : '' }}>Terbaru</option>
                         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
                         <option value="view" {{ request('sort') == 'view' ? 'selected' : '' }}>Jumlah Dilihat</option>
@@ -82,18 +126,66 @@
                 </form>
             </div>
 
-            {{-- Table --}}
-            <div class="table-responsive">
+
+            {{-- Tampilan Mobile (Card View) --}}
+            <div class="d-block d-lg-none">
+                @forelse($galleries as $gallery)
+                    <div class="mobile-gallery-card">
+                        @if($gallery->thumbnail)
+                            <img src="{{ asset('storage/' . $gallery->thumbnail) }}" alt="thumbnail" class="card-thumbnail">
+                        @else
+                            <div class="card-thumbnail-placeholder">
+                                <i class="fas fa-image fa-2x text-muted"></i>
+                            </div>
+                        @endif
+                        <div class="card-body-content">
+                            <h3 class="card-title">{{ $gallery->tournament_name ?? '-' }}</h3>
+                            <div class="meta-info">
+                                @php
+                                    $statusBgColor = '#f4b704';
+                                    $statusTextColor = '#212529';
+                                    if ($gallery->status == 'Published') {
+                                        $statusBgColor = '#00617a';
+                                        $statusTextColor = 'white';
+                                    }
+                                @endphp
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: {{ $statusBgColor }}; color: {{ $statusTextColor }};">
+                                    {{ $gallery->status }}
+                                </span>
+                                <span class="text-muted small"><i class="fas fa-eye me-1"></i>{{ $gallery->views }}</span>
+                            </div>
+                            <div class="action-buttons">
+                                <a href="{{ route('admin.galleries.show', $gallery->slug) }}" class="btn btn-view-custom" title="Lihat Detail"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('admin.galleries.edit', $gallery->slug) }}" class="btn btn-edit-custom" title="Edit"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('admin.galleries.destroy', $gallery->slug) }}" method="POST" class="d-inline" onsubmit="confirmDelete(event, this)">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-delete-custom w-100" title="Hapus"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-camera-retro fa-3x mb-3"></i>
+                        <p>Belum ada dokumentasi ditemukan.</p>
+                    </div>
+                @endforelse
+            </div>
+
+
+            {{-- Tampilan Desktop (Table View) --}}
+            <div class="d-none d-lg-block table-responsive">
                 <table class="table table-hover align-middle">
                     <thead>
-                        <tr style="background-color: #f8f9fa;"> {{-- Light background for header row --}}
-                            <th class="py-3" style="color: #6c757d;">Thumbnail</th>
-                            <th class="py-3" style="color: #6c757d;">Nama Turnamen</th>
-                            <th class="py-3" style="color: #6c757d;">Tautan Video</th>
-                            <th class="py-3" style="color: #6c757d;">Penulis</th>
-                            <th class="py-3" style="color: #6c757d;">Status</th>
-                            <th class="py-3" style="color: #6c757d;">Dilihat</th>
-                            <th class="py-3" style="color: #6c757d;">Aksi</th>
+                        <tr>
+                            <th class="py-3">Thumbnail</th>
+                            <th class="py-3">Nama Turnamen</th>
+                            <th class="py-3">Tautan Video</th>
+                            <th class="py-3">Penulis</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Dilihat</th>
+                            <th class="py-3">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,10 +203,8 @@
                                 <td class="py-3 fw-semibold">{{ $gallery->tournament_name ?? '-' }}</td>
                                 <td class="py-3">
                                     @if($gallery->video_link)
-                                        {{-- Interactive care: styled link for video --}}
                                         <a href="{{ $gallery->video_link }}" target="_blank" class="text-decoration-none fw-medium" style="color: #00617a;">
-                                            Lihat Video
-                                            <i class="fas fa-external-link-alt ms-1"></i>
+                                            Lihat Video <i class="fas fa-external-link-alt ms-1"></i>
                                         </a>
                                     @else
                                         <span class="text-muted">Tanpa Video</span>
@@ -122,36 +212,23 @@
                                 </td>
                                 <td class="py-3 text-muted">{{ $gallery->author ?? '-' }}</td>
                                 <td class="py-3">
-                                    {{-- Expressive: status badges with custom colors from palette --}}
                                     @php
-                                        $statusBgColor = '#f4b704'; // Default to yellow (pending/draft-like)
-                                        $statusTextColor = '#212529'; // Default dark text
-                                        if ($gallery->status == 'Published') {
-                                            $statusBgColor = '#00617a'; // Primary blue for published
-                                            $statusTextColor = 'white';
-                                        }
+                                        $statusBgColor = ($gallery->status == 'Published') ? '#00617a' : '#f4b704';
+                                        $statusTextColor = ($gallery->status == 'Published') ? 'white' : '#212529';
                                     @endphp
-                                    <span class="badge rounded-pill px-3 py-2 text-white"
-                                          style="background-color: {{ $statusBgColor }}; color: {{ $statusTextColor }};">
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: {{ $statusBgColor }}; color: {{ $statusTextColor }};">
                                         {{ $gallery->status }}
                                     </span>
                                 </td>
                                 <td class="py-3 fw-semibold">{{ $gallery->views }}</td>
                                 <td class="py-3">
                                     <div class="d-flex gap-2">
-                                        {{-- CRITICAL FIX: Changed $gallery->id to $gallery->slug for show, edit, and destroy --}}
-                                        <a href="{{ route('admin.galleries.show', $gallery->slug) }}" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #00617a; color: white;" title="Lihat Detail">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.galleries.edit', $gallery->slug) }}" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #f4b704; color: #212529;" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('admin.galleries.destroy', $gallery->slug) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('admin.galleries.show', $gallery->slug) }}" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #00617a; color: white;" title="Lihat Detail"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('admin.galleries.edit', $gallery->slug) }}" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #f4b704; color: #212529;" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <form action="{{ route('admin.galleries.destroy', $gallery->slug) }}" method="POST" class="d-inline" onsubmit="confirmDelete(event, this)">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" onclick="confirmDelete(event, this.parentElement)" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #cb2786; color: white;" title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <button type="submit" class="btn btn-sm px-2 py-1 rounded-pill" style="background-color: #cb2786; color: white;" title="Hapus"><i class="fas fa-trash"></i></button>
                                         </form>
                                     </div>
                                 </td>
@@ -165,117 +242,34 @@
                 </table>
             </div>
 
-            {{-- Pagination --}}
+
+            {{-- Paginasi --}}
             @if($galleries->hasPages())
                 <div class="mt-4 d-flex justify-content-center">
-                    <nav aria-label="Gallery pagination">
-                        <ul class="pagination pagination-sm mb-0">
-                            {{-- Previous Page Link --}}
-                            @if ($galleries->onFirstPage())
-                                <li class="page-item disabled"><span class="page-link rounded-3 border-0">&laquo;</span></li>
-                            @else
-                                <li class="page-item">
-                                    <a class="page-link rounded-3 border-0" href="{{ $galleries->previousPageUrl() }}" rel="prev" style="color: #00617a;">&laquo;</a>
-                                </li>
-                            @endif
-
-                            {{-- Pagination Elements --}}
-                            @php
-                                $currentPage = $galleries->currentPage();
-                                $lastPage = $galleries->lastPage();
-                                $pageRange = 5;
-                                $startPage = max(1, $currentPage - floor($pageRange / 2));
-                                $endPage = min($lastPage, $currentPage + floor($pageRange / 2));
-                                if ($currentPage < floor($pageRange / 2)) {
-                                    $endPage = min($lastPage, $pageRange);
-                                }
-                                if ($currentPage > $lastPage - floor($pageRange / 2)) {
-                                    $startPage = max(1, $lastPage - $pageRange + 1);
-                                }
-                            @endphp
-
-                            {{-- Page Number Links --}}
-                            @for ($i = $startPage; $i <= $endPage; $i++)
-                                @if ($i == $currentPage)
-                                    <li class="page-item active">
-                                        {{-- Sporty visioner: active page with primary color --}}
-                                        <span class="page-link rounded-3 border-0" style="background-color: #00617a; color: white;">{{ $i }}</span>
-                                    </li>
-                                @else
-                                    <li class="page-item">
-                                        <a class="page-link rounded-3 border-0" href="{{ $galleries->url($i) }}" style="color: #00617a;">{{ $i }}</a>
-                                    </li>
-                                @endif
-                            @endfor
-
-                            {{-- Next Page Link --}}
-                            @if ($galleries->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link rounded-3 border-0" href="{{ $galleries->nextPageUrl() }}" rel="next" style="color: #00617a;">&raquo;</a>
-                                </li>
-                            @else
-                                <li class="page-item disabled"><span class="page-link rounded-3 border-0">&raquo;</span></li>
-                            @endif
-                        </ul>
-                    </nav>
+                    {{ $galleries->links() }}
                 </div>
             @endif
-
         </div>
     </div>
 </div>
 
-{{-- SweetAlert --}}
 <script>
 function confirmDelete(event, form) {
     event.preventDefault();
-
     Swal.fire({
         title: "Konfirmasi Hapus?",
         text: "Anda yakin ingin menghapus dokumentasi ini? Data tidak bisa dikembalikan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#cb2786", // Red/Magenta for delete confirmation
-        cancelButtonColor: "#00617a", // Primary blue for cancel
+        confirmButtonColor: "#cb2786",
+        cancelButtonColor: "#00617a",
         confirmButtonText: "Ya, Hapus!",
-        cancelButtonText: "Batalkan",
-        customClass: { // Sporty youthful: rounded buttons
-            confirmButton: 'rounded-pill px-4',
-            cancelButton: 'rounded-pill px-4'
-        }
+        cancelButtonText: "Batalkan"
     }).then((result) => {
         if (result.isConfirmed) {
             form.submit();
-            // Note: The success alert after deletion should ideally come from a session flash message after redirect,
-            // not directly from this JS, as the page will reload.
         }
     });
 }
-
-@if(session('success'))
-Swal.fire({
-    icon: 'success',
-    title: "{{ session('success') }}",
-    showConfirmButton: false,
-    timer: 2000, // Longer timer for better user experience
-    customClass: { // Sporty youthful: rounded popup
-        popup: 'rounded-4'
-    }
-});
-@endif
-
-@if(session('error'))
-Swal.fire({
-    icon: 'error',
-    title: "Terjadi Kesalahan!",
-    text: "{{ session('error') }}",
-    showConfirmButton: true,
-    confirmButtonColor: '#cb2786', // Accent color for error confirm
-    customClass: { // Sporty youthful: rounded buttons
-        confirmButton: 'rounded-pill px-4',
-        popup: 'rounded-4'
-    }
-});
-@endif
 </script>
 @endsection
